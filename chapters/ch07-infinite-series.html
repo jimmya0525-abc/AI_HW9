@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微積分講義 - 第 07 章：無窮級數 (Infinite Series)</title>
+
+  <!-- 全站共用樣式 (相對路徑) -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- KaTeX 數學公式支援 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-chapter-id="ch07">
+  <!-- 頂部功能導覽列 -->
+  <header class="site-header">
+    <div class="header-left">
+      <button id="menu-toggle" class="icon-btn" aria-label="切換選單">☰</button>
+      <a href="../index.html" class="header-logo">
+        <span>📐</span> 微積分課程講義
+      </a>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="切換主題模式">🌓</button>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- 側邊欄（由 nav.js 動態渲染目錄） -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>章節目錄導覽</h3>
+      </div>
+      <nav id="course-nav" class="course-nav">
+        <!-- nav.js 自動注入目錄 -->
+      </nav>
+    </aside>
+
+    <!-- 手機端側邊欄遮罩 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 講義主內容區域 -->
+    <main class="main-content">
+      <article class="lecture-content">
+        <!-- 章節標頭 -->
+        <header class="chapter-header">
+          <div class="chapter-meta">Chapter 07</div>
+          <h1 class="chapter-title">無窮級數<br><small style="font-size: 0.6em; font-weight: 500; color: var(--text-muted);">Infinite Series</small></h1>
+          <p class="chapter-lead">
+            無窮級數是微積分由有限運算躍升至無窮分析的核心殿堂。本章從離散數列（Sequences）的極限定義與單調有界收斂定理奠基，系統性建構無窮級數之部分和極限觀念；深入剖析等比級數、望遠鏡級數與第 $n$ 項發散檢驗；全面鋪展積分審斂法、$p$-級數、直接比較與極限比較審斂法；辨析絕對收斂與條件收斂、交錯級數審斂（萊布尼茨法則）與截斷餘項誤差、黎曼重排悖論、比值審斂法與根值審斂法；進而探討泰勒多項式逼近與拉格朗日餘項估計、冪級數（Power Series）之收斂半徑與區間、逐項微積分；最終總結泰勒級數與馬克勞林級數之嚴格收斂性、代數建構技巧、定積分數值逼近與廣義二項級數之金融精算應用。
+          </p>
+        </header>
+
+        <!-- 7.1 數列 -->
+        <section id="sec7-1" class="lecture-section">
+          <h2>7.1 數列 (Sequences)</h2>
+          <p>
+            數學上，<strong>數列（Sequence）</strong>定義為定義域為正整數集合 $\mathbb{Z}^+ = \{1, 2, 3, \dots\}$ 的函數。數值 $a_n$ 稱為數列的第 $n$ 項（記作 $\{a_n\}$），通常有封閉形式（Closed form）與遞迴形式（Recursive form）。
+          </p>
+
+          <!-- 數列定義與形式 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 7.1.1：數列的表示形式</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>封閉形式 (Closed form)：</strong>第 $n$ 項以 $n$ 的明確算式給出。例如：
+                  $$a_n = 3 + (-1)^n \implies 2, 4, 2, 4, \dots$$
+                  $$b_n = \frac{n}{1 - 2n} \implies -1, -\frac{2}{3}, -\frac{3}{5}, -\frac{4}{7}, \dots$$
+                  $$c_n = \frac{n^2}{2^n - 1} \implies 1, \frac{4}{3}, \frac{9}{7}, \frac{16}{15}, \dots$$
+                </li>
+                <li><strong>遞迴形式 (Recursive form)：</strong>由首項及後項與前項的關係定義。例如：
+                  $$d_1 = 25, \quad d_{n+1} = d_n - 5 \implies 25, 20, 15, 10, \dots$$
+                </li>
+                <li><strong>等差數列 (Arithmetic sequence)：</strong>相鄰項具公差 $d$，通項為 $a_n = a + (n - 1)d$。</li>
+                <li><strong>等比數列 (Geometric sequence)：</strong>相鄰項具公比 $r$，通項為 $a_n = a r^{n-1}$。</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 數列極限定義與實變數連續擴展 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 7.1.2：數列的極限 (Limit of a Sequence)</div>
+            <div class="callout-body">
+              設 $L$ 為實數。若對任意給定的正數 $\epsilon > 0$，皆存在對應的整數 $M > 0$，使得：
+              $$\text{當 } n > M \text{ 時，恆有 } |a_n - L| < \epsilon$$
+              則稱數列 $\{a_n\}$ <strong>收斂至 $L$ (converges to $L$)</strong>，記作 $\lim_{n \to \infty} a_n = L$。若極限不存在，則稱數列<strong>發散 (diverges)</strong>。
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.1.1：實變數函數連續擴展定理 (Theorem 9.1)</div>
+            <div class="callout-body">
+              設 $L$ 為實數，$f$ 為實變數函數且滿足 $\lim_{x \to \infty} f(x) = L$。若數列 $\{a_n\}$ 滿足對所有正整數 $n$ 均有 $f(n) = a_n$，則：
+              $$\lim_{n \to \infty} a_n = L$$
+              此定理允許我們對數列的通項藉由實變數之微積分法則（包括羅必達法則）來判定其極限。
+            </div>
+          </div>
+
+          <!-- 範例：數列極限運算 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.1.1：數列極限計算與羅必達法則應用</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求數列 $a_n = \left(1 + \frac{1}{n}\right)^n$ 之極限：</strong><br>
+                  考慮連續函數 $f(x) = \left(1 + \frac{1}{x}\right)^x$。由第六章之極限分析可知 $\lim_{x \to \infty} \left(1 + \frac{1}{x}\right)^x = e$。<br>
+                  根據定理 7.1.1，立即推知：
+                  $$\lim_{n \to \infty} a_n = \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e$$
+                </li>
+                <li><strong>檢驗數列 $a_n = \frac{n^2}{2^n - 1}$ 是否收斂：</strong><br>
+                  考慮實函數 $f(x) = \frac{x^2}{2^x - 1} \quad \left(\frac{\infty}{\infty}\right)$，連續使用兩次羅必達法則：
+                  $$\lim_{x \to \infty} \frac{x^2}{2^x - 1} \overset{\text{L'H}}{=} \lim_{x \to \infty} \frac{2x}{(\ln 2)2^x} \overset{\text{L'H}}{=} \lim_{x \to \infty} \frac{2}{(\ln 2)^2 2^x} = 0$$
+                  因此 $\lim_{n \to \infty} a_n = 0$，數列收斂至 0。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 夾擠定理與絕對值定理 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.1.2：數列的極限性質、夾擠定理與絕對值定理</div>
+            <div class="callout-body">
+              <p>若 $\lim_{n \to \infty} a_n = L$ 且 $\lim_{n \to \infty} b_n = K$：</p>
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li><strong>線性運算：</strong>$\lim (a_n \pm b_n) = L \pm K, \quad \lim (c a_n) = c L$</li>
+                <li><strong>乘積與商：</strong>$\lim (a_n b_n) = L K, \quad \lim \frac{a_n}{b_n} = \frac{L}{K} \quad (b_n \ne 0, K \ne 0)$</li>
+                <li><strong>夾擠定理 (Squeeze Theorem)：</strong>若 $\lim a_n = \lim b_n = L$，且存在整數 $N$ 使得當 $n > N$ 時恆有 $a_n \le c_n \le b_n$，則 $\lim_{n \to \infty} c_n = L$。</li>
+                <li><strong>絕對值定理 (Absolute Value Theorem)：</strong>對於數列 $\{a_n\}$，若 $\lim_{n \to \infty} |a_n| = 0$，則 $\lim_{n \to \infty} a_n = 0$。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.1.2：階乘數列之夾擠定理求極限</div>
+            <div class="callout-body">
+              <p>求數列 $a_n = \frac{(-1)^n}{n!}$ 之極限：</p>
+              <div class="proof-body">
+                觀察階乘與指數的增長：
+                $$n! = 1 \cdot 2 \cdot 3 \cdot 4 \cdot 5 \cdots n \implies \text{當 } n \ge 4 \text{ 時，} n! > 2^n \implies \frac{1}{n!} < \frac{1}{2^n}$$
+                因此建立夾擠不等式：
+                $$-\frac{1}{2^n} < \frac{(-1)^n}{n!} < \frac{1}{2^n}$$
+                由於 $\lim_{n \to \infty} \left(-\frac{1}{2^n}\right) = 0$ 且 $\lim_{n \to \infty} \left(\frac{1}{2^n}\right) = 0$，由夾擠定理得出：
+                $$\lim_{n \to \infty} \frac{(-1)^n}{n!} = 0$$
+              </div>
+            </div>
+          </div>
+
+          <!-- 單調有界收斂定理 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 7.1.3：單調數列與有界數列 (Monotonic and Bounded Sequences)</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>單調數列 (Monotonic)：</strong>
+                  若數列項遞增不減 $a_1 \le a_2 \le a_3 \le \dots$，稱為<strong>遞增數列（Nondecreasing）</strong>；若 $a_1 \ge a_2 \ge a_3 \ge \dots$，稱為<strong>遞減數列（Nonincreasing）</strong>。
+                </li>
+                <li><strong>有界數列 (Bounded)：</strong>
+                  若存在實數 $M$ 使得對所有 $n$ 恆有 $a_n \le M$，稱數列<strong>上有界（Bounded above）</strong>；若存在實數 $N$ 使得 $N \le a_n$，稱數列<strong>下有界（Bounded below）</strong>。兼具上下界者稱為<strong>有界數列（Bounded）</strong>。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.1.3：單調有界收斂定理 (Bounded Monotonic Sequences Theorem)</div>
+            <div class="callout-body">
+              <strong>任何有界且單調的數列，必定收斂。</strong><br>
+              特別地：若數列遞增且具有上界 $M$，則其極限必存在且不大於 $M$（$\lim a_n \le M$）。
+            </div>
+          </div>
+        </section>
+
+        <!-- 7.2 級數與等比級數 -->
+        <section id="sec7-2" class="lecture-section">
+          <h2>7.2 級數與等比級數 (Series & Geometric Series)</h2>
+          <p>
+            將無窮數列 $\{a_n\}$ 的無窮多項累加起來，即構成<strong>無窮級數（Infinite Series）</strong>，記作 $\sum_{n=1}^\infty a_n$。
+          </p>
+
+          <!-- 級數與部分和 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 7.2.1：部分和數列與級數之收斂性</div>
+            <div class="callout-body">
+              對於無窮級數 $\sum_{n=1}^\infty a_n$，其前 $n$ 項累加和稱為<strong>部分和（Partial Sum）</strong>：
+              $$S_n = a_1 + a_2 + a_3 + \dots + a_n$$
+              若部分和構成的數列 $\{S_n\}$ 收斂至有限極限 $S$（即 $\lim_{n \to \infty} S_n = S$），則稱該級數<strong>收斂（Converges）</strong>，$S$ 稱為級數的和：
+              $$\sum_{n=1}^\infty a_n = S$$
+              若 $\{S_n\}$ 發散，則稱該無窮級數<strong>發散（Diverges）</strong>。
+            </div>
+          </div>
+
+          <!-- 望遠鏡級數 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.2.1：望遠鏡級數求和 (Telescoping Series)</div>
+            <div class="callout-body">
+              <p>望遠鏡級數的中間各項會正負成對抵消：$(b_1 - b_2) + (b_2 - b_3) + \dots \implies S_n = b_1 - b_{n+1} \implies S = b_1 - \lim_{n \to \infty} b_{n+1}$：</p>
+              <ul>
+                <li><strong>求 $\sum_{n=1}^\infty \left(\frac{1}{n} - \frac{1}{n+1}\right)$：</strong><br>
+                  $$S_n = \left(1 - \frac{1}{2}\right) + \left(\frac{1}{2} - \frac{1}{3}\right) + \dots + \left(\frac{1}{n} - \frac{1}{n+1}\right) = 1 - \frac{1}{n+1}$$
+                  $$\sum_{n=1}^\infty \left(\frac{1}{n} - \frac{1}{n+1}\right) = \lim_{n \to \infty} S_n = \lim_{n \to \infty} \left(1 - \frac{1}{n+1}\right) = 1$$
+                </li>
+                <li><strong>求 $\sum_{n=1}^\infty \frac{2}{4n^2 - 1}$：</strong><br>
+                  以部分分式拆解通項：$a_n = \frac{2}{(2n - 1)(2n + 1)} = \frac{1}{2n - 1} - \frac{1}{2n + 1}$：
+                  $$S_n = \left(\frac{1}{1} - \frac{1}{3}\right) + \left(\frac{1}{3} - \frac{1}{5}\right) + \dots + \left(\frac{1}{2n - 1} - \frac{1}{2n + 1}\right) = 1 - \frac{1}{2n + 1}$$
+                  $$\sum_{n=1}^\infty \frac{2}{4n^2 - 1} = \lim_{n \to \infty} S_n = \lim_{n \to \infty} \left(1 - \frac{1}{2n + 1}\right) = 1$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 等比級數 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.2.2：等比級數求和定理 (Geometric Series)</div>
+            <div class="callout-body">
+              等比級數 $\sum_{n=0}^\infty a r^n = a + ar + ar^2 + \dots \quad (a \ne 0)$：
+              <ul>
+                <li>當且僅當公比滿足 $|r| < 1$ 時，級數收斂，其和為：
+                  $$S = \frac{a}{1 - r}$$
+                </li>
+                <li>若 $|r| \ge 1$，則級數發散。</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 等比級數實例：循環小數與彈跳球 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.2.2：等比級數應用實例</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\sum_{n=0}^\infty \frac{3}{2^n}$ 之和：</strong><br>
+                  首項 $a = 3$，公比 $r = \frac{1}{2} < 1$：
+                  $$S = \frac{3}{1 - 1/2} = 6$$
+                </li>
+                <li><strong>無窮循環小數化為精確分數：將 $0.\overline{08} = 0.080808\dots$ 化為分數</strong><br>
+                  將循環節展開為等比級數：
+                  $$0.080808\dots = \frac{8}{10^2} + \frac{8}{10^4} + \frac{8}{10^6} + \dots = \sum_{n=1}^\infty \frac{8}{10^2}\left(\frac{1}{10^2}\right)^{n-1}$$
+                  首項 $a = \frac{8}{100}$，公比 $r = \frac{1}{100}$：
+                  $$S = \frac{a}{1 - r} = \frac{8/100}{1 - 1/100} = \frac{8/100}{99/100} = \frac{8}{99}$$
+                </li>
+                <li><strong>彈跳球垂直運動總路徑問題 (Bouncing Ball Problem)：</strong><br>
+                  一顆球自 6 英尺高處落下，每次反彈高度均為前一次的 $\frac{3}{4}$。求該球在靜止前所運動的總垂直距離：
+                  <div class="proof-body">
+                    首次落下距離：$D_1 = 6$ 英尺。<br>
+                    第二次往返：$D_2 = 6(\frac{3}{4}) + 6(\frac{3}{4}) = 12(\frac{3}{4})$ 英尺。<br>
+                    第三次往返：$D_3 = 12(\frac{3}{4})^2$ 英尺。<br>
+                    總距離為初始落下加上所有反彈之等比級數：
+                    $$D = 6 + 12 \sum_{n=0}^\infty \left(\frac{3}{4}\right)^{n+1} = 6 + 12\left(\frac{3}{4}\right) \sum_{n=0}^\infty \left(\frac{3}{4}\right)^n = 6 + 9\left(\frac{1}{1 - 3/4}\right) = 6 + 9(4) = 42 \text{ 英尺}$$
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 第 n 項發散審斂法 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.2.3：第 $n$ 項發散審斂法 ($n$-th Term Test for Divergence)</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>若無窮級數 $\sum_{n=1}^\infty a_n$ 收斂，則通項極限必為零：
+                  $$\lim_{n \to \infty} a_n = 0$$
+                </li>
+                <li><strong>發散檢驗法：</strong>若 $\lim_{n \to \infty} a_n \ne 0$ 或極限不存在，則無窮級數 $\sum_{n=1}^\infty a_n$ <strong>必定發散</strong>。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-title">⚠️ 致命誤區警示：$\lim a_n = 0$ 無法保證級數收斂！</div>
+            <div class="callout-body">
+              <p>第 $n$ 項審斂法是<strong>單向的發散檢驗工具</strong>：</p>
+              <ul>
+                <li>若 $\lim_{n \to \infty} \frac{n!}{2n! + 1} = \frac{1}{2} \ne 0 \implies$ 級數必定發散！</li>
+                <li><strong>反例：調和級數 (Harmonic Series)</strong> $\sum_{n=1}^\infty \frac{1}{n}$：<br>
+                  雖然 $\lim_{n \to \infty} \frac{1}{n} = 0$，但調和級數<strong>發散至無窮大</strong>！因此當 $\lim a_n = 0$ 時，本審斂法<strong>無法得出任何結論 (No conclusion)</strong>，必須借助進階審斂法檢驗。
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7.3 積分審斂法、p-級數與比較審斂 -->
+        <section id="sec7-3" class="lecture-section">
+          <h2>7.3 積分審斂法、p-級數與比較審斂 (Integral & Comparison Tests)</h2>
+          <p>
+            對於所有項均為正數的正項級數（Positive-term Series），部分和數列必定單調遞增。因此只需證明部分和是否有界即可判定其收斂性。
+          </p>
+
+          <!-- 積分審斂法 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.3.1：積分審斂法 (The Integral Test)</div>
+            <div class="callout-body">
+              設函數 $f$ 在 $[1, \infty)$ 上滿足<strong>正值 (positive)</strong>、<strong>連續 (continuous)</strong>且<strong>遞減 (decreasing)</strong>，令 $a_n = f(n)$。則：
+              $$\sum_{n=1}^\infty a_n \quad \text{與} \quad \int_1^\infty f(x) \, dx$$
+              <strong>兩者必同時收斂，或同時發散。</strong>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.3.1：積分審斂法應用實戰</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>檢驗 $\sum_{n=1}^\infty \frac{n}{n^2 + 1}$：</strong><br>
+                  令 $f(x) = \frac{x}{x^2 + 1}$，其導函數 $f'(x) = \frac{1 - x^2}{(x^2 + 1)^2} < 0 \quad (\forall x > 1)$，為連續正值遞減函數。<br>
+                  計算第一類瑕積分：
+                  $$\int_1^\infty \frac{x}{x^2 + 1} \, dx = \lim_{b \to \infty} \left[ \frac{1}{2}\ln(x^2 + 1) \right]_1^b = \lim_{b \to \infty} \frac{1}{2}[\ln(b^2 + 1) - \ln 2] = \infty$$
+                  瑕積分發散，故原級數<strong>發散</strong>！
+                </li>
+                <li><strong>檢驗 $\sum_{n=1}^\infty \frac{1}{n^2 + 1}$：</strong><br>
+                  計算對應積分：
+                  $$\int_1^\infty \frac{1}{x^2 + 1} \, dx = \lim_{b \to \infty} [\arctan x]_1^b = \frac{\pi}{2} - \frac{\pi}{4} = \frac{\pi}{4}$$
+                  瑕積分收斂，故原級數<strong>收斂</strong>！
+                </li>
+                <li><strong>檢驗 $\sum_{n=2}^\infty \frac{1}{n \ln n}$：</strong><br>
+                  計算對應瑕積分：
+                  $$\int_2^\infty \frac{dx}{x \ln x} = \lim_{b \to \infty} [\ln(\ln x)]_2^b = \infty$$
+                  故原級數<strong>發散</strong>！
+                </li>
+                <li><strong>檢驗 $\sum_{n=1}^\infty \frac{\ln n}{n^2}$（分部積分）：</strong><br>
+                  $$\int_1^\infty \frac{\ln x}{x^2} \, dx = \left[ -\frac{1 + \ln x}{x} \right]_1^\infty = 0 - (-1) = 1$$
+                  故原級數<strong>收斂</strong>！
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- p-級數收斂定理 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.3.2：$p$-級數收斂判定 (Convergence of $p$-Series)</div>
+            <div class="callout-body">
+              形式為 $\sum_{n=1}^\infty \frac{1}{n^p} = 1 + \frac{1}{2^p} + \frac{1}{3^p} + \dots$ 的級數：
+              $$\sum_{n=1}^\infty \frac{1}{n^p} = \begin{cases}
+              \text{收斂}, & \text{若 } p > 1 \\
+              \text{發散}, & \text{若 } 0 < p \le 1
+              \end{cases}$$
+              註：當 $p = 1$ 時即為著名的調和級數（發散）。
+            </div>
+          </div>
+
+          <!-- 直接比較審斂法 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.3.3：直接比較審斂法 (Direct Comparison Test)</div>
+            <div class="callout-body">
+              設對所有 $n > N$ 恆有 $0 < a_n \le b_n$：
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>若大級數 $\sum_{n=1}^\infty b_n$ 收斂，則小級數 $\sum_{n=1}^\infty a_n$ <strong>必定收斂</strong>。</li>
+                <li>若小級數 $\sum_{n=1}^\infty a_n$ 發散，則大級數 $\sum_{n=1}^\infty b_n$ <strong>必定發散</strong>。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.3.2：直接比較法範例與比較基準選擇</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\sum_{n=1}^\infty \frac{1}{2 + 3^n}$：</strong><br>
+                  觀察到 $a_n = \frac{1}{2 + 3^n} < \frac{1}{3^n} = b_n$。因 $\sum \frac{1}{3^n}$ 為收斂等比級數（$r = 1/3 < 1$），由直接比較法知原級數<strong>收斂</strong>。
+                </li>
+                <li><strong>求 $\sum_{k=1}^\infty \frac{1}{k!}$：</strong><br>
+                  當 $k \ge 4$ 時 $k! > 2^k \implies \frac{1}{k!} < \frac{1}{2^k}$。因等比級數 $\sum \frac{1}{2^k}$ 收斂，故原級數<strong>收斂</strong>。
+                </li>
+                <li><strong>審慎選擇比較基準：求 $\sum_{n=1}^\infty \frac{1}{2 + \sqrt{n}}$</strong><br>
+                  ❌ 錯誤比較：$\frac{1}{2 + \sqrt{n}} < \frac{1}{\sqrt{n}}$，但 $\sum \frac{1}{\sqrt{n}}$ 發散（大級數發散無法證明小級數發散）。<br>
+                  ✅ 正確比較：當 $n \ge 4$ 時 $\sqrt{n} \ge 2 \implies 2 + \sqrt{n} \le 2\sqrt{n} \implies \frac{1}{2\sqrt{n}} \le \frac{1}{2 + \sqrt{n}}$。<br>
+                  因 $\sum \frac{1}{2\sqrt{n}} = \frac{1}{2}\sum \frac{1}{n^{1/2}}$ 為 $p = 1/2 \le 1$ 之發散 $p$-級數，由直接比較法知原級數<strong>發散</strong>！
+                </li>
+                <li><strong>求 $\sum_{n=1}^\infty \frac{\ln n}{n^2}$：</strong><br>
+                  當 $n$ 充分大時 $\ln n < \sqrt{n} \implies \frac{\ln n}{n^2} < \frac{\sqrt{n}}{n^2} = \frac{1}{n^{3/2}}$。<br>
+                  因 $p = 3/2 > 1$ 收斂，原級數<strong>收斂</strong>。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 極限比較審斂法與增長層級 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.3.4：極限比較審斂法 (Limit Comparison Test)</div>
+            <div class="callout-body">
+              設 $a_n > 0, \, b_n > 0$。若：
+              $$\lim_{n \to \infty} \frac{a_n}{b_n} = L \quad (0 < L < \infty)$$
+              則級數 $\sum a_n$ 與 $\sum b_n$ <strong>同收斂或同發散</strong>。
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.3.3：最高次項選取技巧與無窮大增長層級</div>
+            <div class="callout-body">
+              <p>選取比較級數 $b_n$ 之核心心法：<strong>僅保留分子與分母中的最高次項！</strong></p>
+              <ul>
+                <li>$\sum_{n=1}^\infty \frac{1}{3n^2 - 4n + 5} \implies$ 比較 $b_n = \frac{1}{n^2}$（$p=2$ 收斂）$\implies$ <strong>收斂</strong>。</li>
+                <li>$\sum_{n=1}^\infty \frac{1}{\sqrt{3n - 2}} \implies$ 比較 $b_n = \frac{1}{\sqrt{n}}$（$p=1/2$ 發散）$\implies$ <strong>發散</strong>。</li>
+                <li>$\sum_{n=1}^\infty \frac{\sqrt{n}}{n^2 + 1} \implies$ 比較 $b_n = \frac{\sqrt{n}}{n^2} = \frac{1}{n^{3/2}}$：
+                  $$\lim_{n \to \infty} \frac{\frac{\sqrt{n}}{n^2 + 1}}{\frac{1}{n^{3/2}}} = \lim_{n \to \infty} \frac{n^2}{n^2 + 1} = 1 \implies \text{原級數收斂}$$
+                </li>
+                <li>$\sum_{n=1}^\infty \frac{n 2^n}{4n^3 + 1} \implies$ 比較 $b_n = \frac{n 2^n}{n^3} = \frac{2^n}{n^2}$：
+                  極限比值為 $\frac{1}{4}$。由第 $n$ 項檢驗可知 $\lim_{n \to \infty} \frac{2^n}{n^2} = \infty \ne 0$（發散），故原級數<strong>發散</strong>！
+                </li>
+              </ul>
+              <div class="callout callout-note" style="margin-top: 0.8rem;">
+                <div class="callout-title">🚀 無窮大增長速度階級體系 (Hierarchy of Growth)</div>
+                <div class="callout-body">
+                  當 $n \to \infty$ 時，無窮大增長速度排序為（設底數 $a > 1$，指數 $p > 0$）：
+                  $$n! \gg a^n \gg n^p \gg \ln n$$
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7.4 交錯級數、比值與根值審斂法 -->
+        <section id="sec7-4" class="lecture-section">
+          <h2>7.4 交錯級數、比值與根值審斂法 (Alternating, Ratio & Root Tests)</h2>
+          <p>
+            當級數包含正負變號項時，部分和不再單調增加，必須區分絕對收斂與條件收斂，並採用針對變號與乘積特性的審斂工具。
+          </p>
+
+          <!-- 絕對收斂與條件收斂 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 7.4.1：絕對收斂與條件收斂 (Absolute and Conditional Convergence)</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>若各項取絕對值後的正項級數 $\sum_{n=1}^\infty |a_n|$ 收斂，則稱原級數 $\sum_{n=1}^\infty a_n$ <strong>絕對收斂 (Absolutely Convergent)</strong>。</li>
+                <li>若原級數 $\sum_{n=1}^\infty a_n$ 收斂，但 $\sum_{n=1}^\infty |a_n|$ 發散，則稱原級數<strong>條件收斂 (Conditionally Convergent)</strong>。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.4.1：絕對收斂必導致收斂 (Absolute Convergence Implies Convergence)</div>
+            <div class="callout-body">
+              若無窮級數 $\sum_{n=1}^\infty |a_n|$ 收斂，則 $\sum_{n=1}^\infty a_n$ 必定收斂。
+            </div>
+          </div>
+
+          <div class="proof-block">
+            <div class="proof-title">證明：</div>
+            <div class="proof-body">
+              由絕對值性質可知 $-|a_n| \le a_n \le |a_n| \implies 0 \le a_n + |a_n| \le 2|a_n|$。<br>
+              因 $\sum |a_n|$ 收斂，由比較審斂法知正項級數 $\sum (a_n + |a_n|)$ 亦收斂。<br>
+              由於 $a_n = (a_n + |a_n|) - |a_n|$，為兩個收斂級數之差，故 $\sum a_n$ 必定收斂。
+              <div class="proof-end">$\blacksquare$</div>
+            </div>
+          </div>
+
+          <!-- 交錯級數審斂法與截斷誤差 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.4.2：交錯級數審斂法 (Alternating Series Test / Leibniz Rule)</div>
+            <div class="callout-body">
+              交錯級數 $\sum_{n=1}^\infty (-1)^n a_n$ 或 $\sum_{n=1}^\infty (-1)^{n+1} a_n$（其中 $a_n > 0$），若滿足下列兩條件，則必收斂：
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>$\lim_{n \to \infty} a_n = 0$</li>
+                <li>對所有 $n \ge N$ 恆有 $a_{n+1} \le a_n$（數列各項數值遞減）</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.4.3：交錯級數截斷誤差估計 (Alternating Series Remainder)</div>
+            <div class="callout-body">
+              若交錯級數滿足萊布尼茨審斂條件且收斂至 $S$，則以前 $N$ 項部分和 $S_N$ 逼近 $S$ 的絕對誤差小於或等於被捨棄的第一項：
+              $$|S - S_N| = |R_N| \le a_{N+1}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.4.1：交錯級數收斂性與誤差估計範例</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>交錯調和級數：$\sum_{n=1}^\infty \frac{(-1)^{n+1}}{n} = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \dots$</strong><br>
+                  因 $\lim \frac{1}{n} = 0$ 且 $\frac{1}{n+1} < \frac{1}{n}$，由萊布尼茨審斂法知其<strong>收斂</strong>；但因其絕對值級數 $\sum \frac{1}{n}$ 發散，故為<strong>條件收斂</strong>。<br>
+                  取前 20 項部分和 $S_{20}$，截斷誤差估計為 $|S - S_{20}| \le a_{21} = \frac{1}{21} \approx 0.0476$。
+                </li>
+                <li><strong>交錯階乘級數：$\sum_{n=1}^\infty \frac{(-1)^{n+1}}{n!} = 1 - \frac{1}{2!} + \frac{1}{3!} - \dots$</strong><br>
+                  取前 6 項 $S_6 = 1 - \frac{1}{2} + \frac{1}{6} - \frac{1}{24} + \frac{1}{120} - \frac{1}{720} = \frac{91}{144} \approx 0.63194$。<br>
+                  截斷餘項 $|R_6| \le a_7 = \frac{1}{5040} \approx 0.0002$。<br>
+                  真值保證落在區間：$0.63174 \le S \le 0.63214$。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 黎曼級數重排定理 -->
+          <div class="callout callout-warn">
+            <div class="callout-title">🚨 黎曼級數重排定理 (Riemann Rearrangement Theorem)</div>
+            <div class="callout-body">
+              <p>無窮級數加法的運算規律與有限加法截然不同：</p>
+              <ul>
+                <li><strong>絕對收斂級數：</strong>各項可隨意重新排列順序，其和恆定不變。</li>
+                <li><strong>條件收斂級數：</strong>若任意更動加法順序，<strong>其和將會改變，甚至可使其收斂至任意預先給定的實數或發散！</strong></li>
+              </ul>
+              <div class="proof-block" style="margin-top: 0.5rem;">
+                <div class="proof-title">震撼範例：交錯調和級數重排後和折半！</div>
+                <div class="proof-body">
+                  已知 $S = 1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5} - \frac{1}{6} + \frac{1}{7} - \frac{1}{8} + \dots$。<br>
+                  若按「一正兩負」重排：
+                  $$\begin{aligned}
+                  &\left(1 - \frac{1}{2}\right) - \frac{1}{4} + \left(\frac{1}{3} - \frac{1}{6}\right) - \frac{1}{8} + \left(\frac{1}{5} - \frac{1}{10}\right) - \frac{1}{12} + \dots \\
+                  &= \frac{1}{2} - \frac{1}{4} + \frac{1}{6} - \frac{1}{8} + \frac{1}{10} - \frac{1}{12} + \dots \\
+                  &= \frac{1}{2} \left(1 - \frac{1}{2} + \frac{1}{3} - \frac{1}{4} + \frac{1}{5} - \frac{1}{6} + \dots\right) = \frac{1}{2} S \quad \text{（數值居然變成一半！）}
+                  \end{aligned}$$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 比值審斂法與根值審斂法 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.4.4：比值審斂法 (The Ratio Test)</div>
+            <div class="callout-body">
+              設 $\sum a_n$ 各項均非零。令比值極限為：
+              $$\lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = L$$
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>若 $L < 1$：級數<strong>絕對收斂</strong>。</li>
+                <li>若 $L > 1$ 或 $L = \infty$：級數<strong>發散</strong>。</li>
+                <li>若 $L = 1$：比值審斂法<strong>無法判定 (Inconclusive)</strong>，必須換用其他檢驗法。</li>
+              </ol>
+              <small>💡 適用時機：通項含有階乘（$n!$）、指數項（$a^n, e^n$）或高次方連乘時極為有效。</small>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.4.5：根值審斂法 (The Root Test)</div>
+            <div class="callout-body">
+              設級數為 $\sum a_n$。令開 $n$ 次方根極限為：
+              $$\lim_{n \to \infty} \sqrt[n]{|a_n|} = L$$
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>若 $L < 1$：級數<strong>絕對收斂</strong>。</li>
+                <li>若 $L > 1$ 或 $L = \infty$：級數<strong>發散</strong>。</li>
+                <li>若 $L = 1$：根值審斂法<strong>無法判定 (Inconclusive)</strong>。</li>
+              </ol>
+              <small>💡 適用時機：通項整體被包在第 $n$ 次方時（如 $(f(n))^n$）。</small>
+            </div>
+          </div>
+
+          <!-- 比值與根值範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.4.2：比值與根值審斂法實戰演練</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\sum_{n=0}^\infty \frac{2^n}{n!}$：</strong><br>
+                  $$\lim_{n \to \infty} \left| \frac{2^{n+1}}{(n+1)!} \cdot \frac{n!}{2^n} \right| = \lim_{n \to \infty} \frac{2}{n + 1} = 0 < 1 \implies \text{絕對收斂}$$
+                </li>
+                <li><strong>求 $\sum_{n=0}^\infty \frac{n^2 2^{n+1}}{3^n}$：</strong><br>
+                  $$\lim_{n \to \infty} \left| \frac{(n+1)^2 2^{n+2}}{3^{n+1}} \cdot \frac{3^n}{n^2 2^{n+1}} \right| = \lim_{n \to \infty} \left(\frac{n+1}{n}\right)^2 \cdot \frac{2}{3} = \frac{2}{3} < 1 \implies \text{絕對收斂}$$
+                </li>
+                <li><strong>求 $\sum_{n=1}^\infty \frac{n^n}{n!}$：</strong><br>
+                  $$\lim_{n \to \infty} \left| \frac{(n+1)^{n+1}}{(n+1)!} \cdot \frac{n!}{n^n} \right| = \lim_{n \to \infty} \left(\frac{n+1}{n}\right)^n = \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e > 1 \implies \text{發散}$$
+                </li>
+                <li><strong>根值法檢驗：$\sum_{n=1}^\infty \frac{e^{2n}}{n^n}$</strong><br>
+                  $$\lim_{n \to \infty} \sqrt[n]{\frac{e^{2n}}{n^n}} = \lim_{n \to \infty} \frac{e^2}{n} = 0 < 1 \implies \text{絕對收斂}$$
+                </li>
+                <li><strong>根值法檢驗：$\sum_{k=1}^\infty \frac{k^k}{3^{4k+5}}$</strong><br>
+                  $$\lim_{n \to \infty} \left[ \frac{n^n}{3^{4n+5}} \right]^{1/n} = \lim_{n \to \infty} \frac{n}{3^{4 + 5/n}} = \frac{\infty}{81} = \infty > 1 \implies \text{發散}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 審斂策略表 -->
+          <div class="callout callout-note">
+            <div class="callout-title">📋 無窮級數審斂策略指引 (Strategies for Testing Series)</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>先看通項極限：$\lim a_n \ne 0 \implies$ 直接判定發散（$n$-th Term Test）。</li>
+                <li>檢查特殊級數：等比級數（$|r| < 1$ 收斂）、$p$-級數（$p > 1$ 收斂）、望遠鏡級數。</li>
+                <li>若通項含階乘 $n!$ 或指數 $a^n$：優先使用<strong>比值審斂法 (Ratio Test)</strong>。</li>
+                <li>若通項為整個式的 $n$ 次方 $(a_n)^n$：優先使用<strong>根值審斂法 (Root Test)</strong>。</li>
+                <li>若為多項式分式型：以最高次項取 $b_n$ 使用<strong>極限比較審斂法 (Limit Comparison Test)</strong>。</li>
+                <li>若為交錯變號：優先考慮<strong>萊布尼茨審斂法 (Alternating Series Test)</strong>。</li>
+                <li>若可視為連續遞減函數且易於積分：採用<strong>積分審斂法 (Integral Test)</strong>。</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7.5 泰勒多項式與餘項估計 -->
+        <section id="sec7-5" class="lecture-section">
+          <h2>7.5 泰勒多項式與餘項估計 (Taylor Polynomials & Remainder)</h2>
+          <p>
+            多項式是計算機與工程中最易於運算（僅需加乘法）的函數。泰勒多項式旨在構造一個多項式 $P_n(x)$，使其在特定中心點 $x = c$ 處之函數值與各階導數值與目標函數 $f(x)$ 完全吻合。
+          </p>
+
+          <!-- 逼近概念與泰勒多項式定義 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 7.5.1：泰勒多項式與馬克勞林多項式 (Taylor & Maclaurin Polynomials)</div>
+            <div class="callout-body">
+              設函數 $f$ 在 $x = c$ 處具有 $n$ 階導數，滿足 $P_n^{(k)}(c) = f^{(k)}(c) \quad (k = 0, 1, \dots, n)$ 的 $n$ 次多項式稱為 $f$ 在 $x = c$ 處的 <strong>$n$ 階泰勒多項式</strong>：
+              $$P_n(x) = f(c) + f'(c)(x - c) + \frac{f''(c)}{2!}(x - c)^2 + \frac{f'''(c)}{3!}(x - c)^3 + \dots + \frac{f^{(n)}(c)}{n!}(x - c)^n$$
+              通項係數為：
+              $$a_n = \frac{f^{(n)}(c)}{n!}$$
+              若中心點取為原點 $c = 0$，則稱為 <strong>$n$ 階馬克勞林多項式 (Maclaurin Polynomial)</strong>。
+            </div>
+          </div>
+
+          <!-- 典型函數展開範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.5.1：經典函數之泰勒與馬克勞林多項式</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>$f(x) = e^x$ 在 $c = 0$ 處的 $n$ 階馬克勞林多項式：</strong><br>
+                  因 $f^{(k)}(0) = e^0 = 1$：
+                  $$P_n(x) = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots + \frac{x^n}{n!}$$
+                </li>
+                <li><strong>$f(x) = \ln x$ 在 $c = 1$ 處的 4 階泰勒多項式：</strong><br>
+                  $f(1) = 0, \, f'(1) = 1, \, f''(1) = -1, \, f'''(1) = 2!, \, f^{(4)}(1) = -3!$：
+                  $$P_4(x) = (x - 1) - \frac{1}{2}(x - 1)^2 + \frac{1}{3}(x - 1)^3 - \frac{1}{4}(x - 1)^4$$
+                </li>
+                <li><strong>$f(x) = \cos x$ 在 $c = 0$ 處的馬克勞林多項式（僅具偶數次項）：</strong><br>
+                  $$P_8(x) = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + \frac{x^8}{8!}$$
+                </li>
+                <li><strong>$f(x) = \sin x$ 在 $c = \frac{\pi}{6}$ 處的 3 階泰勒多項式：</strong><br>
+                  $f(\pi/6) = 1/2, \, f'(\pi/6) = \sqrt{3}/2, \, f''(\pi/6) = -1/2, \, f'''(\pi/6) = -\sqrt{3}/2$：
+                  $$P_3(x) = \frac{1}{2} + \frac{\sqrt{3}}{2}\left(x - \frac{\pi}{6}\right) - \frac{1}{4}\left(x - \frac{\pi}{6}\right)^2 - \frac{\sqrt{3}}{12}\left(x - \frac{\pi}{6}\right)^3$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 泰勒定理與拉格朗日餘項 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.5.2：泰勒定理與拉格朗日餘項 (Taylor's Theorem and Remainder)</div>
+            <div class="callout-body">
+              若 $f$ 在包含 $c$ 與 $x$ 的開區間內具有 $n + 1$ 階導函數，則：
+              $$f(x) = P_n(x) + R_n(x)$$
+              其中截斷誤差（餘項）可表示為：
+              $$R_n(x) = \frac{f^{(n+1)}(z)}{(n+1)!}(x - c)^{n+1}$$
+              其中 $z$ 為介於 $x$ 與 $c$ 之間的某個實數。
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.5.2：逼近誤差界限估計應用</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>估計 $\sin(0.1)$ 並求誤差上界：</strong><br>
+                  使用 3 階馬克勞林逼近 $\sin x \approx x - \frac{x^3}{6}$：
+                  $$P_3(0.1) = 0.1 - \frac{(0.1)^3}{6} = 0.1 - \frac{0.001}{6} \approx 0.099833$$
+                  餘項 $R_3(0.1) = \frac{\sin z}{4!} (0.1)^4$（$0 < z < 0.1$）。因 $\sin z < 1$：
+                  $$|R_3(0.1)| < \frac{1}{24} (0.1)^4 = \frac{0.0001}{24} \approx 0.000004$$
+                  因此保證：$0.099833 < \sin(0.1) < 0.099837$。
+                </li>
+                <li><strong>求逼近 $\ln(1.2)$ 滿足誤差小於 $0.001$ 之最低多項式階數 $n$：</strong><br>
+                  對於 $f(x) = \ln x$ 在 $c = 1$，其 $n+1$ 階導數為 $f^{(n+1)}(z) = (-1)^n \frac{n!}{z^{n+1}}$：
+                  $$|R_n(1.2)| = \left| \frac{n!}{z^{n+1} (n+1)!} (1.2 - 1)^{n+1} \right| = \frac{(0.2)^{n+1}}{z^{n+1}(n + 1)}$$
+                  因 $1 < z < 1.2 \implies z^{n+1} > 1$，最大可能誤差滿足：
+                  $$\frac{(0.2)^{n+1}}{n + 1} = \frac{1}{(n + 1)5^{n+1}} < 0.001 \implies (n + 1)5^{n+1} > 1000$$
+                  代入檢驗：當 $n = 3$ 時，$(4) \cdot 5^4 = 4 \cdot 625 = 2500 > 1000$。<br>
+                  因此至少需要取 <strong>3 階泰勒多項式 $P_3(x)$</strong> 即可保證誤差小於 $0.001$。
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7.6 冪級數與收斂區間 -->
+        <section id="sec7-6" class="lecture-section">
+          <h2>7.6 冪級數與收斂區間 (Power Series & Convergence)</h2>
+          <p>
+            當泰勒多項式階數 $n \to \infty$ 時，即擴展為無窮項的<strong>冪級數（Power Series）</strong>。冪級數可視為「無窮次的多項式」，其收斂性高度依賴於變數 $x$ 的取值。
+          </p>
+
+          <!-- 冪級數定義與三大收斂範疇 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 7.6.1：冪級數 (Power Series)</div>
+            <div class="callout-body">
+              若 $x$ 為變數，$c$ 為常數，則稱形式為：
+              $$\sum_{n=0}^\infty a_n (x - c)^n = a_0 + a_1(x - c) + a_2(x - c)^2 + \dots$$
+              的無窮級數為<strong>以 $c$ 為中心點的冪級數 (Power series centered at $c$)</strong>。
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.6.1：收斂半徑與收斂區間定理 (Radius and Interval of Convergence)</div>
+            <div class="callout-body">
+              對於以 $c$ 為中心的冪級數 $\sum a_n (x - c)^n$，必定且僅會落在以下三種情況之一：
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li><strong>$R = 0$：</strong>僅在中心點 $x = c$ 處收斂，其餘任何 $x$ 均發散。</li>
+                <li><strong>$R = \infty$：</strong>對全體實數 $x \in (-\infty, \infty)$ 均絕對收斂。</li>
+                <li><strong>$0 < R < \infty$：</strong>存在正實數 $R$（稱為<strong>收斂半徑</strong>），使得：
+                  <ul>
+                    <li>當 $|x - c| < R$ 時，級數絕對收斂；</li>
+                    <li>當 $|x - c| > R$ 時，級數發散；</li>
+                    <li>在端點 $x = c \pm R$ 處，可能收斂也可能發散，必須各自獨立檢驗。</li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- 典型收斂半徑求法範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.6.1：以比值審斂法求解收斂半徑</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\sum_{n=0}^\infty \frac{x^n}{3^n}$：</strong><br>
+                  $$\lim_{n \to \infty} \left| \frac{x^{n+1}}{3^{n+1}} \cdot \frac{3^n}{x^n} \right| = \left|\frac{x}{3}\right| < 1 \implies |x| < 3$$
+                  收斂半徑 $R = 3$，中心在 $c = 0$。
+                </li>
+                <li><strong>求 $\sum_{n=0}^\infty 3(x - 2)^n$：</strong><br>
+                  $$\lim_{n \to \infty} \left| \frac{3(x - 2)^{n+1}}{3(x - 2)^n} \right| = |x - 2| < 1$$
+                  收斂半徑 $R = 1$，中心在 $c = 2$。
+                </li>
+                <li><strong>求 $\sum_{n=0}^\infty \frac{(-1)^n x^{2n+1}}{(2n + 1)!}$：</strong><br>
+                  $$\lim_{n \to \infty} \left| \frac{x^{2n+3}}{(2n + 3)!} \cdot \frac{(2n + 1)!}{x^{2n+1}} \right| = \lim_{n \to \infty} \frac{x^2}{(2n + 3)(2n + 2)} = 0 < 1 \quad (\forall x)$$
+                  對任意 $x$ 均成立，故收斂半徑 $R = \infty$。
+                </li>
+                <li><strong>求 $\sum_{n=0}^\infty n!(x - 5)^n$ 與 $\sum_{n=0}^\infty n! x^n$：</strong><br>
+                  當 $x \ne 5$ 時，$\lim_{n \to \infty} (n + 1)|x - 5| = \infty$。僅在中心點 $x = 5$ 處收斂，故 $R = 0$。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 端點檢驗 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.6.2：端點收斂性的獨立檢驗 (Endpoint Convergence)</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\sum_{n=1}^\infty \frac{x^n}{n}$ 的完整收斂區間：</strong><br>
+                  比值法：$\lim_{n \to \infty} \left| \frac{x^{n+1}}{n+1} \cdot \frac{n}{x^n} \right| = |x| < 1 \implies R = 1$。<br>
+                  - 端點 $x = 1$：代入得 $\sum \frac{1}{n}$（調和級數，發散）。<br>
+                  - 端點 $x = -1$：代入得 $\sum \frac{(-1)^n}{n}$（交錯調和級數，由 AST 收斂）。<br>
+                  綜合結果：收斂區間為半開半閉區間 <strong>$[-1, 1)$</strong>。
+                </li>
+                <li><strong>求 $\sum_{n=0}^\infty \frac{n}{3^{n+1}} x^n$：</strong><br>
+                  比值法得 $|x| < 3 \implies R = 3$。<br>
+                  - 端點 $x = \pm 3$：通項極限 $\lim_{n \to \infty} \frac{n}{3^{n+1}} (\pm 3)^n \to \infty \ne 0$（由第 $n$ 項檢驗發散）。<br>
+                  收斂區間為開區間 <strong>$(-3, 3)$</strong>。
+                </li>
+                <li><strong>求 $\sum_{n=0}^\infty \frac{(-1)^n (x + 1)^n}{2^n}$：</strong><br>
+                  比值法：$|x + 1| < 2 \implies R = 2$，區間 $(-3, 1)$。兩端點代入均發散，收斂區間為 <strong>$(-3, 1)$</strong>。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 冪級數逐項微積分 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.6.2：冪級數的逐項微分與積分 (Differentiation and Integration of Power Series)</div>
+            <div class="callout-body">
+              若函數 $f(x) = \sum_{n=0}^\infty a_n (x - c)^n$ 在 $(c - R, c + R)$ 內收斂（$R > 0$），則 $f$ 在該區間內連續且具備各階導數，並可進行逐項微積分：
+              <ol style="margin-left: 1.2rem; line-height: 2;">
+                <li>$f'(x) = \sum_{n=1}^\infty n a_n (x - c)^{n-1} = a_1 + 2a_2(x - c) + 3a_3(x - c)^2 + \dots$</li>
+                <li>$\int f(x) \, dx = C + \sum_{n=0}^\infty a_n \frac{(x - c)^{n+1}}{n+1} = C + a_0(x - c) + a_1\frac{(x - c)^2}{2} + \dots$</li>
+              </ol>
+              <div class="callout callout-warn" style="margin-top: 0.5rem;">
+                <div class="callout-title">⚠️ 重大性質：收斂半徑不變，但端點收斂性可能不同！</div>
+                <div class="callout-body">
+                  $f(x)$、$f'(x)$ 與 $\int f(x)dx$ 的<strong>收斂半徑 $R$ 完全相同</strong>，但在邊界端點處的斂散性可能改變：
+                  $$\begin{aligned}
+                  f(x) &= \sum_{n=1}^\infty \frac{x^n}{n} \implies \text{收斂區間為 } [-1, 1) \\
+                  f'(x) &= \sum_{n=1}^\infty x^{n-1} \implies \text{收斂區間為 } (-1, 1) \quad (\text{端點失去收斂}) \\
+                  \int f(x) \, dx &= C + \sum_{n=1}^\infty \frac{x^{n+1}}{n(n+1)} \implies \text{收斂區間擴展為 } [-1, 1] \quad (\text{兩端點均收斂！})
+                  \end{aligned}$$
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7.7 函數的冪級數展開 -->
+        <section id="sec7-7" class="lecture-section">
+          <h2>7.7 函數的冪級數展開 (Power Series Representation)</h2>
+          <p>
+            等比級數求和公式逆向使用，是將許多函數表達為冪級數的最基礎核心磚石：
+            $$\frac{1}{1 - x} = \sum_{n=0}^\infty x^n = 1 + x + x^2 + x^3 + \dots \quad (|x| < 1)$$
+          </p>
+
+          <!-- 重心平移與經典分式展開 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.7.1：中心點平移與等比形式變換</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>將 $\frac{1}{1 - x}$ 在中心點 $c = -1$ 處展開為冪級數：</strong><br>
+                  湊出 $(x + 1)$ 項：
+                  $$\frac{1}{1 - x} = \frac{1}{2 - (x + 1)} = \frac{1/2}{1 - \left[\frac{x + 1}{2}\right]} = \sum_{n=0}^\infty \frac{1}{2} \left(\frac{x + 1}{2}\right)^n = \sum_{n=0}^\infty \frac{(x + 1)^n}{2^{n+1}}$$
+                  收斂條件：$\left|\frac{x + 1}{2}\right| < 1 \implies |x + 1| < 2$，收斂區間為 $(-3, 1)$。
+                </li>
+                <li><strong>求 $f(x) = \frac{4}{x + 2}$ 以 $c = 0$ 為中心的冪級數：</strong><br>
+                  $$\frac{4}{2 + x} = \frac{2}{1 - (-x/2)} = \sum_{n=0}^\infty 2\left(-\frac{x}{2}\right)^n = 2\left(1 - \frac{x}{2} + \frac{x^2}{4} - \frac{x^3}{8} + \dots\right)$$
+                  收斂區間：$|-x/2| < 1 \implies (-2, 2)$。
+                </li>
+                <li><strong>求 $f(x) = \frac{1}{x}$ 以 $c = 1$ 為中心的冪級數：</strong><br>
+                  $$\frac{1}{x} = \frac{1}{1 - (-(x - 1))} = \sum_{n=0}^\infty (-1)^n (x - 1)^n = 1 - (x - 1) + (x - 1)^2 - \dots$$
+                  收斂區間：$|x - 1| < 1 \implies (0, 2)$。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 部分分式與冪級數運算 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.7.2：部分分式拆解求冪級數</div>
+            <div class="callout-body">
+              <p>求 $f(x) = \frac{3x - 1}{x^2 - 1}$ 以 $c = 0$ 為中心的冪級數：</p>
+              <div class="proof-body">
+                以部分分式拆解：$\frac{3x - 1}{x^2 - 1} = \frac{2}{x + 1} + \frac{1}{x - 1}$。<br>
+                分別展開為等比級數：
+                $$\frac{2}{x + 1} = \frac{2}{1 - (-x)} = \sum_{n=0}^\infty 2(-1)^n x^n \quad (|x| < 1)$$
+                $$\frac{1}{x - 1} = -\frac{1}{1 - x} = -\sum_{n=0}^\infty x^n \quad (|x| < 1)$$
+                相加合併同類項：
+                $$\frac{3x - 1}{x^2 - 1} = \sum_{n=0}^\infty [2(-1)^n - 1] x^n = 1 - 3x + x^2 - 3x^3 + x^4 - \dots$$
+                收斂區間為兩者交集：$(-1, 1)$。
+              </div>
+            </div>
+          </div>
+
+          <!-- 逐項積分導出 ln 與 arctan 級數 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.7.3：逐項積分導出自然對數與反正切級數</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>自然對數級數展開：</strong><br>
+                  對 $\frac{1}{x} = \sum_{n=0}^\infty (-1)^n (x - 1)^n$ 逐項積分：
+                  $$\ln x = \int \frac{1}{x} \, dx = C + \sum_{n=0}^\infty (-1)^n \frac{(x - 1)^{n+1}}{n + 1}$$
+                  代入 $x = 1 \implies \ln 1 = 0 \implies C = 0$：
+                  $$\ln x = (x - 1) - \frac{(x - 1)^2}{2} + \frac{(x - 1)^3}{3} - \frac{(x - 1)^4}{4} + \dots$$
+                  💡 值得注意：經積分後，在端點 $x = 2$ 處級數化為交錯調和級數而收斂！收斂區間擴展為 <strong>$(0, 2]$</strong>。
+                </li>
+                <li><strong>反正切級數展開：</strong><br>
+                  以 $-x^2$ 代換 $\frac{1}{1 + x} \implies \frac{1}{1 + x^2} = \sum_{n=0}^\infty (-1)^n x^{2n}$。<br>
+                  逐項積分得：
+                  $$\arctan x = \int \frac{1}{1 + x^2} \, dx = C + \sum_{n=0}^\infty (-1)^n \frac{x^{2n+1}}{2n + 1}$$
+                  代入 $x = 0 \implies C = 0$：
+                  $$\arctan x = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \dots$$
+                  在端點 $x = \pm 1$ 處由交錯級數定理均收斂，收斂區間為 <strong>$[-1, 1]$</strong>。
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7.8 泰勒級數與馬克勞林級數 -->
+        <section id="sec7-8" class="lecture-section">
+          <h2>7.8 泰勒級數與馬克勞林級數 (Taylor & Maclaurin Series)</h2>
+          <p>
+            泰勒展開式是將一般任意可微函數精確表達成無窮冪級數的最通用途徑。
+          </p>
+
+          <!-- 泰勒級數定義與兩大關鍵問題 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 7.8.1：泰勒級數 (Taylor Series)</div>
+            <div class="callout-body">
+              若 $f(x)$ 在包含 $c$ 的開區間內具有任意階導數，則 $f$ 在 $x = c$ 處的泰勒級數定義為：
+              $$f(x) = \sum_{n=0}^\infty \frac{f^{(n)}(c)}{n!} (x - c)^n = f(c) + f'(c)(x - c) + \frac{f''(c)}{2!}(x - c)^2 + \dots$$
+              當中心點 $c = 0$ 時，稱為<strong>馬克勞林級數 (Maclaurin Series)</strong>。
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">🔑 泰勒級數的兩大核心數學提問 (Two Fundamental Questions)</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 2;">
+                <li><strong>$Q_1$：泰勒級數是否收斂？</strong><br>
+                  由比值審斂法（Ratio Test）檢驗通項極限 $\lim_{n \to \infty} |\frac{a_{n+1}}{a_n}|$，求出其收斂區間與收斂半徑 $R$。
+                </li>
+                <li><strong>$Q_2$：若級數收斂，它是否收斂到原本的函數 $f(x)$？</strong><br>
+                  由泰勒定理：$f(x) = P_n(x) + R_n(x)$。級數嚴格收斂到 $f(x)$ 的<strong>充要條件為其拉格朗日餘項極限為零</strong>：
+                  $$\lim_{n \to \infty} R_n(x) = 0$$
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- 正弦與指數函數的嚴格證明 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.8.1：$\sin x$ 與 $e^x$ 之馬克勞林級數嚴格推導與收斂證明</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>正弦函數 $\sin x$：</strong><br>
+                  奇數次導數循環：$f(0)=0, f'(0)=1, f''(0)=0, f'''(0)=-1, \dots$：
+                  $$\sin x = \sum_{n=0}^\infty (-1)^n \frac{x^{2n+1}}{(2n+1)!} = x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \dots$$
+                  <div class="proof-block" style="margin-top: 0.5rem;">
+                    <div class="proof-title">收斂性與餘項證明：</div>
+                    <div class="proof-body">
+                      1. 比值檢驗：$\lim_{n \to \infty} \left|\frac{x^{2n+3}}{(2n+3)!} \cdot \frac{(2n+1)!}{x^{2n+1}}\right| = \lim \frac{x^2}{(2n+3)(2n+2)} = 0 < 1 \implies$ 對所有 $x$ 收斂。<br>
+                      2. 餘項檢驗：$|R_n(x)| = \left|\frac{f^{(n+1)}(z)}{(n+1)!} x^{n+1}\right| \le \frac{|x|^{n+1}}{(n+1)!}$。<br>
+                      因 $\sum \frac{|x|^n}{n!}$ 收斂，其第 $n$ 項極限 $\lim_{n \to \infty} \frac{|x|^{n+1}}{(n+1)!} = 0$。<br>
+                      由夾擠定理知 $\lim_{n \to \infty} R_n(x) = 0$。因此對任意實數 $x$，級數恆等於 $\sin x$！
+                      <div class="proof-end">$\blacksquare$</div>
+                    </div>
+                  </div>
+                </li>
+                <li><strong>指數函數 $e^x$：</strong><br>
+                  $$e^x = \sum_{n=0}^\infty \frac{x^n}{n!} = 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \dots$$
+                  餘項 $|R_n(x)| \le e^{|x|} \frac{|x|^{n+1}}{(n+1)!} \to 0$ 對所有 $x$ 成立。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 泰勒級數之進階建構技巧 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.8.2：代換、長除法與級數乘積特殊技巧</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>代換法求 $\sin(x^2)$ 與 $\cos\sqrt{x}$：</strong><br>
+                  將 $x^2$ 代入正弦級數：$\sin(x^2) = x^2 - \frac{x^6}{3!} + \frac{x^{10}}{5!} - \frac{x^{14}}{7!} + \dots$<br>
+                  將 $\sqrt{x}$ 代入餘弦級數：$\cos\sqrt{x} = 1 - \frac{x}{2!} + \frac{x^2}{4!} - \frac{x^3}{6!} + \dots$
+                </li>
+                <li><strong>多項式長除法求 $\tan x$ 的馬克勞林級數：</strong><br>
+                  $$\tan x = \frac{\sin x}{\cos x} = \frac{x - \frac{x^3}{6} + \frac{x^5}{120} - \dots}{1 - \frac{x^2}{2} + \frac{x^4}{24} - \dots} = x + \frac{1}{3}x^3 + \frac{2}{15}x^5 + \dots$$
+                </li>
+                <li><strong>級數乘法：求 $e^x \arctan x$ 的前五項</strong><br>
+                  展開兩級數相乘收集同次項：
+                  $$\left(1 + x + \frac{x^2}{2} + \frac{x^3}{6} + \frac{x^4}{24} + \dots\right) \left(x - \frac{x^3}{3} + \frac{x^5}{5} - \dots\right) = x + x^2 + \frac{1}{6}x^3 - \frac{1}{6}x^4 + \frac{3}{40}x^5 + \dots$$
+                </li>
+                <li><strong>定積分數值逼近：求 $\int_0^1 e^{-x^2} \, dx$</strong><br>
+                  將 $e^{-x^2} = 1 - x^2 + \frac{x^4}{2!} - \frac{x^6}{3!} + \dots$ 逐項積分：
+                  $$\int_0^1 e^{-x^2} \, dx = \left[ x - \frac{x^3}{3} + \frac{x^5}{10} - \frac{x^7}{42} + \dots \right]_0^1 = 1 - \frac{1}{3} + \frac{1}{10} - \frac{1}{42} + \dots$$
+                  前四項和逼近：$1 - \frac{1}{3} + \frac{1}{10} - \frac{1}{42} \approx 0.7474$。<br>
+                  由交錯級數餘項定理，誤差保證小於第 5 項 $\frac{1}{9 \cdot 4!} = \frac{1}{216} \approx 0.005$！
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 廣義二項級數與保險年金精算應用 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 7.8.3：廣義二項級數 (Binomial Series)</div>
+            <div class="callout-body">
+              對任意實數 $k$ 及 $|x| < 1$：
+              $$(1 + x)^k = 1 + kx + \frac{k(k - 1)}{2!} x^2 + \frac{k(k - 1)(k - 2)}{3!} x^3 + \dots = \sum_{n=0}^\infty \binom{k}{n} x^n$$
+              例如展開立方根函數：
+              $$(1 + x)^{1/3} = 1 + \frac{x}{3} - \frac{2x^2}{3^2 \cdot 2!} + \frac{2 \cdot 5 x^3}{3^3 \cdot 3!} - \frac{2 \cdot 5 \cdot 8 x^4}{3^4 \cdot 4!} + \dots$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7.8.3：二項級數於六年期複合保險收益率精算之應用</div>
+            <div class="callout-body">
+              <p>某 6 年期儲蓄型保險，每年初投入 10,000 元，期末滿期領回 62,000 元。設年化報酬率為 $r \ll 1$：</p>
+              <div class="proof-body">
+                精算方程式：
+                $$10000\left[(1 + r)^6 + (1 + r)^5 + (1 + r)^4 + (1 + r)^3 + (1 + r)^2 + (1 + r)\right] = 62000$$
+                <p><strong>1. 一階線性逼近（$(1 + r)^k \approx 1 + kr$）：</strong></p>
+                $$10000\left[(1 + 6r) + (1 + 5r) + (1 + 4r) + (1 + 3r) + (1 + 2r) + (1 + r)\right] \approx 62000$$
+                $$10000(6 + 21r) \approx 62000 \implies 21r \approx 0.2 \implies r \approx 0.00952 \ (0.952\%)$$
+                <p><strong>2. 二階精確逼近（引入二階項 $\frac{k(k-1)}{2}r^2$）：</strong></p>
+                二階項係數總和：$\frac{6 \times 5}{2} + \frac{5 \times 4}{2} + \frac{4 \times 3}{2} + \frac{3 \times 2}{2} + \frac{2 \times 1}{2} + 0 = 15 + 10 + 6 + 3 + 1 = 35$。
+                $$10000(6 + 21r + 35r^2) \approx 62000 \implies 35r^2 + 21r - 0.2 = 0$$
+                解一元二次方程式公式解：
+                $$r = \frac{-21 \pm \sqrt{21^2 - 4(35)(-0.2)}}{2 \times 35} = \frac{-21 + \sqrt{441 + 28}}{70} = \frac{-21 + \sqrt{469}}{70} \approx 0.00937 \ (0.937\%)$$
+                二階展開將年利率精確度大幅提升至萬分之三以內！
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 前後章節導航按鈕 -->
+        <nav class="chapter-pagination">
+          <a href="ch06-integration-techniques.html" id="prev-chapter-link" class="page-link prev">
+            <span class="link-label">← 上一章</span>
+            <span class="link-title">第 06 章：進階積分技巧與瑕積分</span>
+          </a>
+          <a href="#" id="next-chapter-link" class="page-link next disabled">
+            <span class="link-label">下一章</span>
+            <span class="link-title">全課程完結</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <!-- 邏輯腳本 (相對路徑) -->
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

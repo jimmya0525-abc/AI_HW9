@@ -1,0 +1,727 @@
+/* ==========================================================================
+   微積分課程講義網站 - 全站樣式 (style.css)
+   現代極簡學術風格 (Clean & Modern Academic Style)
+   ========================================================================== */
+
+/* 1. 色彩系統與主題變數定義 */
+:root {
+  /* 淺色主題 (Light Mode) */
+  --bg-primary: #fcfcfd;
+  --bg-secondary: #ffffff;
+  --bg-sidebar: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  
+  --accent-primary: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-light: #eff6ff;
+
+  /* Callout 專業學術卡片邊界與背景 */
+  --def-border: #0284c7;
+  --def-bg: #f0f9ff;
+  --thm-border: #059669;
+  --thm-bg: #ecfdf5;
+  --example-border: #d97706;
+  --example-bg: #fffbeb;
+  --note-border: #7c3aed;
+  --note-bg: #faf5ff;
+  --warn-border: #dc2626;
+  --warn-bg: #fef2f2;
+
+  /* 尺寸與陰影 */
+  --header-height: 60px;
+  --sidebar-width: 290px;
+  --content-max-width: 880px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-mono: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+[data-theme="dark"] {
+  /* 深色主題 (Dark Mode) */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-sidebar: #131d35;
+  --bg-card: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --border-subtle: #1e293b;
+  
+  --accent-primary: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-light: #1e3a5f;
+
+  /* 深色模式下的 Callout 背景柔化 */
+  --def-border: #38bdf8;
+  --def-bg: #0c2d48;
+  --thm-border: #34d399;
+  --thm-bg: #063726;
+  --example-border: #fbbf24;
+  --example-bg: #382805;
+  --note-border: #a78bfa;
+  --note-bg: #291b4a;
+  --warn-border: #f87171;
+  --warn-bg: #3a1313;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* 2. 基礎全域重設 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + 20px);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.75;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--font-mono);
+  background-color: var(--border-subtle);
+  color: var(--accent-primary);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+}
+
+/* 3. 頂部導覽列 (Site Header) */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-logo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-logo:hover {
+  text-decoration: none;
+  color: var(--accent-primary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.icon-btn:hover {
+  background-color: var(--accent-light);
+  border-color: var(--accent-primary);
+}
+
+#menu-toggle {
+  display: none;
+}
+
+/* 4. 版面結構 (Layout Container) */
+.layout-container {
+  display: flex;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* 側邊欄 (Sidebar) */
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  padding: 1.5rem 1rem;
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebar-header {
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h3 {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.course-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.nav-item-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.4;
+  transition: all 0.15s ease;
+}
+
+.nav-item-link:hover {
+  background-color: var(--accent-light);
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.nav-item-link.active {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* 側邊欄內的小節導覽 (Sub-sections) */
+.sub-nav {
+  list-style: none;
+  padding-left: 1.25rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-left: 2px solid var(--border-color);
+}
+
+.sub-nav a {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: block;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+}
+
+.sub-nav a:hover {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+/* 遮罩層 (Mobile Overlay) */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 90;
+  backdrop-filter: blur(2px);
+}
+
+/* 主內容區 (Main Content) */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 2.5rem 3rem 5rem 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.lecture-content {
+  width: 100%;
+  max-width: var(--content-max-width);
+}
+
+/* 5. 講義內容標題與排版 (Typography & Article) */
+.chapter-header {
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.chapter-meta {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-primary);
+  background-color: var(--accent-light);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+}
+
+.chapter-title {
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.chapter-lead {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* 章節小節 (Lecture Section) */
+.lecture-section {
+  margin-bottom: 3.5rem;
+}
+
+.lecture-section h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lecture-section h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.lecture-section p {
+  margin-bottom: 1.1rem;
+  color: var(--text-secondary);
+}
+
+.lecture-section ul, .lecture-section ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.lecture-section li {
+  margin-bottom: 0.4rem;
+}
+
+/* 6. 學術專用 Callout 區塊設計 (Definition / Theorem / Example / Note) */
+.callout {
+  border-left: 4px solid var(--border-color);
+  background-color: var(--bg-card);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1.25rem 1.4rem;
+  margin: 1.5rem 0;
+  box-shadow: var(--shadow-sm);
+  border-top: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.callout-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.callout-body {
+  font-size: 0.98rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+.callout-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* 定義 (Definition) */
+.callout-def {
+  border-left-color: var(--def-border);
+  background-color: var(--def-bg);
+}
+.callout-def .callout-title {
+  color: var(--def-border);
+}
+
+/* 定理 (Theorem) */
+.callout-thm {
+  border-left-color: var(--thm-border);
+  background-color: var(--thm-bg);
+}
+.callout-thm .callout-title {
+  color: var(--thm-border);
+}
+
+/* 範例 (Example) */
+.callout-example {
+  border-left-color: var(--example-border);
+  background-color: var(--example-bg);
+}
+.callout-example .callout-title {
+  color: var(--example-border);
+}
+
+/* 備註與重點 (Note) */
+.callout-note {
+  border-left-color: var(--note-border);
+  background-color: var(--note-bg);
+}
+.callout-note .callout-title {
+  color: var(--note-border);
+}
+
+/* 警告/極限不存在 (Warning) */
+.callout-warn {
+  border-left-color: var(--warn-border);
+  background-color: var(--warn-bg);
+}
+.callout-warn .callout-title {
+  color: var(--warn-border);
+}
+
+/* 證明區塊 (Proof Block) */
+.proof-block {
+  border-left: 3px dashed var(--text-muted);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  background-color: var(--bg-card);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.proof-title {
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.proof-body {
+  font-size: 0.96rem;
+  color: var(--text-secondary);
+}
+
+.proof-end {
+  text-align: right;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+/* 7. 數學公式與表格 (KaTeX & Table) */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+  margin: 1.25rem 0 !important;
+}
+
+/* 表格樣式 (Table) */
+.data-table-container {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.lecture-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+  background-color: var(--bg-card);
+}
+
+.lecture-table th {
+  background-color: var(--bg-sidebar);
+  color: var(--text-primary);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.lecture-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.lecture-table tr:last-child td {
+  border-bottom: none;
+}
+
+.lecture-table tr:hover td {
+  background-color: var(--accent-light);
+}
+
+/* 8. 前後章節跳轉導航按鈕 (Chapter Pagination) */
+.chapter-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+  gap: 1rem;
+}
+
+.page-link {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-weight: 600;
+  background-color: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  min-width: 150px;
+}
+
+.page-link .link-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.page-link .link-title {
+  font-size: 0.95rem;
+}
+
+.page-link:hover {
+  border-color: var(--accent-primary);
+  background-color: var(--accent-light);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.page-link.next {
+  text-align: right;
+  margin-left: auto;
+}
+
+.page-link.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  border-color: var(--border-color);
+}
+
+/* 9. 首頁專用卡片網格 (Index Page Styling) */
+.hero-section {
+  text-align: center;
+  padding: 3rem 1rem 4rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 3rem;
+}
+
+.hero-badge {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  background-color: var(--accent-light);
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.hero-desc {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto 2rem auto;
+}
+
+.chapter-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.chapter-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.chapter-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-lg);
+  text-decoration: none;
+}
+
+.chapter-card-number {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.chapter-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.chapter-card-desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.chapter-card-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: auto;
+}
+
+.topic-tag {
+  font-size: 0.75rem;
+  background-color: var(--border-subtle);
+  color: var(--text-muted);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+}
+
+/* 10. 響應式媒體查詢 (Responsive Media Queries) */
+@media (max-width: 960px) {
+  #menu-toggle {
+    display: inline-flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  .main-content {
+    padding: 2rem 1.5rem 4rem 1.5rem;
+  }
+
+  .chapter-title {
+    font-size: 1.85rem;
+  }
+
+  .hero-title {
+    font-size: 2.1rem;
+  }
+}

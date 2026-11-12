@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微積分講義 - 第 04 章：積分及其法則 (Integration)</title>
+
+  <!-- 全站共用樣式 (相對路徑) -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- KaTeX 數學公式支援 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-chapter-id="ch04">
+  <!-- 頂部功能導覽列 -->
+  <header class="site-header">
+    <div class="header-left">
+      <button id="menu-toggle" class="icon-btn" aria-label="切換選單">☰</button>
+      <a href="../index.html" class="header-logo">
+        <span>📐</span> 微積分課程講義
+      </a>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="切換主題模式">🌓</button>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- 側邊欄（由 nav.js 動態渲染目錄） -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>章節目錄導覽</h3>
+      </div>
+      <nav id="course-nav" class="course-nav">
+        <!-- nav.js 自動注入目錄 -->
+      </nav>
+    </aside>
+
+    <!-- 手機端側邊欄遮罩 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 講義主內容區域 -->
+    <main class="main-content">
+      <article class="lecture-content">
+        <!-- 章節標頭 -->
+        <header class="chapter-header">
+          <div class="chapter-meta">Chapter 04</div>
+          <h1 class="chapter-title">積分及其法則<br><small style="font-size: 0.6em; font-weight: 500; color: var(--text-muted);">Integration</small></h1>
+          <p class="chapter-lead">
+            積分是微分的逆運算，更是累積量與曲邊圖形面積的強大工具。本章從反導函數與不定積分開篇，引導黎曼和與定積分極限定義，深入微積分基本定理（FTC 第一與第二部分），並全面傳授代換積分法、自然對數積分、反三角函數積分（配方法）以及雙曲函數微積分體系。
+          </p>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- 4.1 Anti-derivatives -->
+        <!-- ========================================== -->
+        <section id="sec4-1" class="lecture-section">
+          <h2>4.1 反導函數與不定積分 (Anti-derivatives and Indefinite Integral)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：反導函數 (Definition of an Antiderivative)</div>
+            <div class="callout-body">
+              若在區間 $I$ 上的所有 $x$ 均滿足 $F'(x) = f(x)$，則稱函數 $F$ 為 $f$ 在區間 $I$ 上的一個<strong>反導函數 (Antiderivative)</strong>。
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">為什麼稱為「一個」反導函數？(Why an anti-derivative?)</div>
+            <div class="callout-body">
+              <strong>"Because there are countless anti-derivatives for one given function!"</strong><br>
+              例如：$F_1(x) = x^3$、$F_2(x) = x^3 - 5$ 與 $F_3(x) = x^3 + 97$ 的導數全都是 $f(x) = 3x^2$。事實上對任意常數 $C$，$F(x) = x^3 + C$ 都是 $f$ 的反導函數。
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 4.1：反導函數的表示形式 (Representation of Antiderivatives)</div>
+            <div class="callout-body">
+              若 $F$ 是 $f$ 在區間 $I$ 上的反導函數，則 $G$ 也是 $f$ 在 $I$ 上的反導函數，若且唯若 $G$ 具有形式：
+              $$G(x) = F(x) + C$$
+              其中 $C$ 為任意常數（積分常數）。
+              <ul>
+                <li><strong>找到一個反導函數 = 找到所有反導函數！</strong> 它們之間僅相差一個常數項。</li>
+                <li>幾何意義：反導函數代表一組<strong>上下垂直平移的曲線族 (a family of curves with vertical shift)</strong>！</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">不定積分基本符號</div>
+            <div class="callout-body">
+              $$\int f'(x) dx = F(x) + C \quad \iff \quad \int f(x) dx = F(x) + C$$
+              積分本質上就是微分的逆運算 (Integration is the "inverse" of differentiation)。
+            </div>
+          </div>
+
+          <h3>基本積分法則對照表</h3>
+          <div class="data-table-container">
+            <table class="lecture-table">
+              <thead>
+                <tr>
+                  <th>微分公式</th>
+                  <th>對應積分公式</th>
+                  <th>備註</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$\frac{d}{dx}[C] = 0$</td>
+                  <td>$\int 0 \, dx = C$</td>
+                  <td>零之積分為常數</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[kx] = k$</td>
+                  <td>$\int k \, dx = kx + C$</td>
+                  <td>常數積分</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[kf(x)] = kf'(x)$</td>
+                  <td>$\int kf(x) \, dx = k\int f(x) \, dx$</td>
+                  <td>常數倍提至積分外</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[f \pm g] = f' \pm g'$</td>
+                  <td>$\int [f(x) \pm g(x)] \, dx = \int f(x) \, dx \pm \int g(x) \, dx$</td>
+                  <td>和差線性分解</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[x^n] = n x^{n-1}$</td>
+                  <td>$\int x^n \, dx = \frac{x^{n+1}}{n+1} + C \quad (n \ne -1)$</td>
+                  <td><strong>冪次積分法則 (Power Rule)</strong></td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[\sin x] = \cos x$</td>
+                  <td>$\int \cos x \, dx = \sin x + C$</td>
+                  <td>餘弦積分為正弦</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[\cos x] = -\sin x$</td>
+                  <td>$\int \sin x \, dx = -\cos x + C$</td>
+                  <td>注意負號！</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[\tan x] = \sec^2 x$</td>
+                  <td>$\int \sec^2 x \, dx = \tan x + C$</td>
+                  <td>正割平方積分</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[\sec x] = \sec x \tan x$</td>
+                  <td>$\int \sec x \tan x \, dx = \sec x + C$</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[\cot x] = -\csc^2 x$</td>
+                  <td>$\int \csc^2 x \, dx = -\cot x + C$</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[\csc x] = -\csc x \cot x$</td>
+                  <td>$\int \csc x \cot x \, dx = -\csc x + C$</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：基本積分代數化簡演算</div>
+            <div class="callout-body">
+              <p><strong>例 1：多項式逐項積分</strong></p>
+              $$\int (3x^4 - 5x^2 + x) \, dx = 3\left(\frac{x^5}{5}\right) - 5\left(\frac{x^3}{3}\right) + \frac{x^2}{2} + C = \frac{3}{5}x^5 - \frac{5}{3}x^3 + \frac{1}{2}x^2 + C$$
+
+              <p><strong>例 2：拆項為指數冪次</strong></p>
+              $$\int \frac{x+1}{\sqrt{x}} \, dx = \int \left(\frac{x}{x^{1/2}} + \frac{1}{x^{1/2}}\right) \, dx = \int (x^{1/2} + x^{-1/2}) \, dx = \frac{2}{3}x^{3/2} + 2x^{1/2} + C$$
+
+              <p><strong>例 3：三角恆等式化簡</strong></p>
+              $$\int \frac{\sec^3\theta \tan\theta}{1+\tan^2\theta} \, d\theta = \int \frac{\sec^3\theta \tan\theta}{\sec^2\theta} \, d\theta = \int \sec\theta \tan\theta \, d\theta = \sec\theta + C$$
+            </div>
+          </div>
+
+          <h3>初始條件與特解 (Initial Conditions and Particular Solutions)</h3>
+          <p>
+            不定積分所得的包含常數 $C$ 的解稱為<strong>通解 (General solution)</strong>。若額外給定曲線通過特定點 $(x_0, y_0)$，則可解出唯一的常數 $C$，此解稱為<strong>特解 (Particular solution)</strong>。
+          </p>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：求特解與自由落體運動學</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> 已知 $\frac{dy}{dx} = 3x^2 - 1$，且曲線必須通過點 $(2, 4)$：</p>
+              通解為 $y = \int (3x^2-1)dx = x^3 - x + C$。<br>
+              代入點 $(2, 4)$：$4 = 2^3 - 2 + C \implies 4 = 6 + C \implies C = -2$。<br>
+              故特解為 $y = x^3 - x - 2$。
+
+              <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 0.75rem 0;">
+              <p><strong>例 2：自由落體問題 (Freefall-Body Problem)</strong></p>
+              已知重力加速度 $s''(t) = -32 \text{ ft/s}^2$，初始條件 $s(0) = 80 \text{ ft}$（初位置），$s'(0) = 64 \text{ ft/s}$（初速度）：
+              <ul>
+                <li>速度函數：$v(t) = s'(t) = \int -32 \, dt = -32t + C_1$。由 $s'(0) = 64 \implies C_1 = 64$。
+                  <br>$s'(t) = -32t + 64$。
+                </li>
+                <li>位置函數：$s(t) = \int (-32t + 64) \, dt = -16t^2 + 64t + C_2$。由 $s(0) = 80 \implies C_2 = 80$。
+                  <br>$s(t) = -16t^2 + 64t + 80$。
+                </li>
+                <li>求著地時間（落地高度 $s = 0$）：
+                  $$-16t^2 + 64t + 80 = 0 \implies -16(t^2 - 4t - 5) = 0 \implies (t-5)(t+1) = 0$$
+                  時間取正值，$t = 5 \text{ 秒}$。
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4.2 Area & Summation -->
+        <!-- ========================================== -->
+        <section id="sec4-2" class="lecture-section">
+          <h2>4.2 面積與黎曼和逼近 (Area and Riemann Sum Approximation)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 4.2：四個基本求和公式 (Summation Formulas)</div>
+            <div class="callout-body">
+              <ol>
+                <li>常數和：$\sum_{i=1}^n c = cn$</li>
+                <li>一次方和：$\sum_{i=1}^n i = \frac{n(n+1)}{2}$</li>
+                <li>平方和：$\sum_{i=1}^n i^2 = \frac{n(n+1)(2n+1)}{6}$</li>
+                <li>立方和：$\sum_{i=1}^n i^3 = \frac{n^2(n+1)^2}{4}$</li>
+              </ol>
+            </div>
+          </div>
+
+          <h3>求平面區域面積的矩形逼近法</h3>
+          <p>
+            欲求函數 $y = f(x)$ 在 $x \in [a, b]$ 下方的面積：
+            將區間 $[a, b]$ 分割為 $n$ 等分，每個小長方形的寬度為 $\Delta x = \frac{b-a}{n}$。
+          </p>
+          <ul>
+            <li><strong>下和 (Lower Sum $s(n)$)：</strong> 以每個子區間的最小值 $f(m_i)$ 為長方形高：$s(n) = \sum_{i=1}^n f(m_i)\Delta x$。</li>
+            <li><strong>上和 (Upper Sum $S(n)$)：</strong> 以每個子區間的最大值 $f(M_i)$ 為長方形高：$S(n) = \sum_{i=1}^n f(M_i)\Delta x$。</li>
+          </ul>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：求拋物線 $f(x) = x^2$ 在 $[0, 2]$ 下方面積</div>
+            <div class="callout-body">
+              寬度 $\Delta x = \frac{2-0}{n} = \frac{2}{n}$。
+              <p><strong>1. 計算下和 $s(n)$（左端點為高）：</strong></p>
+              $$s(n) = \sum_{i=1}^n f\left(\frac{2(i-1)}{n}\right)\left(\frac{2}{n}\right) = \frac{8}{n^3}\sum_{i=1}^n (i-1)^2 = \frac{8}{3} - \frac{4}{n} + \frac{4}{3n^2}$$
+              當分割無窮細密時：$\lim_{n \to \infty} s(n) = \frac{8}{3}$。
+
+              <p><strong>2. 計算上和 $S(n)$（右端點為高）：</strong></p>
+              $$S(n) = \sum_{i=1}^n f\left(\frac{2i}{n}\right)\left(\frac{2}{n}\right) = \frac{8}{n^3}\sum_{i=1}^n i^2 = \frac{8}{n^3}\left[\frac{n(n+1)(2n+1)}{6}\right] = \frac{8}{3} + \frac{4}{n} + \frac{4}{3n^2}$$
+              當分割無窮細密時：$\lim_{n \to \infty} S(n) = \frac{8}{3}$。
+
+              <p>由夾擠定理（Squeeze Theorem），下和與上和在 $n \to \infty$ 時的極限定然相等，其共同極限即為曲線下面積：$\text{Area} = \frac{8}{3}$！</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4.3 Definite Integral -->
+        <!-- ========================================== -->
+        <section id="sec4-3" class="lecture-section">
+          <h2>4.3 黎曼和與定積分 (Riemann Sum and Definite Integral)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：黎曼和 (Definition of a Riemann Sum)</div>
+            <div class="callout-body">
+              設 $\Delta$ 為閉區間 $[a, b]$ 的任意分割：$a = x_0 < x_1 < x_2 < \dots < x_n = b$。第 $i$ 個子區間寬度為 $\Delta x_i = x_i - x_{i-1}$，並在其中任意選取採樣點 $c_i \in [x_{i-1}, x_i]$。則：
+              $$\sum_{i=1}^n f(c_i)\Delta x_i$$
+              稱為函數 $f$ 關於分割 $\Delta$ 的<strong>黎曼和 (Riemann Sum)</strong>。
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">💡 逼近精確的核心：分割範數 $\|\Delta\| \to 0$</div>
+            <div class="callout-body">
+              分割中最寬的子區間寬度稱為分割的範數（norm），記作 $\|\Delta\|$。<br>
+              <strong>"To have an accurate estimation, it is $\|\Delta\| \to 0$ matters, not the $n \to \infty$!"</strong><br>
+              即使分割個數 $n \to \infty$，若最寬的區間不收斂至 0，估計仍然會有誤差。唯有保證最寬子區間寬度 $\|\Delta\| \to 0$，極限才能精確定義定積分。
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：定積分 (Definition of a Definite Integral)</div>
+            <div class="callout-body">
+              若極限存在，則稱 $f$ 在 $[a, b]$ 上<strong>可積 (integrable)</strong>，該極限定義為 $f$ 從 $a$ 到 $b$ 的定積分：
+              $$\lim_{\|\Delta\| \to 0} \sum_{i=1}^n f(c_i)\Delta x_i = \int_a^b f(x) \, dx$$
+              其中 $a$ 為<strong>積分下限 (lower limit)</strong>，$b$ 為<strong>積分上限 (upper limit)</strong>，$f(x)$ 為<strong>被積函數 (integrand)</strong>。
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 4.4 & 4.5：連續性可積與幾何面積</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>連續必可積：</strong> 若函數 $f$ 在閉區間 $[a, b]$ 上連續，則 $f$ 在 $[a, b]$ 上必定可積。</li>
+                <li><strong>幾何面積求法：</strong> 若 $f$ 連續且非負（$f(x) \ge 0$），則 $\int_a^b f(x)dx$ 即為曲線與 $x$ 軸所圍面積。</li>
+              </ul>
+              <p><em>幾何求積分實例：</em> 求 $\int_{-2}^2 \sqrt{4-x^2} \, dx$：圖形為半徑為 2 的上半圓，直接由幾何公式求解：</p>
+              $$\int_{-2}^2 \sqrt{4-x^2} \, dx = \frac{1}{2}\pi r^2 = \frac{1}{2}\pi(2^2) = 2\pi$$
+            </div>
+          </div>
+
+          <h3>定積分的四大基本性質 (Properties of Definite Integral)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">定積分基本運算性質</div>
+            <div class="callout-body">
+              <ol type="A">
+                <li><strong>線性性質 (Linearity)：</strong>
+                  $$\int_a^b k f(x) \, dx = k\int_a^b f(x) \, dx, \qquad \int_a^b [f(x) \pm g(x)] \, dx = \int_a^b f(x) \, dx \pm \int_a^b g(x) \, dx$$
+                </li>
+                <li><strong>上下限反向與同點性質：</strong>
+                  $$\int_a^a f(x) \, dx = 0, \qquad \int_b^a f(x) \, dx = -\int_a^b f(x) \, dx$$
+                </li>
+                <li><strong>區間可加性 (Additive Interval)：</strong>
+                  $$\int_a^b f(x) \, dx = \int_a^c f(x) \, dx + \int_c^b f(x) \, dx$$
+                </li>
+                <li><strong>不等式保持性 (Preservation of Inequality)：</strong>
+                  若對所有 $x \in [a, b]$ 恆有 $f(x) \le g(x)$，則：
+                  $$\int_a^b f(x) \, dx \le \int_a^b g(x) \, dx$$
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4.4 Fundamental Theorem of Calculus -->
+        <!-- ========================================== -->
+        <section id="sec4-4" class="lecture-section">
+          <h2>4.4 微積分基本定理 (Fundamental Theorem of Calculus)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 4.9：微積分第一基本定理 (FTC 1)</div>
+            <div class="callout-body">
+              若函數 $f$ 在閉區間 $[a, b]$ 上連續，且 $F$ 為 $f$ 在 $[a, b]$ 上的一個反導函數（即 $F' = f$），則：
+              $$\int_a^b f(x) \, dx = F(b) - F(a)$$
+              <div class="proof-block">
+                <div class="proof-title">證明（利用均值定理 MVT 與黎曼和）：</div>
+                <div class="proof-body">
+                  將 $[a, b]$ 做任意分割 $a = x_0 < x_1 < \dots < x_n = b$。利用首尾項相消的伸縮和技巧：
+                  $$F(b) - F(a) = \sum_{i=1}^n [F(x_i) - F(x_{i-1})]$$
+                  對每個子區間 $[x_{i-1}, x_i]$ 套用均值定理，必存在 $c_i \in (x_{i-1}, x_i)$ 使得：
+                  $$F(x_i) - F(x_{i-1}) = F'(c_i)(x_i - x_{i-1}) = f(c_i)\Delta x_i$$
+                  因此：
+                  $$F(b) - F(a) = \sum_{i=1}^n f(c_i)\Delta x_i$$
+                  取極限 $\|\Delta\| \to 0$，右式即為黎曼和的極限定義 $\int_a^b f(x)dx$，證得：
+                  $$F(b) - F(a) = \int_a^b f(x) \, dx$$
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+              <p><strong>備註：</strong> 定積分中常數 $C$ 會在相減時完全抵消 $[F(b)+C] - [F(a)+C] = F(b) - F(a)$，因此計算定積分時永遠選取最簡的 $F(x)$（令 $C = 0$）。</p>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：定積分計算與絕對值分段積分</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> $\int_1^2 (x^2 - 3) \, dx = \left[\frac{x^3}{3} - 3x\right]_1^2 = \left(\frac{8}{3}-6\right) - \left(\frac{1}{3}-3\right) = -\frac{2}{3}$</p>
+              <p><strong>例 2：</strong> $\int_1^4 3\sqrt{x} \, dx = 3\left[\frac{x^{3/2}}{3/2}\right]_1^4 = 2\left(4^{3/2} - 1^{3/2}\right) = 2(8-1) = 14$</p>
+              <p><strong>例 3（含絕對值分段）：</strong> 求 $\int_0^2 |2x - 1| \, dx$：</p>
+              $$|2x - 1| = \begin{cases} -(2x-1), & x < 1/2 \\ 2x - 1, & x \ge 1/2 \end{cases}$$
+              $$\begin{aligned}
+              \int_0^2 |2x - 1| \, dx &= \int_0^{1/2} (1 - 2x) \, dx + \int_{1/2}^2 (2x - 1) \, dx \\
+              &= \left[x - x^2\right]_0^{1/2} + \left[x^2 - x\right]_{1/2}^2 \\
+              &= \left(\frac{1}{2} - \frac{1}{4}\right) + \left[(4-2) - \left(\frac{1}{4}-\frac{1}{2}\right)\right] = \frac{1}{4} + \frac{9}{4} = \frac{5}{2}
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <h3>函數的平均值 (Average Value of a Function)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">定義：區間上的平均值</div>
+            <div class="callout-body">
+              若 $f$ 在 $[a, b]$ 上可積，則 $f$ 在該區間上的<strong>平均值 (Average value)</strong> 定義為：
+              $$\text{Average value} = \frac{1}{b - a}\int_a^b f(x) \, dx$$
+              <p><strong>物理意涵：</strong> 若 $x$ 代表時間，$f(x)$ 代表速度，則曲線下面積即為總位移，$\text{平均速度} = \frac{\text{總位移}}{\text{總時間}}$！</p>
+            </div>
+          </div>
+
+          <h3>微積分第二基本定理 (The Second Fundamental Theorem of Calculus)</h3>
+          <p>
+            考慮累積面積函數 $F(x) = \int_a^x f(t) \, dt$。當上限 $x$ 變動時，累積面積的瞬時增長率為何？
+          </p>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 4.11：微積分第二基本定理 (FTC 2)</div>
+            <div class="callout-body">
+              若 $f$ 在包含 $a$ 的開區間上連續，則對該區間內的任意 $x$：
+              $$\frac{d}{dx}\left[\int_a^x f(t) \, dt\right] = f(x)$$
+              <p><strong>推廣（結合連鎖律之 Leibniz 積分求導公式）：</strong> 若積分上限為函數 $u(x)$：</p>
+              $$\frac{d}{dx}\left[\int_a^{u(x)} f(t) \, dt\right] = f(u(x)) \cdot \frac{du}{dx}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：變動上限積分求導演算</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> $\frac{d}{dx}\left[\int_0^x \sqrt{t^2+1} \, dt\right] = \sqrt{x^2+1}$</p>
+              <p><strong>例 2：</strong> $\frac{d}{dx}\left[\int_x^5 3t\sin t \, dt\right] = \frac{d}{dx}\left[-\int_5^x 3t\sin t \, dt\right] = -3x\sin x$</p>
+              <p><strong>例 3（含連鎖律）：</strong> 求 $F(x) = \int_{\pi/2}^{x^3} \cos t \, dt$ 的導數：</p>
+              令 $u = x^3$，$\frac{du}{dx} = 3x^2$：
+              $$F'(x) = \cos(x^3) \cdot \frac{d}{dx}[x^3] = 3x^2 \cos(x^3)$$
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4.5 Integration by Substitution -->
+        <!-- ========================================== -->
+        <section id="sec4-5" class="lecture-section">
+          <h2>4.5 代換積分法 (Integration by Substitution)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">變數變換法核心原理 (Change of Variable)</div>
+            <div class="callout-body">
+              令 $u = g(x)$，則微分量 $du = g'(x)dx$：
+              $$\int f(g(x))g'(x) \, dx = \int f(u) \, du = F(u) + C = F(g(x)) + C$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：代換法典型題型演練</div>
+            <div class="callout-body">
+              <p><strong>例 1：三角複合</strong> 求 $\int \sin^2 3x \cos 3x \, dx$</p>
+              令 $u = \sin 3x \implies du = 3\cos 3x dx \implies \cos 3x dx = \frac{du}{3}$：
+              $$\int u^2 \left(\frac{du}{3}\right) = \frac{1}{3}\left(\frac{u^3}{3}\right) + C = \frac{1}{9}\sin^3 3x + C$$
+
+              <p><strong>例 2：試誤原則（Try-and-error：替換最困難的項）</strong> 求 $\int x\sqrt{2x-1} \, dx$</p>
+              令 $u = 2x-1 \implies x = \frac{u+1}{2}$ 且 $dx = \frac{du}{2}$：
+              $$\begin{aligned}
+              \int \left(\frac{u+1}{2}\right) u^{1/2} \left(\frac{du}{2}\right) &= \frac{1}{4}\int (u^{3/2} + u^{1/2}) \, du \\
+              &= \frac{1}{4}\left[\frac{u^{5/2}}{5/2} + \frac{u^{3/2}}{3/2}\right] + C \\
+              &= \frac{1}{10}(2x-1)^{5/2} + \frac{1}{6}(2x-1)^{3/2} + C
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 4.14：定積分的代換變換法則 (Limits of Integration)</div>
+            <div class="callout-body">
+              $$\int_a^b f(g(x))g'(x) \, dx = \int_{g(a)}^{g(b)} f(u) \, du$$
+              <strong>重要關鍵：計算定積分時，直接將上下限由 $x$ 轉換為 $u$，完全不需要再換回原變數 $x$！</strong>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：定積分上下限轉換實例</div>
+            <div class="callout-body">
+              求 $\int_1^5 \frac{x}{\sqrt{2x-1}} \, dx$：<br>
+              令 $u = \sqrt{2x-1} \implies u^2 = 2x - 1 \implies x = \frac{u^2+1}{2}$，且 $2u du = 2 dx \implies dx = u du$。<br>
+              <strong>轉換積分上下限：</strong>
+              <ul>
+                <li>當 $x = 1 \implies u = \sqrt{2(1)-1} = 1$</li>
+                <li>當 $x = 5 \implies u = \sqrt{2(5)-1} = 3$</li>
+              </ul>
+              $$\int_1^5 \frac{x}{\sqrt{2x-1}} \, dx = \int_1^3 \frac{\frac{u^2+1}{2}}{u} (u \, du) = \frac{1}{2}\int_1^3 (u^2 + 1) \, du = \frac{1}{2}\left[\frac{u^3}{3} + u\right]_1^3 = \frac{1}{2}\left[(9+3) - \left(\frac{1}{3}+1\right)\right] = \frac{16}{3}$$
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 4.15：奇函數與偶函數的對稱積分性質</div>
+            <div class="callout-body">
+              設 $f$ 在對稱區間 $[-a, a]$ 上可積：
+              <ol>
+                <li>若 $f$ 為<strong>偶函數</strong>（$f(-x) = f(x)$），則：$$\int_{-a}^a f(x) \, dx = 2\int_0^a f(x) \, dx$$</li>
+                <li>若 $f$ 為<strong>奇函數</strong>（$f(-x) = -f(x)$），則：$$\int_{-a}^a f(x) \, dx = 0$$</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4.7 Log Rule & Trig Integrals -->
+        <!-- ========================================== -->
+        <section id="sec4-7" class="lecture-section">
+          <h2>4.7 自然對數積分法與三角積分 (Integration of Natural Logarithmic Function)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 5.5：對數積分法則 (Log Rule for Integration)</div>
+            <div class="callout-body">
+              $$\int \frac{1}{x} \, dx = \ln|x| + C, \qquad \int \frac{u'}{u} \, dx = \ln|u| + C$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：$\frac{u'}{u}$ 形式積分</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> $\int \frac{1}{4x-1} \, dx = \frac{1}{4}\int \frac{4}{4x-1} \, dx = \frac{1}{4}\ln|4x-1| + C$</p>
+              <p><strong>例 2：</strong> $\int_0^3 \frac{x}{x^2+1} \, dx = \frac{1}{2}\int_0^3 \frac{2x}{x^2+1} \, dx = \frac{1}{2}\left[\ln(x^2+1)\right]_0^3 = \frac{1}{2}(\ln 10 - \ln 1) = \frac{1}{2}\ln 10 \approx 1.151$</p>
+              <p><strong>例 3：</strong> $\int \frac{1}{x\ln x} \, dx = \int \frac{1/x}{\ln x} \, dx = \ln|\ln x| + C$</p>
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">假分式先以長除法化簡 (Improper Fraction Long Division)</div>
+            <div class="callout-body">
+              當有理函數<strong>分子的次數 $\ge$ 分母的次數</strong>時，必須先進行多項式長除法：
+              $$\int \frac{x^2+x+1}{x^2+1} \, dx = \int \left(1 + \frac{x}{x^2+1}\right) \, dx = \int 1 \, dx + \frac{1}{2}\int \frac{2x}{x^2+1} \, dx = x + \frac{1}{2}\ln(x^2+1) + C$$
+            </div>
+          </div>
+
+          <h3>六種基本三角函數的不定積分</h3>
+          <div class="data-table-container">
+            <table class="lecture-table">
+              <thead>
+                <tr>
+                  <th>三角函數</th>
+                  <th>積分公式</th>
+                  <th>推導思路</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$\sin u$</td>
+                  <td>$\int \sin u \, du = -\cos u + C$</td>
+                  <td>基本定義</td>
+                </tr>
+                <tr>
+                  <td>$\cos u$</td>
+                  <td>$\int \cos u \, du = \sin u + C$</td>
+                  <td>基本定義</td>
+                </tr>
+                <tr>
+                  <td>$\tan u$</td>
+                  <td>$\int \tan u \, du = -\ln|\cos u| + C = \ln|\sec u| + C$</td>
+                  <td>換為 $\frac{\sin u}{\cos u}$ 套用對數法則</td>
+                </tr>
+                <tr>
+                  <td>$\cot u$</td>
+                  <td>$\int \cot u \, du = \ln|\sin u| + C$</td>
+                  <td>換為 $\frac{\cos u}{\sin u}$ 套用對數法則</td>
+                </tr>
+                <tr>
+                  <td>$\sec u$</td>
+                  <td>$\int \sec u \, du = \ln|\sec u + \tan u| + C$</td>
+                  <td>同乘除 $(\sec u + \tan u)$</td>
+                </tr>
+                <tr>
+                  <td>$\csc u$</td>
+                  <td>$\int \csc u \, du = -\ln|\csc u + \cot u| + C$</td>
+                  <td>同乘除 $(\csc u + \cot u)$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4.8 Inverse Trig & Completing Square -->
+        <!-- ========================================== -->
+        <section id="sec4-8" class="lecture-section">
+          <h2>4.8 反三角函數積分與配方法 (Integral of Inverse Trigonometric Functions)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">反三角函數三大基本積分公式 ($a > 0$)</div>
+            <div class="callout-body">
+              <ol>
+                <li>$\int \frac{du}{\sqrt{a^2 - u^2}} = \arcsin\left(\frac{u}{a}\right) + C$</li>
+                <li>$\int \frac{du}{a^2 + u^2} = \frac{1}{a}\arctan\left(\frac{u}{a}\right) + C$</li>
+                <li>$\int \frac{du}{u\sqrt{u^2 - a^2}} = \frac{1}{a}\text{arcsec}\left(\frac{|u|}{a}\right) + C$</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">配方法核心技術 (Completing the Square)</div>
+            <div class="callout-body">
+              當分母出現二次三項式 $x^2 + bx + c$ 時，透過配方將其化為 $u^2 \pm a^2$ 或 $a^2 - u^2$ 形式：
+              $$x^2 + bx + c = \left(x + \frac{b}{2}\right)^2 - \left(\frac{b}{2}\right)^2 + c$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：配方法結合反三角積分</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> 求 $\int \frac{dx}{x^2 - 4x + 7}$</p>
+              配方分母：$x^2 - 4x + 7 = (x-2)^2 + 3 = (x-2)^2 + (\sqrt{3})^2$。令 $u = x-2, a = \sqrt{3}$：
+              $$\int \frac{dx}{(x-2)^2 + (\sqrt{3})^2} = \frac{1}{\sqrt{3}}\arctan\left(\frac{x-2}{\sqrt{3}}\right) + C$$
+
+              <p><strong>例 2：</strong> 求 $\int_{3/2}^{9/4} \frac{dx}{\sqrt{3x - x^2}}$</p>
+              配方根號內：$3x - x^2 = -\left(x^2 - 3x + \frac{9}{4}\right) + \frac{9}{4} = \left(\frac{3}{2}\right)^2 - \left(x - \frac{3}{2}\right)^2$：
+              $$\begin{aligned}
+              \int_{3/2}^{9/4} \frac{dx}{\sqrt{(3/2)^2 - [x - (3/2)]^2}} &= \left[\arcsin\left(\frac{x - 3/2}{3/2}\right)\right]_{3/2}^{9/4} \\
+              &= \arcsin\left(\frac{3/4}{3/2}\right) - \arcsin(0) = \arcsin\left(\frac{1}{2}\right) - 0 = \frac{\pi}{6}
+              \end{aligned}$$
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4.9 Hyperbolic Functions -->
+        <!-- ========================================== -->
+        <section id="sec4-9" class="lecture-section">
+          <h2>4.9 雙曲函數與反雙曲函數 (Hyperbolic Functions)</h2>
+          <div class="callout callout-def">
+            <div class="callout-title">定義：雙曲函數 (Definitions of Hyperbolic Functions)</div>
+            <div class="callout-body">
+              由 $e^x$ 與 $e^{-x}$ 之線性組合定義：
+              <ul>
+                <li><strong>雙曲正弦：</strong> $\sinh x = \frac{e^x - e^{-x}}{2}$（奇函數 Odd function）</li>
+                <li><strong>雙曲餘弦：</strong> $\cosh x = \frac{e^x + e^{-x}}{2}$（偶函數 Even function）</li>
+                <li><strong>雙曲正切：</strong> $\tanh x = \frac{\sinh x}{\cosh x} = \frac{e^x - e^{-x}}{e^x + e^{-x}}$</li>
+              </ul>
+              倒數函數：$\text{csch } x = \frac{1}{\sinh x}$，$\text{sech } x = \frac{1}{\cosh x}$，$\coth x = \frac{1}{\tanh x}$。
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">雙曲恆等式 (Hyperbolic Identities)</div>
+            <div class="callout-body">
+              <ol>
+                <li>$\cosh^2 x - \sinh^2 x = 1$（對照雙曲線 $x^2 - y^2 = 1$；三角函數為 $\cos^2+\sin^2=1$）</li>
+                <li>$\tanh^2 x + \text{sech}^2 x = 1$</li>
+                <li>$\coth^2 x - \text{csch}^2 x = 1$</li>
+                <li>$\sinh(2x) = 2\sinh x \cosh x$</li>
+                <li>$\sinh^2 x = \frac{-1 + \cosh 2x}{2}$</li>
+              </ol>
+            </div>
+          </div>
+
+          <h3>雙曲函數的微積分與反雙曲函數對數式</h3>
+          <div class="data-table-container">
+            <table class="lecture-table">
+              <thead>
+                <tr>
+                  <th>微分公式</th>
+                  <th>對應積分公式</th>
+                  <th>反雙曲函數對數表示式</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$\frac{d}{dx}[\sinh u] = (\cosh u)u'$</td>
+                  <td>$\int \cosh u \, du = \sinh u + C$</td>
+                  <td>$\sinh^{-1} x = \ln(x + \sqrt{x^2+1})$</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[\cosh u] = (\sinh u)u'$</td>
+                  <td>$\int \sinh u \, du = \cosh u + C$</td>
+                  <td>$\cosh^{-1} x = \ln(x + \sqrt{x^2-1}) \quad (x \ge 1)$</td>
+                </tr>
+                <tr>
+                  <td>$\frac{d}{dx}[\tanh u] = (\text{sech}^2 u)u'$</td>
+                  <td>$\int \text{sech}^2 u \, du = \tanh u + C$</td>
+                  <td>$\tanh^{-1} x = \frac{1}{2}\ln\left(\frac{1+x}{1-x}\right) \quad (|x| < 1)$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 前後章節跳轉按鈕 -->
+        <nav class="chapter-pagination">
+          <a href="ch03-applications-of-differentiation.html" id="prev-chapter-link" class="page-link prev">
+            <span class="link-label">← 上一章</span>
+            <span class="link-title">第 03 章：微分之應用</span>
+          </a>
+          <a href="ch05-applications-of-integration.html" id="next-chapter-link" class="page-link next">
+            <span class="link-label">下一章 →</span>
+            <span class="link-title">第 05 章：積分之應用</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <!-- 邏輯腳本 (相對路徑) -->
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

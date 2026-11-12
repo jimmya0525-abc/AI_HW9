@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微積分講義 - 第 05 章：積分之應用 (Applications of Integration)</title>
+
+  <!-- 全站共用樣式 (相對路徑) -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- KaTeX 數學公式支援 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-chapter-id="ch05">
+  <!-- 頂部功能導覽列 -->
+  <header class="site-header">
+    <div class="header-left">
+      <button id="menu-toggle" class="icon-btn" aria-label="切換選單">☰</button>
+      <a href="../index.html" class="header-logo">
+        <span>📐</span> 微積分課程講義
+      </a>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="切換主題模式">🌓</button>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- 側邊欄（由 nav.js 動態渲染目錄） -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>章節目錄導覽</h3>
+      </div>
+      <nav id="course-nav" class="course-nav">
+        <!-- nav.js 自動注入目錄 -->
+      </nav>
+    </aside>
+
+    <!-- 手機端側邊欄遮罩 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 講義主內容區域 -->
+    <main class="main-content">
+      <article class="lecture-content">
+        <!-- 章節標頭 -->
+        <header class="chapter-header">
+          <div class="chapter-meta">Chapter 05</div>
+          <h1 class="chapter-title">積分之應用<br><small style="font-size: 0.6em; font-weight: 500; color: var(--text-muted);">Applications of Integration</small></h1>
+          <p class="chapter-lead">
+            積分學在幾何學、物理學與工程領域具有舉足輕重的地位。本章全面探討兩曲線間的面積求法、旋轉體體積（圓盤法、圓環法與圓柱殼層法）、弧長與旋轉曲面表面積、變力作功、平面薄板質心與轉動慣量、流體靜水壓力，以及指數成長衰減與牛頓冷卻定律微分方程。
+          </p>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- 5.1 Area Between Two Curves -->
+        <!-- ========================================== -->
+        <section id="sec5-1" class="lecture-section">
+          <h2>5.1 兩曲線間的區域面積 (Area of Region Between Two Curves)</h2>
+          <p>
+            假設在區間 $[a, b]$ 上恆有 $f(x) \ge g(x)$，則兩曲線 $y = f(x)$ 與 $y = g(x)$ 之間所夾的區域面積為：
+            $$\text{Area} = \int_a^b [f(x) - g(x)] \, dx = \int_a^b f(x) \, dx - \int_a^b g(x) \, dx$$
+            一般化通式（若曲線在區間內多次交錯）：
+            $$\text{Area} = \int_a^b |f(x) - g(x)| \, dx$$
+          </p>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：求兩圖形圍成的面積（因式分解求交點）</div>
+            <div class="callout-body">
+              求由 $y = \frac{1}{4}x^2$ 與 $y = \frac{8}{x^2+4}$ 所圍成的區域面積：
+              <ol>
+                <li><strong>求兩曲線交點 (Find the intersections)：</strong>
+                  $$\frac{1}{4}x^2 = \frac{8}{x^2+4} \implies x^4 + 4x^2 - 32 = 0 \implies (x^2+8)(x^2-4) = 0 \implies x = \pm 2$$
+                </li>
+                <li><strong>定積分求解（利用偶函數對稱性）：</strong>
+                  $$\begin{aligned}
+                  A &= \int_{-2}^2 \left(\frac{8}{x^2+4} - \frac{x^2}{4}\right) \, dx = 2\int_0^2 \left(\frac{8}{x^2+4} - \frac{x^2}{4}\right) \, dx \\
+                  &= 2\left[4\arctan\left(\frac{x}{2}\right) - \frac{1}{12}x^3\right]_0^2 = 2\left[4\arctan(1) - \frac{8}{12}\right] \\
+                  &= 2\left[4\left(\frac{\pi}{4}\right) - \frac{2}{3}\right] = 2\pi - \frac{4}{3}
+                  \end{aligned}$$
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 3：正弦與餘弦曲線所夾面積</div>
+            <div class="callout-body">
+              正弦與餘弦在 $[0, 2\pi]$ 交於 $x = \frac{\pi}{4}$ 與 $x = \frac{5\pi}{4}$。在 $\left[\frac{\pi}{4}, \frac{5\pi}{4}\right]$ 區間內 $\sin x \ge \cos x$：
+              $$A = \int_{\pi/4}^{5\pi/4} (\sin x - \cos x) \, dx = \left[-\cos x - \sin x\right]_{\pi/4}^{5\pi/4} = 2\sqrt{2}$$
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">💡 聰明選取積分變數（$x$ 或 $y$）以簡化式子</div>
+            <div class="callout-body">
+              <strong>"Choose your selection of variable of integration (i.e., $x$ or $y$) wisely to simplify your integration formula!"</strong><br>
+              求 $y^2 = 4+x$ 與 $x+2y = 4$ 所夾面積：
+              <ul>
+                <li>若對 $x$ 積分：必須在 $x = 0$ 處切為兩塊分別積分，過程繁瑣。</li>
+                <li><strong>更簡便的方法（對 $y$ 積分）：</strong> 右邊界為直線 $x = 4-2y$，左邊界為拋物線 $x = y^2-4$。解交點 $4-2y = y^2-4 \implies y = -4, 2$：
+                  $$A = \int_{-4}^2 \left[(4-2y) - (y^2-4)\right] \, dy = \int_{-4}^2 (8 - 2y - y^2) \, dy = 36$$
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 5.2 Disk & Washer Method -->
+        <!-- ========================================== -->
+        <section id="sec5-2" class="lecture-section">
+          <h2>5.2 旋轉體體積：圓盤法與圓環法 (Disk Method & Washer Method)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">圓盤法四步驟核心原理 (The Disk Method)</div>
+            <div class="callout-body">
+              單一薄圓盤的微元體積為 $\Delta V = (\text{底面積}) \times (\text{厚度}) = \pi R^2 \Delta x$：
+              <ol>
+                <li><strong>分割 (Partition)：</strong> 將旋轉軸區間分割為 $n$ 個子區間，寬度為 $\Delta x$。</li>
+                <li><strong>近似 (Approximate)：</strong> 第 $i$ 個代表長方形旋轉所成圓盤體積 $\Delta V_i \approx \pi [R(x_i)]^2 \Delta x$。</li>
+                <li><strong>求和 (Sum)：</strong> 總體積近似為 $\sum_{i=1}^n \pi [R(x_i)]^2 \Delta x$。</li>
+                <li><strong>取極限 (Limit as $\Delta x \to 0$)：</strong>
+                  $$\text{Total volume } V = \pi \int_a^b [R(x)]^2 \, dx$$
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">旋轉軸方向公式</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>繞水平軸旋轉 (Horizontal Axis)：</strong> $$V = \pi \int_a^b [R(x)]^2 \, dx$$</li>
+                <li><strong>繞垂直軸旋轉 (Vertical Axis)：</strong> $$V = \pi \int_c^d [R(y)]^2 \, dy$$</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：繞水平直線旋轉體積</div>
+            <div class="callout-body">
+              求由曲線 $y = 2-x^2$ 與水平直線 $y = 1$ 所夾區域繞直線 $y = 1$ 旋轉所得體積：
+              <p>半徑為代表長方形高度：$R(x) = (2-x^2) - 1 = 1 - x^2$。積分交點 $1 - x^2 = 0 \implies x = \pm 1$：</p>
+              $$V = \pi \int_{-1}^1 (1-x^2)^2 \, dx = \pi \int_{-1}^1 (1 - 2x^2 + x^4) \, dx = \pi \left[x - \frac{2x^3}{3} + \frac{x^5}{5}\right]_{-1}^1 = \frac{16\pi}{15}$$
+            </div>
+          </div>
+
+          <h3>圓環法 (The Washer Method)</h3>
+          <p>
+            當旋轉區域與旋轉軸之間具有空隙時，旋轉出的立體截面為具有內徑與外徑的圓環（Washer）：
+          </p>
+          <div class="callout callout-thm">
+            <div class="callout-title">圓環法體積公式</div>
+            <div class="callout-body">
+              令外半徑為 $R(x)$，內半徑為 $r(x)$：
+              $$V = \pi \int_a^b \left([R(x)]^2 - [r(x)]^2\right) \, dx$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：圓環法求解</div>
+            <div class="callout-body">
+              區域由 $y = \sqrt{x}$ 與 $y = x^2$ 圍成，繞 $x$ 軸旋轉：
+              <p>外半徑 $R(x) = \sqrt{x}$，內半徑 $r(x) = x^2$。交點 $x = 0$ 至 $x = 1$：</p>
+              $$V = \pi \int_0^1 \left[(\sqrt{x})^2 - (x^2)^2\right] \, dx = \pi \int_0^1 (x - x^4) \, dx = \pi \left[\frac{x^2}{2} - \frac{x^5}{5}\right]_0^1 = \frac{3\pi}{10}$$
+            </div>
+          </div>
+
+          <h3>已知平行截面之立體體積 (Volume with Known Cross-Section)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">平行截面體積公式</div>
+            <div class="callout-body">
+              若已知垂直於 $x$ 軸的截面積為 $A(x)$，則：
+              $$V = \int_a^b A(x) \, dx$$
+              <em>實例：底面為 $f(x) = 1-x/2$ 與 $g(x) = -1+x/2$ 在 $[0, 2]$ 圍成的三角形，且垂直於 $x$ 軸的截面均為正三角形：</em><br>
+              底邊長 $s = (1-x/2) - (-1+x/2) = 2-x$。正三角形截面積 $A(x) = \frac{\sqrt{3}}{4}s^2 = \frac{\sqrt{3}}{4}(2-x)^2$：
+              $$V = \int_0^2 \frac{\sqrt{3}}{4}(2-x)^2 \, dx = \frac{\sqrt{3}}{4}\left[-\frac{(2-x)^3}{3}\right]_0^2 = \frac{2\sqrt{3}}{3}$$
+              <em>(吻合三角錐體積公式 $V = \frac{1}{3}A_{\text{Base}} H$)</em>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 5.3 Shell Method -->
+        <!-- ========================================== -->
+        <section id="sec5-3" class="lecture-section">
+          <h2>5.3 旋轉體體積：圓柱殼層法 (Shell Method)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">圓柱殼層法原理 (The Shell Method)</div>
+            <div class="callout-body">
+              展開薄圓柱殼層，體積微元為長方體：
+              $$\text{Volume of shell} = 2\pi \times (\text{平均半徑 } p) \times (\text{柱高 } h) \times (\text{厚度 } \Delta x)$$
+              $$V = 2\pi \int_a^b p(x) h(x) \, dx \quad \text{(繞垂直軸旋轉)}$$
+              $$V = 2\pi \int_c^d p(y) h(y) \, dy \quad \text{(繞水平軸旋轉)}$$
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">何時必須選擇殼層法？(Why Shell Method?)</div>
+            <div class="callout-body">
+              <strong>"Sometime, only disk or shell method is feasible!"</strong><br>
+              考慮 $y = f(x) = x^3 + x + 1$ 繞直線 $x = 2$ 旋轉：若使用圓盤法，必須將 $x$ 解為 $y$ 的函數 $x = g(y)$，但代數上極難解出！此時唯有使用殼層法（平均半徑 $p(x) = 2-x$，高度 $h(x) = x^3+x$）能直接積分求解：
+              $$V = 2\pi \int_0^1 (2-x)(x^3+x) \, dx = \frac{29\pi}{15}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：繞 $x$ 軸之殼層積分</div>
+            <div class="callout-body">
+              求 $x = e^{-y^2}$ 在 $0 \le y \le 1$ 繞 $x$ 軸旋轉之體積：<br>
+              平均半徑 $p(y) = y$，柱長 $h(y) = e^{-y^2}$：
+              $$V = 2\pi \int_0^1 y e^{-y^2} \, dy = -\pi \left[e^{-y^2}\right]_0^1 = \pi\left(1 - \frac{1}{e}\right) \approx 1.986$$
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 5.4 Arc Length & Surface Area -->
+        <!-- ========================================== -->
+        <section id="sec5-4" class="lecture-section">
+          <h2>5.4 弧長與旋轉曲面表面積 (Arc Length and Surface of Revolution)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：平面曲線弧長 (Definition of Arc Length)</div>
+            <div class="callout-body">
+              設函數 $f$ 在 $[a, b]$ 上具有連續導函數（光滑曲線 smooth curve）：
+              $$s = \int_a^b \sqrt{1 + [f'(x)]^2} \, dx$$
+              若曲線表示為 $x = g(y)$ 且 $y \in [c, d]$，則：
+              $$s = \int_c^d \sqrt{1 + [g'(y)]^2} \, dy$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：配方消根號之經典弧長運算</div>
+            <div class="callout-body">
+              求 $y = \frac{x^3}{6} + \frac{1}{2x}$ 在 $\left[\frac{1}{2}, 2\right]$ 上的弧長：
+              $$\frac{dy}{dx} = \frac{x^2}{2} - \frac{1}{2x^2} = \frac{1}{2}\left(x^2 - \frac{1}{x^2}\right)$$
+              $$1 + \left(\frac{dy}{dx}\right)^2 = 1 + \frac{1}{4}\left(x^4 - 2 + \frac{1}{x^4}\right) = \frac{1}{4}\left(x^4 + 2 + \frac{1}{x^4}\right) = \left[\frac{1}{2}\left(x^2 + \frac{1}{x^2}\right)\right]^2$$
+              開根號完全消去：
+              $$s = \int_{1/2}^2 \frac{1}{2}\left(x^2 + \frac{1}{x^2}\right) \, dx = \frac{1}{2}\left[\frac{x^3}{3} - \frac{1}{x}\right]_{1/2}^2 = \frac{33}{16}$$
+            </div>
+          </div>
+
+          <h3>旋轉曲面表面積 (Area of a Surface of Revolution)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">旋轉曲面表面積公式</div>
+            <div class="callout-body">
+              圓台側面展開面積微元 $\Delta S = 2\pi r L$，其中 $r$ 為旋轉半徑，弧長微元 $dL = \sqrt{1+[f'(x)]^2}dx$：
+              <ul>
+                <li><strong>繞 $x$ 軸旋轉：</strong> $$S = 2\pi \int_a^b f(x)\sqrt{1 + [f'(x)]^2} \, dx$$</li>
+                <li><strong>繞 $y$ 軸旋轉：</strong> $$S = 2\pi \int_a^b x\sqrt{1 + [f'(x)]^2} \, dx$$</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：旋轉曲面表面積求解</div>
+            <div class="callout-body">
+              求 $f(x) = x^3$ 在 $[0, 1]$ 繞 $x$ 軸旋轉所得之表面積：
+              $$\begin{aligned}
+              S &= 2\pi \int_0^1 x^3 \sqrt{1 + (3x^2)^2} \, dx = 2\pi \int_0^1 x^3 \sqrt{1 + 9x^4} \, dx \\
+              &= \frac{2\pi}{36}\int_0^1 (1 + 9x^4)^{1/2}(36x^3) \, dx = \frac{\pi}{18}\left[\frac{(1+9x^4)^{3/2}}{3/2}\right]_0^1 = \frac{\pi}{27}(10^{3/2} - 1)
+              \end{aligned}$$
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 5.5 Physics & Engineering -->
+        <!-- ========================================== -->
+        <section id="sec5-5" class="lecture-section">
+          <h2>5.5 物理與工程應用：作功、質心與水壓力 (Physics and Engineering)</h2>
+
+          <h3>作功 (Work)</h3>
+          <p>
+            定力作功為 $W = F \cdot D$。若力隨位置變動 $F(x)$，則將位移細分為微元 $\Delta x$，功為：
+            $$W = \int_a^b F(x) \, dx$$
+          </p>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：虎克定律彈簧作功 (Hooke's Law: $F = kx$)</div>
+            <div class="callout-body">
+              已知壓縮 3 英吋需施力 750 磅，求將彈簧自 $x = 3$ 壓縮至 $x = 6$ 所需作的功：
+              <ul>
+                <li>彈性係數：$k = \frac{F}{x} = \frac{750}{3} = 250 \text{ lb/in}$，故 $F(x) = 250x$。</li>
+                <li>作功：
+                  $$W = \int_3^6 250x \, dx = \left[125x^2\right]_3^6 = 125(36 - 9) = 3375 \text{ in-lbs}$$
+                </li>
+                <li>彈簧形變 $d$ 所儲存的彈位能通式：$W = \int_0^d kx \, dx = \frac{1}{2}kd^2$。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：波以耳定律氣體膨脹作功 (Expanding Gas: $P = k/V$)</div>
+            <div class="callout-body">
+              活塞氣體膨脹時，$\Delta W = P(\pi r^2)\Delta x = P \Delta V \implies W = \int_{V_0}^{V_1} P \, dV$。<br>
+              若初始體積 $1 \text{ ft}^3$ 時壓力為 $500 \text{ lb/ft}^2$（$k = 500$），膨脹至體積 $2 \text{ ft}^3$：
+              $$W = \int_1^2 \frac{500}{V} \, dV = 500[\ln|V|]_1^2 = 500\ln 2 \approx 346.6 \text{ ft-lbs}$$
+            </div>
+          </div>
+
+          <h3>平面薄板質心 (Center of Mass of a Planar Lamina)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">薄板質心 $(\bar{x}, \bar{y})$ 計算公式</div>
+            <div class="callout-body">
+              設均勻薄板密度為 $\rho$，邊界由 $f(x) \ge g(x)$ 在 $[a, b]$ 圍成：
+              <ul>
+                <li>總質量：$m = \rho \int_a^b [f(x) - g(x)] \, dx = \rho A$</li>
+                <li>對 $y$ 軸之一次力矩：$M_y = \rho \int_a^b x[f(x) - g(x)] \, dx$</li>
+                <li>對 $x$ 軸之一次力矩：$M_x = \rho \int_a^b \frac{f(x)+g(x)}{2}[f(x)-g(x)] \, dx$</li>
+              </ul>
+              質心坐標（平衡點 Balancing Point）：
+              $$\bar{x} = \frac{M_y}{m} = \frac{1}{A}\int_a^b x[f(x) - g(x)] \, dx, \qquad \bar{y} = \frac{M_x}{m} = \frac{1}{A}\int_a^b \frac{[f(x)]^2 - [g(x)]^2}{2} \, dx$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：拋物線薄板 $f(x) = 4-x^2$ 在 $[-2, 2]$ 的質心</div>
+            <div class="callout-body">
+              由對稱性可知 $\bar{x} = 0$。質量 $m = \rho \int_{-2}^2 (4-x^2)dx = \frac{32\rho}{3}$。<br>
+              力矩：$M_x = \rho \int_{-2}^2 \frac{4-x^2}{2}(4-x^2)dx = \frac{\rho}{2}\int_{-2}^2 (16 - 8x^2 + x^4)dx = \frac{256\rho}{15}$。<br>
+              $$\bar{y} = \frac{M_x}{m} = \frac{256\rho/15}{32\rho/3} = \frac{8}{5}$$
+              質心位於 $\left(0, \frac{8}{5}\right)$。
+            </div>
+          </div>
+
+          <h3>流體壓力與流體力 (Fluid Pressure and Force)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">垂直浸沒平板之流體總作用力公式</div>
+            <div class="callout-body">
+              在水深 $h$ 處的流體壓強為 $P = wh$（$w$ 為流體重量密度 weight-density）：
+              $$F = w \int_c^d h(y) L(y) \, dy$$
+              其中 $h(y)$ 為深度函數，$L(y)$ 為水平方向寬度函數。
+              <div class="callout callout-note" style="margin-top: 0.75rem;">
+                <div class="callout-title">常用重量密度基準值</div>
+                <div class="callout-body">
+                  <ul>
+                    <li>英制清水 (Imperial Unit)：$w = 62.4 \text{ lb/ft}^3$（海水約 $64 \text{ lb/ft}^3$）</li>
+                    <li>公制清水 (Metric Unit)：$\rho = 1000 \text{ kg/m}^3$ ($1 \text{ g/cm}^3$)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 5.6 Growth & Decay -->
+        <!-- ========================================== -->
+        <section id="sec5-6" class="lecture-section">
+          <h2>5.6 指數成長衰減與牛頓冷卻定律 (Growth, Decay and Cooling)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">指數變化率微分方程模型</div>
+            <div class="callout-body">
+              若物理量的變化率與該量現存值成正比：
+              $$\frac{dy}{dt} = ky$$
+              <strong>分離變數法求解 (Separation of Variables)：</strong>
+              $$\frac{1}{y} \, dy = k \, dt \implies \int \frac{1}{y} \, dy = \int k \, dt \implies \ln y = kt + C_1 \implies y = e^{kt+C_1} = C e^{kt}$$
+              其中 $C = y(0)$ 為初始值。$k > 0$ 代表指數成長，$k < 0$ 代表指數衰減。
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 3：車諾比事故鈽-239 放射性衰減與半衰期 (Half-Life)</div>
+            <div class="callout-body">
+              鈽-239（Pu-239）的半衰期為 24,100 年。假設外洩 10 克，求衰變至剩餘 1 克所需的時間：
+              <ul>
+                <li>初值 $C = 10$。利用半衰期求解比例常數 $k$：
+                  $$5 = 10e^{k(24{,}100)} \implies e^{24100k} = \frac{1}{2} \implies k = \frac{\ln(1/2)}{24{,}100} \approx -0.000028761$$
+                </li>
+                <li>衰變模型：$y = 10e^{-0.000028761t}$。令剩餘量 $y = 1$：
+                  $$1 = 10e^{-0.000028761t} \implies \ln(0.1) = -0.000028761t \implies t \approx 80{,}059 \text{ 年}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6：牛頓冷卻定律 (Newton's Law of Cooling)</div>
+            <div class="callout-body">
+              物體溫度變化的速率與「物體溫度與周圍環境溫度之差」成正比。設室溫維持 $60^\circ\text{F}$，物體自 $100^\circ\text{F}$ 降至 $90^\circ\text{F}$ 費時 10 分鐘。求自 $90^\circ\text{F}$ 降至 $80^\circ\text{F}$ 還需多久？
+              <ul>
+                <li><strong>微分方程式：</strong> $\frac{dy}{dt} = k(y - 60)$</li>
+                <li>分離變數法積分得：$y - 60 = C e^{kt} \implies y(t) = 60 + C e^{kt}$。</li>
+                <li>初溫 $y(0) = 100 \implies 100 = 60 + C \implies C = 40$。模型為 $y(t) = 60 + 40e^{kt}$。</li>
+                <li>代入 $t = 10$ 分鐘時 $y = 90$：
+                  $$90 = 60 + 40e^{10k} \implies e^{10k} = \frac{3}{4} \implies k = \frac{1}{10}\ln\left(\frac{3}{4}\right) \approx -0.02877$$
+                </li>
+                <li>求降至 $80^\circ\text{F}$ 的總時間：
+                  $$80 = 60 + 40e^{-0.02877t} \implies 40e^{-0.02877t} = 20 \implies e^{-0.02877t} = \frac{1}{2} \implies t \approx 24.09 \text{ 分鐘}$$
+                </li>
+                <li>還要多久：$24.09 - 10 = 14.09 \text{ 分鐘}$。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 前後章節跳轉按鈕 -->
+        <nav class="chapter-pagination">
+          <a href="ch04-integrals.html" id="prev-chapter-link" class="page-link prev">
+            <span class="link-label">← 上一章</span>
+            <span class="link-title">第 04 章：積分及其法則</span>
+          </a>
+          <a href="ch06-integration-techniques.html" id="next-chapter-link" class="page-link next">
+            <span class="link-label">下一章 →</span>
+            <span class="link-title">第 06 章：進階積分技巧與瑕積分</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <!-- 邏輯腳本 (相對路徑) -->
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

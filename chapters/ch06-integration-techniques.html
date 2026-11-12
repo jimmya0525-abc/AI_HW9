@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微積分講義 - 第 06 章：進階積分技巧與瑕積分 (Integration Techniques and Improper Integrals)</title>
+
+  <!-- 全站共用樣式 (相對路徑) -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- KaTeX 數學公式支援 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-chapter-id="ch06">
+  <!-- 頂部功能導覽列 -->
+  <header class="site-header">
+    <div class="header-left">
+      <button id="menu-toggle" class="icon-btn" aria-label="切換選單">☰</button>
+      <a href="../index.html" class="header-logo">
+        <span>📐</span> 微積分課程講義
+      </a>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="切換主題模式">🌓</button>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- 側邊欄（由 nav.js 動態渲染目錄） -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>章節目錄導覽</h3>
+      </div>
+      <nav id="course-nav" class="course-nav">
+        <!-- nav.js 自動注入目錄 -->
+      </nav>
+    </aside>
+
+    <!-- 手機端側邊欄遮罩 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 講義主內容區域 -->
+    <main class="main-content">
+      <article class="lecture-content">
+        <!-- 章節標頭 -->
+        <header class="chapter-header">
+          <div class="chapter-meta">Chapter 06</div>
+          <h1 class="chapter-title">進階積分技巧與瑕積分<br><small style="font-size: 0.6em; font-weight: 500; color: var(--text-muted);">Integration Techniques and Improper Integrals</small></h1>
+          <p class="chapter-lead">
+            本章深入探討各類解析積分的高等運算技巧：從 20 個基礎積分法則的回顧與被積式形變擬合出發，系統性掌握分部積分法（Integration by Parts）、三角函數乘冪積分、幾何輔助三角形代換法（Trigonometric Substitution）、有理分式之部分分式拆解（Partial Fractions）、萬能代換法（Weierstrass Substitution）與積分表活用；並結合柯西均值定理導出羅必達法則處理各類不定型極限，最後全面解析第一類無窮區間與第二類無窮不連續點之瑕積分（Improper Integrals）及托里拆利小號（Gabriel's Horn）等經典幾何悖論。
+          </p>
+        </header>
+
+        <!-- 6.0 基本積分法則回顧 -->
+        <section id="sec6-0" class="lecture-section">
+          <h2>6.0 基本積分法則回顧 (Review of Basic Rules)</h2>
+          <p>
+            在學習進階積分技巧之前，必須熟練掌握以下 20 個基礎積分公式（設 $a > 0$），並能靈活運用代數變形（長除法、拆項、加減項、三角恆等式、有理化共軛、根式代換）將複雜被積式化為基本型態：
+          </p>
+
+          <!-- 20 個基本積分法則卡片 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">📘 20 個基本積分法則 (Review of 20 Basic Integration Rules, $a > 0$)</div>
+            <div class="callout-body">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                <div>
+                  <ol style="margin-left: 1.2rem; line-height: 2;">
+                    <li>$\int k f(u) \, du = k \int f(u) \, du$</li>
+                    <li>$\int [f(u) \pm g(u)] \, du = \int f(u) \, du \pm \int g(u) \, du$</li>
+                    <li>$\int du = u + C$</li>
+                    <li>$\int u^n \, du = \frac{u^{n+1}}{n+1} + C \quad (n \ne -1)$</li>
+                    <li>$\int \frac{du}{u} = \ln|u| + C$</li>
+                    <li>$\int e^u \, du = e^u + C$</li>
+                    <li>$\int a^u \, du = \left(\frac{1}{\ln a}\right) a^u + C$</li>
+                    <li>$\int \sin u \, du = -\cos u + C$</li>
+                    <li>$\int \cos u \, du = \sin u + C$</li>
+                    <li>$\int \tan u \, du = -\ln|\cos u| + C = \ln|\sec u| + C$</li>
+                  </ol>
+                </div>
+                <div>
+                  <ol start="11" style="margin-left: 1.2rem; line-height: 2;">
+                    <li>$\int \cot u \, du = \ln|\sin u| + C$</li>
+                    <li>$\int \sec u \, du = \ln|\sec u + \tan u| + C$</li>
+                    <li>$\int \csc u \, du = -\ln|\csc u + \cot u| + C$</li>
+                    <li>$\int \sec^2 u \, du = \tan u + C$</li>
+                    <li>$\int \csc^2 u \, du = -\cot u + C$</li>
+                    <li>$\int \sec u \tan u \, du = \sec u + C$</li>
+                    <li>$\int \csc u \cot u \, du = -\csc u + C$</li>
+                    <li>$\int \frac{du}{\sqrt{a^2 - u^2}} = \arcsin\left(\frac{u}{a}\right) + C$</li>
+                    <li>$\int \frac{du}{a^2 + u^2} = \frac{1}{a} \arctan\left(\frac{u}{a}\right) + C$</li>
+                    <li>$\int \frac{du}{u\sqrt{u^2 - a^2}} = \frac{1}{a} \text{arcsec}\left(\frac{|u|}{a}\right) + C$</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 範例：被積式的結構微調對比 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.0.1：被積式微小差異引發的不同積分法則</div>
+            <div class="callout-body">
+              <p>比較以下三道分母均為 $x^2 + 9$ 但分子次方不同的積分：</p>
+              <ul>
+                <li><strong>(a) 反正切型：</strong>
+                  $$\int \frac{4}{x^2 + 9} \, dx = 4 \int \frac{1}{x^2 + 3^2} \, dx = 4 \left(\frac{1}{3} \arctan\frac{x}{3}\right) + C = \frac{4}{3} \arctan\frac{x}{3} + C$$
+                </li>
+                <li><strong>(b) 對數型（分子為分母導數）：</strong>
+                  $$\int \frac{4x}{x^2 + 9} \, dx = 2 \int \frac{2x}{x^2 + 9} \, dx = 2 \int \frac{du}{u} = 2 \ln(x^2 + 9) + C$$
+                </li>
+                <li><strong>(c) 假分式長除法型：</strong>
+                  $$\int \frac{4x^2}{x^2 + 9} \, dx = \int \left(4 - \frac{36}{x^2 + 9}\right) dx = \int 4 \, dx - 36 \int \frac{1}{x^2 + 9} \, dx = 4x - 12 \arctan\frac{x}{3} + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 範例：定積分拆項運算 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.0.2：拆項結合冪法則與反正弦法則之定積分</div>
+            <div class="callout-body">
+              <p>計算定積分 $\int_0^1 \frac{x + 3}{\sqrt{4 - x^2}} \, dx$：</p>
+              <div class="proof-body">
+                $$\begin{aligned}
+                \int_0^1 \frac{x + 3}{\sqrt{4 - x^2}} \, dx &= \int_0^1 \frac{x}{\sqrt{4 - x^2}} \, dx + \int_0^1 \frac{3}{\sqrt{4 - x^2}} \, dx \\
+                &= -\frac{1}{2} \int_0^1 (4 - x^2)^{-1/2} (-2x) \, dx + 3 \int_0^1 \frac{1}{\sqrt{2^2 - x^2}} \, dx \\
+                &= \left[ -(4 - x^2)^{1/2} + 3 \arcsin\frac{x}{2} \right]_0^1 \\
+                &= \left(-\sqrt{3} + 3 \arcsin\frac{1}{2}\right) - (-2 + 0) \\
+                &= \left(-\sqrt{3} + \frac{\pi}{2}\right) + 2 \approx 1.839
+                \end{aligned}$$
+              </div>
+            </div>
+          </div>
+
+          <!-- 隱藏對數型與隱藏冪法則型 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.0.3：隱藏對數型與變數代換技巧</div>
+            <div class="callout-body">
+              <p>求不定積分 $\int \frac{1}{1 + e^x} \, dx$：</p>
+              <p><strong>解法一（分子加減項）：</strong></p>
+              $$\begin{aligned}
+              \int \frac{1}{1 + e^x} \, dx &= \int \frac{1 + e^x - e^x}{1 + e^x} \, dx = \int \left(\frac{1 + e^x}{1 + e^x} - \frac{e^x}{1 + e^x}\right) dx \\
+              &= \int 1 \, dx - \int \frac{e^x}{1 + e^x} \, dx = x - \ln(1 + e^x) + C
+              \end{aligned}$$
+              <p><strong>解法二（變數代換法）：</strong></p>
+              <p>
+                令 $u = e^{-x}$，則 $du = -e^{-x} \, dx \implies dx = -\frac{1}{u} \, du$：
+              </p>
+              $$\int \frac{1}{1 + e^x} \, dx = \int \frac{-\frac{1}{u}}{1 + \frac{1}{u}} \, du = -\int \frac{1}{u + 1} \, du = -\ln(u + 1) + C = -\ln(e^{-x} + 1) + C$$
+              <p class="chapter-lead" style="font-size: 0.9em; margin-top: 0.5rem;">
+                註：$-\ln(e^{-x} + 1) = -\ln\left(\frac{1 + e^x}{e^x}\right) = -[\ln(1 + e^x) - x] = x - \ln(1 + e^x)$，兩種解法形式完全等價。
+              </p>
+            </div>
+          </div>
+
+          <!-- 隱藏冪法則與三角恆等式 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.0.4：隱藏冪法則與三角平方恆等式</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int (\cot x)[\ln(\sin x)] \, dx$：</strong><br>
+                  令 $u = \ln(\sin x)$，則 $du = \frac{\cos x}{\sin x} \, dx = \cot x \, dx$：
+                  $$\int (\cot x)[\ln(\sin x)] \, dx = \int u \, du = \frac{u^2}{2} + C = \frac{1}{2}[\ln(\sin x)]^2 + C$$
+                </li>
+                <li><strong>求 $\int \tan^2 2x \, dx$：</strong><br>
+                  利用畢氏三角恆等式 $1 + \tan^2 \theta = \sec^2 \theta \implies \tan^2 \theta = \sec^2 \theta - 1$：
+                  $$\int \tan^2 2x \, dx = \frac{1}{2} \int \tan^2 u \, du = \frac{1}{2} \int (\sec^2 u - 1) \, du = \frac{1}{2} \tan u - \frac{u}{2} + C = \frac{1}{2} \tan 2x - x + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 分數次冪被積式代換 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.0.5：含根式分數次冪 $[f(x)]^{m/n}$ 的代換法</div>
+            <div class="callout-body">
+              <p>當被積式中含有 $[f(x)]^{m/n}$ 項時，常令 $u = [f(x)]^{1/n}$ 以消去根號：</p>
+              <ul>
+                <li><strong>求 $\int \frac{dx}{2 + \sqrt{x}}$：</strong><br>
+                  令 $u = \sqrt{x} \implies u^2 = x \implies dx = 2u \, du$：
+                  $$\int \frac{2u}{2 + u} \, du = \int \frac{2u + 4 - 4}{2 + u} \, du = \int \left(2 - \frac{4}{2 + u}\right) du = 2u - 4\ln|2 + u| + C = 2\sqrt{x} - 4\ln(2 + \sqrt{x}) + C$$
+                </li>
+                <li><strong>求 $\int_{-1}^0 x \sqrt[3]{x + 1} \, dx$：</strong><br>
+                  令 $u = (x + 1)^{1/3} \implies u^3 = x + 1 \implies x = u^3 - 1, \, dx = 3u^2 \, du$。<br>
+                  積分上下限轉換：當 $x = -1$ 時 $u = 0$；當 $x = 0$ 時 $u = 1$：
+                  $$\int_{-1}^0 x \sqrt[3]{x + 1} \, dx = \int_0^1 (u^3 - 1) u [3u^2 \, du] = \int_0^1 (3u^6 - 3u^3) \, du = \left[ \frac{3}{7}u^7 - \frac{3}{4}u^4 \right]_0^1 = \frac{3}{7} - \frac{3}{4} = -\frac{9}{28}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 常見配適技巧彙整表 -->
+          <div class="callout callout-note">
+            <div class="callout-title">📌 被積式擬合基本法則的常用代數手法 (Procedures for Fitting Integrands)</div>
+            <div class="callout-body">
+              <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+                <thead>
+                  <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                    <th style="padding: 6px;">手法 (Technique)</th>
+                    <th style="padding: 6px;">範例變換 (Example Transformation)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 6px;">展開分子 (Expand)</td>
+                    <td style="padding: 6px;">$(1 + e^x)^2 = 1 + 2e^x + e^{2x}$</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 6px;">拆開分子 (Separate numerator)</td>
+                    <td style="padding: 6px;">$\frac{1 + x}{x^2 + 1} = \frac{1}{x^2 + 1} + \frac{x}{x^2 + 1}$</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 6px;">配方法 (Complete the square)</td>
+                    <td style="padding: 6px;">$\frac{1}{\sqrt{2x - x^2}} = \frac{1}{\sqrt{1 - (x - 1)^2}}$</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 6px;">假分式長除法 (Divide improper fraction)</td>
+                    <td style="padding: 6px;">$\frac{x^2}{x^2 + 1} = 1 - \frac{1}{x^2 + 1}$</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 6px;">分子加減項 (Add and subtract terms)</td>
+                    <td style="padding: 6px;">$\frac{2x}{x^2 + 2x + 1} = \frac{2x + 2 - 2}{x^2 + 2x + 1} = \frac{2x + 2}{x^2 + 2x + 1} - \frac{2}{(x + 1)^2}$</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 6px;">畢氏三角恆等式 (Trig identities)</td>
+                    <td style="padding: 6px;">$\cot^2 x = \csc^2 x - 1$</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px;">乘除畢氏共軛項 (Pythagorean conjugate)</td>
+                    <td style="padding: 6px;">$\frac{1}{1 + \sin x} = \frac{1(1 - \sin x)}{(1 + \sin x)(1 - \sin x)} = \frac{1 - \sin x}{\cos^2 x} = \sec^2 x - \sec x \tan x$</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6.1 分部積分法 -->
+        <section id="sec6-1" class="lecture-section">
+          <h2>6.1 分部積分法 (Integration by Parts)</h2>
+          <p>
+            分部積分法源自微分的<strong>乘積法則（Product Rule）</strong>，專門用來處理「兩個函數相乘」或「反超越函數單項」的積分問題。
+          </p>
+
+          <!-- 定理與證明 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 6.1：分部積分公式 (Integration by Parts Formula)</div>
+            <div class="callout-body">
+              若 $u(x)$ 與 $v(x)$ 為可微函數且其導函數連續，則：
+              $$\int u \, dv = u v - \int v \, du$$
+              定積分形式為：
+              $$\int_a^b u \, dv = [u v]_a^b - \int_a^b v \, du$$
+            </div>
+          </div>
+
+          <div class="proof-block">
+            <div class="proof-title">證明 (Proof from Product Rule)：</div>
+            <div class="proof-body">
+              根據乘積導函數法則：
+              $$\frac{d}{dx}[u v] = u \frac{dv}{dx} + v \frac{du}{dx} = u v' + v u'$$
+              兩邊同乘 $dx$ 並取不定積分：
+              $$\int \frac{d}{dx}[u v] \, dx = \int u v' \, dx + \int v u' \, dx \implies u v = \int u \, dv + \int v \, du$$
+              移項整理即得：
+              $$\int u \, dv = u v - \int v \, du$$
+              <div class="proof-end">$\blacksquare$</div>
+            </div>
+          </div>
+
+          <!-- 如何選擇 u 與 v -->
+          <div class="callout callout-note">
+            <div class="callout-title">🎯 如何選取 $u$ 與 $dv$ (How to Choose $u$ and $dv$)</div>
+            <div class="callout-body">
+              <p>選取核心原則：<strong>令 $u$ 為「微分後形式變得更簡單」的部分，令 $dv$ 為「容易積分」的部分。</strong></p>
+              <p>常用優先順序口訣（LIATE 法則）：</p>
+              <ol style="margin-left: 1.2rem;">
+                <li><strong>L (Logarithmic)</strong>：對數函數（如 $\ln x$）優先選為 $u$</li>
+                <li><strong>I (Inverse Trigonometric)</strong>：反三角函數（如 $\arctan x, \arcsin x$）選為 $u$</li>
+                <li><strong>A (Algebraic)</strong>：代數多項式（如 $x^n$）選為 $u$（微分可降次）</li>
+                <li><strong>T (Trigonometric)</strong>：三角函數（如 $\sin x, \cos x$）選為 $dv$</li>
+                <li><strong>E (Exponential)</strong>：指數函數（如 $e^x$）選為 $dv$</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- 基礎範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.1.1：基礎分部積分演練</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int x \ln x \, dx$：</strong><br>
+                  令 $u = \ln x, \, dv = x \, dx \implies du = \frac{1}{x} \, dx, \, v = \frac{x^2}{2}$：
+                  $$\int x \ln x \, dx = \frac{1}{2} x^2 \ln x - \int \frac{x^2}{2} \left(\frac{1}{x} \, dx\right) = \frac{1}{2} x^2 \ln x - \frac{1}{2} \int x \, dx = \frac{1}{2} x^2 \ln x - \frac{1}{4} x^2 + C$$
+                </li>
+                <li><strong>求 $\int x e^x \, dx$：</strong><br>
+                  令 $u = x, \, dv = e^x \, dx \implies du = dx, \, v = e^x$：
+                  $$\int x e^x \, dx = x e^x - \int e^x \, dx = x e^x - e^x + C$$
+                </li>
+                <li><strong>求 $\int x^2 \ln x \, dx$：</strong><br>
+                  令 $u = \ln x, \, dv = x^2 \, dx \implies du = \frac{1}{x} \, dx, \, v = \frac{x^3}{3}$：
+                  $$\int x^2 \ln x \, dx = \frac{1}{3} x^3 \ln x - \int \frac{x^3}{3} \cdot \frac{1}{x} \, dx = \frac{1}{3} x^3 \ln x - \frac{1}{9} x^3 + C$$
+                </li>
+                <li><strong>求 $\int x^3 e^{x^2} \, dx$（結合代換法）：</strong><br>
+                  改寫被積式為 $\int x^2 (x e^{x^2} \, dx)$。令 $u = x^2, \, dv = x e^{x^2} \, dx \implies du = 2x \, dx, \, v = \frac{1}{2} e^{x^2}$：
+                  $$\int x^3 e^{x^2} \, dx = \frac{1}{2} x^2 e^{x^2} - \frac{1}{2} \int e^{x^2} (2x \, dx) = \frac{1}{2} x^2 e^{x^2} - \frac{1}{2} e^{x^2} + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 應用題：質心計算結合分部積分 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.1.2：正弦曲線下方區域之質心座標 (Centroid)</div>
+            <div class="callout-body">
+              <p>求區域由 $y = \sin x$ 在 $[0, \pi/2]$ 與兩座標軸所圍成圖形的質心 $(\bar{x}, \bar{y})$：</p>
+              <div class="proof-body">
+                <p>1. 區域總面積：$A = \int_0^{\pi/2} \sin x \, dx = [-\cos x]_0^{\pi/2} = 0 - (-1) = 1$。</p>
+                <p>2. $\bar{y}$ 座標（倍角公式）：</p>
+                $$\bar{y} = \frac{1}{A} \int_0^{\pi/2} \frac{\sin x}{2} (\sin x) \, dx = \frac{1}{4} \int_0^{\pi/2} (1 - \cos 2x) \, dx = \frac{1}{4} \left[ x - \frac{\sin 2x}{2} \right]_0^{\pi/2} = \frac{\pi}{8}$$
+                <p>3. $\bar{x}$ 座標（分部積分：令 $u = x, dv = \sin x \, dx \implies du = dx, v = -\cos x$）：</p>
+                $$\int x \sin x \, dx = -x \cos x + \int \cos x \, dx = -x \cos x + \sin x + C$$
+                $$\bar{x} = \frac{1}{1} \int_0^{\pi/2} x \sin x \, dx = [-x \cos x + \sin x]_0^{\pi/2} = (0 + 1) - 0 = 1$$
+                <p>因此該區域質心為 $(\bar{x}, \bar{y}) = \left(1, \frac{\pi}{8}\right)$。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 單項反超越函數之分部積分 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.1.3：單項反超越函數之分部積分（令 $dv = dx$）</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int \ln x \, dx$：</strong><br>
+                  令 $u = \ln x, \, dv = dx \implies du = \frac{1}{x} \, dx, \, v = x$：
+                  $$\int \ln x \, dx = x \ln x - \int x \left(\frac{1}{x} \, dx\right) = x \ln x - x + C$$
+                </li>
+                <li><strong>求 $\int \arctan x \, dx$：</strong><br>
+                  令 $u = \arctan x, \, dv = dx \implies du = \frac{1}{1 + x^2} \, dx, \, v = x$：
+                  $$\int \arctan x \, dx = x \arctan x - \int \frac{x}{1 + x^2} \, dx = x \arctan x - \frac{1}{2} \ln(1 + x^2) + C$$
+                </li>
+                <li><strong>求 $\int \arcsin x \, dx$：</strong><br>
+                  令 $u = \arcsin x, \, dv = dx \implies du = \frac{1}{\sqrt{1 - x^2}} \, dx, \, v = x$：
+                  $$\int \arcsin x \, dx = x \arcsin x - \int \frac{x}{\sqrt{1 - x^2}} \, dx = x \arcsin x + \sqrt{1 - x^2} + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 連續多次分部積分 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.1.4：重複分部積分 (Repeated Integration by Parts)</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int x^2 \sin x \, dx$：</strong><br>
+                  第一次分部：令 $u = x^2, \, dv = \sin x \, dx \implies du = 2x \, dx, \, v = -\cos x$：
+                  $$\int x^2 \sin x \, dx = -x^2 \cos x + \int 2x \cos x \, dx$$
+                  第二次分部（對 $\int x \cos x \, dx$）：令 $u = x, \, dv = \cos x \, dx \implies du = dx, \, v = \sin x$：
+                  $$\int x \cos x \, dx = x \sin x - \int \sin x \, dx = x \sin x + \cos x + C_1$$
+                  代回原式整理：
+                  $$\int x^2 \sin x \, dx = -x^2 \cos x + 2x \sin x + 2\cos x + C$$
+                </li>
+                <li><strong>嘗試題：求 $\int x^2 e^x \, dx$：</strong><br>
+                  同理兩次分部積分消去 $x^2$ 項，得：
+                  $$\int x^2 e^x \, dx = x^2 e^x - 2x e^x + 2e^x + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 循環分部積分 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.1.5：循環分部積分（解方程式求原積分項）</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int e^x \cos 2x \, dx$：</strong><br>
+                  第一次分部：令 $u = e^x, \, dv = \cos 2x \, dx \implies du = e^x \, dx, \, v = \frac{1}{2} \sin 2x$：
+                  $$\int e^x \cos 2x \, dx = \frac{1}{2} e^x \sin 2x - \frac{1}{2} \int e^x \sin 2x \, dx$$
+                  第二次分部：令 $u = e^x, \, dv = \sin 2x \, dx \implies du = e^x \, dx, \, v = -\frac{1}{2} \cos 2x$：
+                  $$\int e^x \sin 2x \, dx = -\frac{1}{2} e^x \cos 2x + \frac{1}{2} \int e^x \cos 2x \, dx$$
+                  代回合併同類項：
+                  $$\int e^x \cos 2x \, dx = \frac{1}{2} e^x \sin 2x + \frac{1}{4} e^x \cos 2x - \frac{1}{4} \int e^x \cos 2x \, dx$$
+                  將原積分項移至左側得 $\frac{5}{4} \int e^x \cos 2x \, dx = \frac{1}{2} e^x \sin 2x + \frac{1}{4} e^x \cos 2x$：
+                  $$\int e^x \cos 2x \, dx = \frac{2}{5} e^x \sin 2x + \frac{1}{5} e^x \cos 2x + C$$
+                </li>
+                <li><strong>求 $\int \sec^3 x \, dx$：</strong><br>
+                  拆成 $\int \sec x (\sec^2 x \, dx)$。令 $u = \sec x, \, dv = \sec^2 x \, dx \implies du = \sec x \tan x \, dx, \, v = \tan x$：
+                  $$\begin{aligned}
+                  \int \sec^3 x \, dx &= \sec x \tan x - \int \sec x \tan^2 x \, dx = \sec x \tan x - \int \sec x (\sec^2 x - 1) \, dx \\
+                  &= \sec x \tan x - \int \sec^3 x \, dx + \int \sec x \, dx
+                  \end{aligned}$$
+                  移項可得 $2 \int \sec^3 x \, dx = \sec x \tan x + \ln|\sec x + \tan x|$：
+                  $$\int \sec^3 x \, dx = \frac{1}{2} \sec x \tan x + \frac{1}{2} \ln|\sec x + \tan x| + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 降次公式 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 6.1.6：降次公式 (Reduction Formulas)</div>
+            <div class="callout-body">
+              <p>透過分部積分可推導出高次冪的遞迴降次公式：</p>
+              $$\int \sin^n x \, dx = -\frac{1}{n} \sin^{n-1} x \cos x + \frac{n-1}{n} \int \sin^{n-2} x \, dx$$
+              $$\int x^n e^x \, dx = x^n e^x - n \int x^{n-1} e^x \, dx$$
+            </div>
+          </div>
+
+          <div class="proof-block">
+            <div class="proof-title">證明 $\sin^n x$ 降次公式：</div>
+            <div class="proof-body">
+              將 $\sin^n x$ 拆為 $\sin^{n-1}x \cdot \sin x$。令 $u = \sin^{n-1}x, \, dv = \sin x \, dx$：
+              $$du = (n-1)\sin^{n-2}x \cos x \, dx, \quad v = -\cos x$$
+              分部積分展開：
+              $$\begin{aligned}
+              \int \sin^n x \, dx &= -\sin^{n-1}x \cos x + \int (n-1)\sin^{n-2}x \cos^2 x \, dx \\
+              &= -\sin^{n-1}x \cos x + (n-1) \int \sin^{n-2}x (1 - \sin^2 x) \, dx \\
+              &= -\sin^{n-1}x \cos x + (n-1) \int \sin^{n-2}x \, dx - (n-1) \int \sin^n x \, dx
+              \end{aligned}$$
+              將最後一項移到等號左側：
+              $$n \int \sin^n x \, dx = -\sin^{n-1}x \cos x + (n-1) \int \sin^{n-2}x \, dx$$
+              兩邊同除以 $n$ 即得證。
+              <div class="proof-end">$\blacksquare$</div>
+            </div>
+          </div>
+
+          <!-- 選修範例與型態總結 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.1.7 (選讀)：巧妙選取 $dv$ 之分部積分</div>
+            <div class="callout-body">
+              <p>求 $\int \frac{x e^x}{(1 + x)^2} \, dx$：</p>
+              <div class="proof-body">
+                令 $u = x e^x, \, dv = (1 + x)^{-2} \, dx \implies v = -(1 + x)^{-1} = -\frac{1}{1 + x}$，且 $du = (e^x + x e^x) \, dx = (1 + x)e^x \, dx$：
+                $$\begin{aligned}
+                \int \frac{x e^x}{(1 + x)^2} \, dx &= x e^x \left(-\frac{1}{1 + x}\right) - \int \left(-\frac{1}{1 + x}\right) (1 + x)e^x \, dx \\
+                &= -\frac{x e^x}{1 + x} + \int e^x \, dx = -\frac{x e^x}{1 + x} + e^x + C \\
+                &= \frac{-x e^x + e^x(1 + x)}{1 + x} + C = \frac{e^x}{1 + x} + C
+                \end{aligned}$$
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">📌 分部積分常用型態彙整表 (Summary of Common Integrals)</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>$\int x^n e^{ax} \, dx, \, \int x^n \sin ax \, dx, \, \int x^n \cos ax \, dx$：令 $u = x^n$，$dv$ 取指數或三角項。</li>
+                <li>$\int x^n \ln x \, dx, \, \int x^n \arcsin ax \, dx, \, \int x^n \arctan ax \, dx$：令 $u$ 取對數或反三角項，$dv = x^n \, dx$。</li>
+                <li>$\int e^{ax} \sin bx \, dx, \, \int e^{ax} \cos bx \, dx$：令 $u$ 取三角項（或指數項），連做兩次分部積分後解方程式。</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6.2 三角積分 -->
+        <section id="sec6-2" class="lecture-section">
+          <h2>6.2 三角積分 (Trigonometric Integrals)</h2>
+          <p>
+            三角積分著重於求解正弦、餘弦、正割、正切之乘冪乘積。解題關鍵在於辨別<strong>次方奇偶性</strong>，保留一組微分因子（如 $\sin x dx, \cos x dx, \sec^2 x dx, \sec x \tan x dx$），並運用恆等式將其餘次方轉換為另一種函數。
+          </p>
+
+          <!-- 核心三角恆等式 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">📘 核心三角恆等式 (Fundamental Trigonometric Identities)</div>
+            <div class="callout-body">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+                <div>
+                  <strong>畢氏恆等式：</strong>
+                  <ul>
+                    <li>$\sin^2 x + \cos^2 x = 1$</li>
+                    <li>$1 + \tan^2 x = \sec^2 x$</li>
+                    <li>$1 + \cot^2 x = \csc^2 x$</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>半角 / 倍角降次公式：</strong>
+                  <ul>
+                    <li>$\sin^2 x = \frac{1 - \cos 2x}{2}$</li>
+                    <li>$\cos^2 x = \frac{1 + \cos 2x}{2}$</li>
+                    <li>$\sin 2x = 2 \sin x \cos x$</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 正弦與餘弦乘冪積分指引 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定理 6.2.1：$\int \sin^m x \cos^n x \, dx$ 判定法則</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li><strong>準則 (i)：若 $m$ 或 $n$ 至少有一個為奇數 (either $m$ or $n$ is odd)</strong>
+                  <ul>
+                    <li>若 $m$ 為奇數：保留一個 $\sin x \, dx = -d(\cos x)$，其餘偶數次利用 $\sin^2 x = 1 - \cos^2 x$ 換成 $\cos x$。</li>
+                    <li>若 $n$ 為奇數：保留一個 $\cos x \, dx = d(\sin x)$，其餘偶數次利用 $\cos^2 x = 1 - \sin^2 x$ 換成 $\sin x$。</li>
+                  </ul>
+                </li>
+                <li><strong>準則 (ii)：若 $m$ 與 $n$ 均為非負偶數 (both $m$ and $n$ are even)</strong>
+                  <ul>
+                    <li>重複使用半角公式 $\sin^2 x = \frac{1 - \cos 2x}{2}$ 及 $\cos^2 x = \frac{1 + \cos 2x}{2}$ 降次，化為 $\cos 2x, \cos 4x$ 等奇偶次項再積分。</li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- 範例：正弦餘弦積分 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.2.1：正弦與餘弦乘冪積分運算</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int \sin^3 x \cos^4 x \, dx$（$m=3$ 奇數）：</strong><br>
+                  保留一個 $\sin x \, dx$，並令 $u = \cos x$：
+                  $$\begin{aligned}
+                  \int \sin^3 x \cos^4 x \, dx &= \int (1 - \cos^2 x) \cos^4 x (\sin x \, dx) = \int (\cos^4 x - \cos^6 x) \sin x \, dx \\
+                  &= -\int (\cos^4 x - \cos^6 x) \, d(\cos x) = -\frac{\cos^5 x}{5} + \frac{\cos^7 x}{7} + C
+                  \end{aligned}$$
+                </li>
+                <li><strong>計算定積分 $\int_{\pi/6}^{\pi/3} \frac{\cos^3 x}{\sqrt{\sin x}} \, dx$（$n=3$ 奇數）：</strong><br>
+                  保留 $\cos x \, dx = d(\sin x)$：
+                  $$\begin{aligned}
+                  \int_{\pi/6}^{\pi/3} \frac{(1 - \sin^2 x)\cos x}{\sqrt{\sin x}} \, dx &= \int_{\pi/6}^{\pi/3} [(\sin x)^{-1/2}\cos x - (\sin x)^{3/2}\cos x] \, dx \\
+                  &= \left[ 2(\sin x)^{1/2} - \frac{2}{5}(\sin x)^{5/2} \right]_{\pi/6}^{\pi/3} \\
+                  &= \left[ 2\left(\frac{\sqrt{3}}{2}\right)^{1/2} - \frac{2}{5}\left(\frac{\sqrt{3}}{2}\right)^{5/2} \right] - \left[ \sqrt{2} - \frac{\sqrt{2}}{80} \right] \approx 0.239
+                  \end{aligned}$$
+                </li>
+                <li><strong>求 $\int \sin^3 x \cos^{4/3} x \, dx$（含分數次冪）：</strong><br>
+                  同樣由 $m=3$ 奇數保留 $\sin x \, dx$：
+                  $$\int (1 - \cos^2 x) \cos^{4/3} x \sin x \, dx = -\int (\cos^{4/3} x - \cos^{10/3} x) \, d(\cos x) = -\frac{3}{7}\cos^{7/3} x + \frac{3}{13}\cos^{13/3} x + C$$
+                </li>
+                <li><strong>求 $\int \cos^4 x \, dx$（均為偶數）：</strong><br>
+                  套用半角公式：
+                  $$\begin{aligned}
+                  \int \cos^4 x \, dx &= \int \left(\frac{1 + \cos 2x}{2}\right)^2 dx = \frac{1}{4} \int (1 + 2\cos 2x + \cos^2 2x) \, dx \\
+                  &= \frac{1}{4} \int \left[ 1 + 2\cos 2x + \frac{1 + \cos 4x}{2} \right] dx = \frac{1}{4} \int \left[ \frac{3}{2} + 2\cos 2x + \frac{1}{2}\cos 4x \right] dx \\
+                  &= \frac{3}{8} x + \frac{1}{4} \sin 2x + \frac{1}{32} \sin 4x + C
+                  \end{aligned}$$
+                </li>
+                <li><strong>求 $\int \sin^2 x \cos^4 x \, dx$：</strong><br>
+                  $$\int \left(\frac{1 - \cos 2x}{2}\right) \left(\frac{1 + \cos 2x}{2}\right)^2 dx = \frac{1}{8} \int (1 + \cos 2x - \cos^2 2x - \cos^3 2x) \, dx = \frac{1}{16}x + \frac{1}{48}\sin^3 2x - \frac{1}{64}\sin 4x + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 正割與正切乘冪積分指引 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定理 6.2.2：$\int \sec^m x \tan^n x \, dx$ 判定法則</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li><strong>準則 (i)：若正割次方 $m$ 為偶數 (m is even)</strong><br>
+                  保留 $\sec^2 x \, dx = d(\tan x)$，其餘正割次方利用 $\sec^2 x = 1 + \tan^2 x$ 全部化為 $\tan x$。
+                </li>
+                <li><strong>準則 (ii)：若正切次方 $n$ 為奇數 (n is odd)</strong><br>
+                  保留 $\sec x \tan x \, dx = d(\sec x)$，其餘正切次方利用 $\tan^2 x = \sec^2 x - 1$ 全部化為 $\sec x$。
+                </li>
+                <li><strong>準則 (iii)：若 $m$ 為奇數且 $n$ 為偶數 (m is odd and n is even)</strong><br>
+                  利用 $\tan^2 x = \sec^2 x - 1$ 將全部項化為奇數次正割 $\sec^k x$，採用<strong>分部積分法</strong>求解。
+                </li>
+                <li><strong>準則 (iv)：若 $m = 0$（無正割項，純正切 $\tan^n x$）</strong><br>
+                  使用降次公式：$\int \tan^n x \, dx = \int \tan^{n-2} x (\sec^2 x - 1) \, dx = \frac{\tan^{n-1} x}{n-1} - \int \tan^{n-2} x \, dx$。
+                </li>
+                <li><strong>準則 (v)：若上述均不適用</strong><br>
+                  將被積式完全化為正弦與餘弦：$\sec x = \frac{1}{\cos x}, \, \tan x = \frac{\sin x}{\cos x}$ 再行求解。
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- 正割正切範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.2.2：正割與正切乘冪積分實戰</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int \sec^4 3x \tan^3 3x \, dx$（$m=4$ 偶數，或 $n=3$ 奇數均可）：</strong><br>
+                  方法一（令 $u = \tan 3x, \, du = 3\sec^2 3x \, dx$）：
+                  $$\int \sec^2 3x \tan^3 3x (\sec^2 3x \, dx) = \frac{1}{3} \int (1 + u^2) u^3 \, du = \frac{1}{3} \left(\frac{u^4}{4} + \frac{u^6}{6}\right) + C = \frac{\tan^4 3x}{12} + \frac{\tan^6 3x}{18} + C$$
+                </li>
+                <li><strong>求 $\int \tan^7 x \sec^4 x \, dx$：</strong><br>
+                  保留 $\sec^2 x \, dx = d(\tan x)$：
+                  $$\int \tan^7 x (1 + \tan^2 x) \, d(\tan x) = \frac{1}{8}\tan^8 x + \frac{1}{10}\tan^{10} x + C$$
+                </li>
+                <li><strong>求 $\int \frac{\tan^3 x}{\sqrt{\sec x}} \, dx$（$n=3$ 奇數）：</strong><br>
+                  保留 $\sec x \tan x \, dx$：
+                  $$\int (\sec x)^{-3/2} (\sec^2 x - 1) (\sec x \tan x \, dx) = \int [(\sec x)^{1/2} - (\sec x)^{-3/2}] \, d(\sec x) = \frac{2}{3}(\sec x)^{3/2} + 2(\sec x)^{-1/2} + C$$
+                </li>
+                <li><strong>求 $\int \tan^2 x \sec x \, dx$（$m=1$ 奇數，$n=2$ 偶數）：</strong><br>
+                  $$\int (\sec^2 x - 1) \sec x \, dx = \int \sec^3 x \, dx - \int \sec x \, dx = \frac{1}{2}(\sec x \tan x - \ln|\sec x + \tan x|) + C$$
+                </li>
+                <li><strong>求 $\int_0^{\pi/4} \tan^4 x \, dx$（純正切）：</strong><br>
+                  $$\int \tan^4 x \, dx = \int \tan^2 x (\sec^2 x - 1) \, dx = \frac{\tan^3 x}{3} - \int (\sec^2 x - 1) \, dx = \frac{\tan^3 x}{3} - \tan x + x + C$$
+                  帶入 $[0, \pi/4]$ 得：$\left(\frac{1}{3} - 1 + \frac{\pi}{4}\right) - (0) = \frac{\pi}{4} - \frac{2}{3}$。
+                </li>
+                <li><strong>求 $\int \tan^3 x \, dx$：</strong><br>
+                  $$\int \tan x (\sec^2 x - 1) \, dx = \int \tan x \, d(\tan x) - \int \tan x \, dx = \frac{1}{2}\tan^2 x + \ln|\cos x| + C$$
+                </li>
+                <li><strong>求 $\int \frac{\sec x}{\tan^2 x} \, dx$（轉化為正餘弦）：</strong><br>
+                  $$\int \left(\frac{1}{\cos x}\right) \left(\frac{\cos x}{\sin x}\right)^2 dx = \int \frac{\cos x}{\sin^2 x} \, dx = \int (\sin x)^{-2} \cos x \, dx = -(\sin x)^{-1} + C = -\csc x + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6.3 三角代換法 -->
+        <section id="sec6-3" class="lecture-section">
+          <h2>6.3 三角代換法 (Trigonometric Substitution)</h2>
+          <p>
+            當被積式中含有二次根號 $\sqrt{a^2 - u^2}$、$\sqrt{a^2 + u^2}$ 或 $\sqrt{u^2 - a^2}$ 且無法用一般代換法處理時，可利用直角三角形幾何邊長關係進行三角代換以根除根號。
+          </p>
+
+          <!-- 三大代換法則表格與幾何三角形 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">📐 三角代換三大形式與幾何參考三角形 ($a > 0$)</div>
+            <div class="callout-body">
+              <table style="width: 100%; border-collapse: collapse; margin-top: 0.5rem;">
+                <thead>
+                  <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                    <th style="padding: 6px;">根式型態</th>
+                    <th style="padding: 6px;">變數代換設定</th>
+                    <th style="padding: 6px;">根式化簡結果</th>
+                    <th style="padding: 6px;">微分量 $du$</th>
+                    <th style="padding: 6px;">幾何參考三角形邊長</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 6px;"><strong>$\sqrt{a^2 - u^2}$</strong></td>
+                    <td style="padding: 6px;">$u = a \sin\theta$<br><small>$(-\frac{\pi}{2} \le \theta \le \frac{\pi}{2})$</small></td>
+                    <td style="padding: 6px;">$a \cos\theta$</td>
+                    <td style="padding: 6px;">$du = a \cos\theta \, d\theta$</td>
+                    <td style="padding: 6px;">對邊 $= u$，斜邊 $= a$，鄰邊 $= \sqrt{a^2 - u^2}$</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 6px;"><strong>$\sqrt{a^2 + u^2}$</strong></td>
+                    <td style="padding: 6px;">$u = a \tan\theta$<br><small>$(-\frac{\pi}{2} < \theta < \frac{\pi}{2})$</small></td>
+                    <td style="padding: 6px;">$a \sec\theta$</td>
+                    <td style="padding: 6px;">$du = a \sec^2\theta \, d\theta$</td>
+                    <td style="padding: 6px;">對邊 $= u$，鄰邊 $= a$，斜邊 $= \sqrt{a^2 + u^2}$</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px;"><strong>$\sqrt{u^2 - a^2}$</strong></td>
+                    <td style="padding: 6px;">$u = a \sec\theta$<br><small>$(0 \le \theta < \frac{\pi}{2}$ 或 $\frac{\pi}{2} < \theta \le \pi)$</small></td>
+                    <td style="padding: 6px;">$\pm a \tan\theta$<br><small>($u > a$ 取正，$u < -a$ 取負)</small></td>
+                    <td style="padding: 6px;">$du = a \sec\theta \tan\theta \, d\theta$</td>
+                    <td style="padding: 6px;">斜邊 $= u$，鄰邊 $= a$，對邊 $= \sqrt{u^2 - a^2}$</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 基礎幾何與代換範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.3.1：單位圓面積與基礎三角代換</div>
+            <div class="callout-body">
+              <p>計算定積分 $\int_0^1 \sqrt{1 - x^2} \, dx$：</p>
+              <div class="proof-body">
+                令 $x = \sin u \implies dx = \cos u \, du$，且 $\sqrt{1 - x^2} = \cos u$（$0 \le u \le \pi/2$）：
+                $$\int_0^1 \sqrt{1 - x^2} \, dx = \int_0^{\pi/2} \cos^2 u \, du = \frac{1}{2} \int_0^{\pi/2} (1 + \cos 2u) \, du = \frac{1}{2} \left[ u + \frac{\sin 2u}{2} \right]_0^{\pi/2} = \frac{\pi}{4}$$
+                幾何意義：半徑為 1 的圓在第一象限之四分之一圓面積 $A = \frac{\pi(1)^2}{4} = \frac{\pi}{4}$。<br>
+                其不定積分形式為 $\int \sqrt{1 - x^2} \, dx = \frac{1}{2}(x\sqrt{1 - x^2} + \arcsin x) + C$。
+              </div>
+            </div>
+          </div>
+
+          <!-- 豐富實戰範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.3.2：典型三角代換運算彙整</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int \frac{dx}{(4 - x^2)^{3/2}}$：</strong><br>
+                  令 $x = 2\sin\theta \implies dx = 2\cos\theta \, d\theta, \, (4 - x^2)^{3/2} = 8\cos^3\theta$：
+                  $$\int \frac{2\cos\theta \, d\theta}{8\cos^3\theta} = \frac{1}{4} \int \sec^2\theta \, d\theta = \frac{1}{4}\tan\theta + C = \frac{x}{4\sqrt{4 - x^2}} + C$$
+                </li>
+                <li><strong>求 $\int \frac{dx}{a^2 - x^2} \quad (a \ne 0)$：</strong><br>
+                  令 $x = a\sin\theta \implies dx = a\cos\theta \, d\theta$：
+                  $$\int \frac{a\cos\theta \, d\theta}{a^2\cos^2\theta} = \frac{1}{a} \int \sec\theta \, d\theta = \frac{1}{a} \ln|\sec\theta + \tan\theta| + C = \frac{1}{a} \ln\left|\frac{a + x}{\sqrt{a^2 - x^2}}\right| + C = \frac{1}{2a} \ln\left|\frac{a + x}{a - x}\right| + C$$
+                </li>
+                <li><strong>求 $\int \frac{dx}{x^2 \sqrt{9 - x^2}}$：</strong><br>
+                  令 $x = 3\sin\theta \implies dx = 3\cos\theta \, d\theta, \, \sqrt{9 - x^2} = 3\cos\theta$：
+                  $$\int \frac{3\cos\theta \, d\theta}{(9\sin^2\theta)(3\cos\theta)} = \frac{1}{9} \int \csc^2\theta \, d\theta = -\frac{1}{9}\cot\theta + C = -\frac{\sqrt{9 - x^2}}{9x} + C$$
+                </li>
+                <li><strong>求 $\int \frac{dx}{\sqrt{4x^2 + 1}}$（連結反雙曲函數）：</strong><br>
+                  令 $2x = \tan\theta \implies dx = \frac{1}{2}\sec^2\theta \, d\theta, \, \sqrt{4x^2 + 1} = \sec\theta$：
+                  $$\int \frac{\frac{1}{2}\sec^2\theta \, d\theta}{\sec\theta} = \frac{1}{2} \int \sec\theta \, d\theta = \frac{1}{2} \ln|\sec\theta + \tan\theta| + C = \frac{1}{2} \ln|\sqrt{4x^2 + 1} + 2x| + C$$
+                  註：此式亦可直接寫作反雙曲正弦形式 $\frac{1}{2}\sinh^{-1}(2x) + C$。
+                </li>
+                <li><strong>求 $\int \frac{dx}{(x^2 + 1)^{3/2}}$：</strong><br>
+                  令 $x = \tan\theta \implies dx = \sec^2\theta \, d\theta, \, (x^2 + 1)^{3/2} = \sec^3\theta$：
+                  $$\int \frac{\sec^2\theta \, d\theta}{\sec^3\theta} = \int \cos\theta \, d\theta = \sin\theta + C = \frac{x}{\sqrt{x^2 + 1}} + C$$
+                </li>
+                <li><strong>求 $\int \sqrt{x^2 - 25} \, dx \quad (x > 5)$：</strong><br>
+                  令 $x = 5\sec\theta \implies dx = 5\sec\theta \tan\theta \, d\theta, \, \sqrt{x^2 - 25} = 5\tan\theta$：
+                  $$\begin{aligned}
+                  \int 25 \tan^2\theta \sec\theta \, d\theta &= 25 \int (\sec^3\theta - \sec\theta) \, d\theta \\
+                  &= 25 \left[ \frac{1}{2}\sec\theta \tan\theta - \frac{1}{2}\ln|\sec\theta + \tan\theta| \right] + C \\
+                  &= \frac{x\sqrt{x^2 - 25}}{2} - \frac{25}{2}\ln|x + \sqrt{x^2 - 25}| + C'
+                  \end{aligned}$$
+                </li>
+                <li><strong>計算定積分 $\int_{\sqrt{3}}^2 \frac{\sqrt{x^2 - 3}}{x} \, dx$（正負區間分支）：</strong><br>
+                  令 $x = \sqrt{3}\sec\theta$。當 $x \ge \sqrt{3}$ 時 $\tan\theta \ge 0$：
+                  $$\int_0^{\pi/6} \frac{(\sqrt{3}\tan\theta)(\sqrt{3}\sec\theta \tan\theta)}{\sqrt{3}\sec\theta} \, d\theta = \sqrt{3} \int_0^{\pi/6} (\sec^2\theta - 1) \, d\theta = \sqrt{3}[\tan\theta - \theta]_0^{\pi/6} = 1 - \frac{\sqrt{3}\pi}{6}$$
+                  若在負區間 $\int_{-2}^{-\sqrt{3}} \frac{\sqrt{x^2 - 3}}{x} \, dx$，因 $x \le -\sqrt{3}$ 鄰邊取負，結果為 $-1 + \frac{\sqrt{3}\pi}{6}$。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 三角代換幾何應用 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.3.3：拋物線弧長與甜甜圈（環面）旋轉體積</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>拋物線 $y = x^2$ 在 $[0, 2]$ 之弧長：</strong><br>
+                  $y' = 2x$，$S = \int_0^2 \sqrt{1 + 4x^2} \, dx$。令 $x = \frac{1}{2}\tan\theta \implies dx = \frac{1}{2}\sec^2\theta \, d\theta$：
+                  $$S = \frac{1}{2} \int_0^{\arctan 4} \sec^3\theta \, d\theta = \frac{1}{4} [\sec\theta \tan\theta + \ln|\sec\theta + \tan\theta|]_0^{\arctan 4} = \frac{1}{4}[4\sqrt{17} + \ln(\sqrt{17} + 4)] \approx 4.65$$
+                </li>
+                <li><strong>甜甜圈環面體積 (Volume of Donut-shaped Torus)：</strong><br>
+                  將圓盤 $(x - 2)^2 + y^2 \le 1$ 繞 $y$ 軸旋轉。採用圓柱殼層法：
+                  $$\Delta V_i = 2\pi x_i \cdot 2\sqrt{1 - (x_i - 2)^2} \, \Delta x \implies V = 4\pi \int_1^3 x\sqrt{1 - (x - 2)^2} \, dx$$
+                  令 $x - 2 = \sin\theta \implies x = 2 + \sin\theta, \, dx = \cos\theta \, d\theta$（上下限由 $-\pi/2$ 到 $\pi/2$）：
+                  $$V = 4\pi \int_{-\pi/2}^{\pi/2} (2 + \sin\theta)\cos^2\theta \, d\theta = 8\pi \int_{-\pi/2}^{\pi/2} \cos^2\theta \, d\theta + 0 = 8\pi \left(\frac{\pi}{2}\right) = 4\pi^2$$
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6.4 部分分式法 -->
+        <section id="sec6-4" class="lecture-section">
+          <h2>6.4 部分分式法 (Partial Fractions)</h2>
+          <p>
+            部分分式法本質上是通分的逆向工程，專門用來將有理函數 $\frac{P(x)}{Q(x)}$（分子分母均為多項式）拆解為易於直接積分的基本簡單分式之和。
+          </p>
+
+          <!-- 引入與對比 -->
+          <div class="callout callout-note">
+            <div class="callout-title">💡 三角代換 vs 部分分式法之對比</div>
+            <div class="callout-body">
+              <p>評估積分 $\int \frac{1}{x^2 - 5x + 6} \, dx$：</p>
+              <ul>
+                <li>若採配方法與三角代換：$\int \frac{dx}{(x - 5/2)^2 - (1/2)^2}$，令 $x - 5/2 = \frac{1}{2}\sec\theta$，過程繁複需推導割線積分。</li>
+                <li>若因式分解分母並拆項：$\frac{1}{x^2 - 5x + 6} = \frac{1}{(x-3)(x-2)} = \frac{1}{x-3} - \frac{1}{x-2}$：
+                  $$\int \left(\frac{1}{x - 3} - \frac{1}{x - 2}\right) dx = \ln|x - 3| - \ln|x - 2| + C = \ln\left|\frac{x - 3}{x - 2}\right| + C$$
+                  數秒內即可精確得出解答！
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 兩大核心基本情境 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">📘 有理式積分的基本工具庫 (Basic Tools)</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 2;">
+                <li><strong>一次因式：</strong>$\int \frac{1}{ax + b} \, dx = \frac{1}{a} \ln|ax + b| + C$</li>
+                <li><strong>二次反正切：</strong>$\int \frac{1}{a^2 + x^2} \, dx = \frac{1}{a} \arctan\frac{x}{a} + C$</li>
+                <li><strong>平方差對數 I：</strong>$\int \frac{1}{a^2 - x^2} \, dx = \frac{1}{2a} \ln\left|\frac{a + x}{a - x}\right| + C$</li>
+                <li><strong>平方差對數 II：</strong>$\int \frac{1}{x^2 - a^2} \, dx = \frac{1}{2a} \ln\left|\frac{x - a}{x + a}\right| + C$</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- 假分式長除法與配方法 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.4.1：假分式長除法與不可分解二次式配方</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>假分式長除法：求 $\int \frac{x^3 - x^2 + 4x - 5}{x - 2} \, dx$</strong><br>
+                  因分子次數（3）$\ge$ 分母次數（1），先作多項式長除法：
+                  $$\frac{x^3 - x^2 + 4x - 5}{x - 2} = (x^2 + x + 6) + \frac{7}{x - 2}$$
+                  逐項積分得：
+                  $$\int \left(x^2 + x + 6 + \frac{7}{x - 2}\right) dx = \frac{x^3}{3} + \frac{x^2}{2} + 6x + 7\ln|x - 2| + C$$
+                </li>
+                <li><strong>不可分解二次項配方法 (Procedure I)：求 $\int \frac{dx}{x^2 + 4x - 5}$ 及 $\int \frac{dx}{x^2 + 6x + 13}$</strong><br>
+                  對分母配方：
+                  $$\int \frac{dx}{x^2 + 4x - 5} = \int \frac{du}{u^2 - 3^2} \quad (u = x+2) = \frac{1}{6} \ln\left|\frac{(x+2) - 3}{(x+2) + 3}\right| + C = \frac{1}{6}\ln\left|\frac{x - 1}{x + 5}\right| + C$$
+                  $$\int \frac{dx}{x^2 + 6x + 13} = \int \frac{dx}{(x + 3)^2 + 2^2} = \frac{1}{2}\arctan\left(\frac{x + 3}{2}\right) + C$$
+                </li>
+                <li><strong>一次分子分離法 (Procedure II)：求 $\int \frac{x + 8}{x^2 + 6x + 12} \, dx$</strong><br>
+                  分母導數為 $2x + 6$。先提 $\frac{1}{2}$ 湊出 $2x$，再加減常數分離：
+                  $$\begin{aligned}
+                  \int \frac{x + 8}{x^2 + 6x + 12} \, dx &= \frac{1}{2} \int \frac{2x + 16}{x^2 + 6x + 12} \, dx = \frac{1}{2} \int \frac{(2x + 6) + 10}{x^2 + 6x + 12} \, dx \\
+                  &= \frac{1}{2} \int \frac{2x + 6}{x^2 + 6x + 12} \, dx + 5 \int \frac{1}{(x + 3)^2 + 3} \, dx \\
+                  &= \frac{1}{2} \ln(x^2 + 6x + 12) + \frac{5}{\sqrt{3}} \arctan\left(\frac{x + 3}{\sqrt{3}}\right) + C
+                  \end{aligned}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 部分分式拆解規則 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定理 6.4.2：有理式 $\frac{N(x)}{D(x)}$ 部分分式拆解通則</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 1.8;">
+                <li><strong>除法步驟：</strong>若 $\deg(N) \ge \deg(D)$，以長除法化為多項式加真分式。</li>
+                <li><strong>因式分解：</strong>在實數系下將分母完全分解為 $(px + q)^m$ 與不可分解之 $(ax^2 + bx + c)^n$。</li>
+                <li><strong>一次因式 $(px + q)^m$：</strong>對應 $m$ 個待定分式：
+                  $$\frac{A_1}{px + q} + \frac{A_2}{(px + q)^2} + \dots + \frac{A_m}{(px + q)^m}$$
+                </li>
+                <li><strong>二次因式 $(ax^2 + bx + c)^n$：</strong>對應 $n$ 個待定分式：
+                  $$\frac{B_1 x + C_1}{ax^2 + bx + c} + \frac{B_2 x + C_2}{(ax^2 + bx + c)^2} + \dots + \frac{B_n x + C_n}{(ax^2 + bx + c)^n}$$
+                </li>
+              </ol>
+              <p>範例架構：分母為 $(x - 1)(x + 1)^2(x^2 + 1)$ 時，拆解形式為：</p>
+              $$\frac{N(x)}{(x - 1)(x + 1)^2(x^2 + 1)} = \frac{A}{x - 1} + \frac{B}{x + 1} + \frac{C}{(x + 1)^2} + \frac{Dx + E}{x^2 + 1}$$
+            </div>
+          </div>
+
+          <!-- 詳細待定係數求解範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.4.3：典型待定係數求解與積分計算</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>重複一次因式：求 $\int \frac{5x^2 + 20x + 6}{x(x + 1)^2} \, dx$</strong><br>
+                  設 $\frac{5x^2 + 20x + 6}{x(x + 1)^2} = \frac{A}{x} + \frac{B}{x + 1} + \frac{C}{(x + 1)^2}$。<br>
+                  基本方程式：$5x^2 + 20x + 6 = A(x + 1)^2 + Bx(x + 1) + Cx$。<br>
+                  - 令 $x = 0 \implies 6 = A(1) \implies A = 6$。<br>
+                  - 令 $x = -1 \implies 5 - 20 + 6 = -C \implies -9 = -C \implies C = 9$。<br>
+                  - 令 $x = 1 \implies 31 = 6(4) + 2B + 9 \implies 2B = -2 \implies B = -1$。<br>
+                  積分求解：
+                  $$\int \left(\frac{6}{x} - \frac{1}{x + 1} + \frac{9}{(x + 1)^2}\right) dx = 6\ln|x| - \ln|x + 1| - \frac{9}{x + 1} + C = \ln\left|\frac{x^6}{x + 1}\right| - \frac{9}{x + 1} + C$$
+                </li>
+                <li><strong>一次與二次因式混合：求 $\int \frac{2x^3 - 4x - 8}{(x^2 - x)(x^2 + 4)} \, dx$</strong><br>
+                  分母為 $x(x - 1)(x^2 + 4)$，設：
+                  $$\frac{2x^3 - 4x - 8}{x(x - 1)(x^2 + 4)} = \frac{A}{x} + \frac{B}{x - 1} + \frac{Cx + D}{x^2 + 4}$$
+                  基本方程式：$2x^3 - 4x - 8 = A(x - 1)(x^2 + 4) + Bx(x^2 + 4) + (Cx + D)x(x - 1)$。<br>
+                  - 令 $x = 0 \implies -8 = -4A \implies A = 2$。<br>
+                  - 令 $x = 1 \implies -10 = 5B \implies B = -2$。<br>
+                  - 比較係數或代值求解方程組解得 $C = 2, \, D = 4$。<br>
+                  積分結果：
+                  $$\int \left(\frac{2}{x} - \frac{2}{x - 1} + \frac{2x}{x^2 + 4} + \frac{4}{x^2 + 4}\right) dx = 2\ln|x| - 2\ln|x - 1| + \ln(x^2 + 4) + 2\arctan\left(\frac{x}{2}\right) + C$$
+                </li>
+                <li><strong>重複二次因式比較係數法：求 $\int \frac{8x^3 + 13x}{(x^2 + 2)^2} \, dx$</strong><br>
+                  設 $\frac{8x^3 + 13x}{(x^2 + 2)^2} = \frac{Ax + B}{x^2 + 2} + \frac{Cx + D}{(x^2 + 2)^2}$。<br>
+                  展開基本方程式：$8x^3 + 13x = (Ax + B)(x^2 + 2) + Cx + D = Ax^3 + Bx^2 + (2A + C)x + (2B + D)$。<br>
+                  對應同次項係數：
+                  - $x^3$ 係數：$A = 8$<br>
+                  - $x^2$ 係數：$B = 0$<br>
+                  - $x$ 係數：$2A + C = 13 \implies 16 + C = 13 \implies C = -3$<br>
+                  - 常數項：$2B + D = 0 \implies D = 0$<br>
+                  積分計算：
+                  $$\int \left(\frac{8x}{x^2 + 2} - \frac{3x}{(x^2 + 2)^2}\right) dx = 4\ln(x^2 + 2) + \frac{3}{2(x^2 + 2)} + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6.5 積分表與特殊代換 -->
+        <section id="sec6-5" class="lecture-section">
+          <h2>6.5 積分表與特殊代換 (Integration by Tables & Weierstrass Substitution)</h2>
+          <p>
+            數學手冊附錄中常載有上百條預先推導完成的積分表公式。值得強調的是，<strong>積分表的所有公式均可藉由代換法、分部積分、三角代換或部分分式法嚴格推導出來</strong>。
+          </p>
+
+          <!-- 積分表範例與推導證明 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.5.1：查表法與背後完整證明推導</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int \frac{dx}{x\sqrt{x - 1}}$：</strong><br>
+                  對應形式 $\int \frac{du}{u\sqrt{a + bu}} = \frac{2}{\sqrt{-a}} \arctan\sqrt{\frac{a + bu}{-a}} + C \quad (a < 0)$。<br>
+                  此處 $a = -1, \, b = 1, \, u = x$，直接得出：
+                  $$\int \frac{dx}{x\sqrt{x - 1}} = 2\arctan\sqrt{x - 1} + C$$
+                  <div class="proof-block" style="margin-top: 0.5rem;">
+                    <div class="proof-title">證明此公式推導：</div>
+                    <div class="proof-body">
+                      令 $t = \sqrt{a + bu} \implies t^2 = a + bu \implies u = \frac{t^2 - a}{b}, \, du = \frac{2t}{b} \, dt$：
+                      $$\int \frac{\frac{2t}{b} \, dt}{\left(\frac{t^2 - a}{b}\right) t} = 2 \int \frac{dt}{t^2 - a} = 2 \int \frac{dt}{t^2 + (\sqrt{-a})^2} = \frac{2}{\sqrt{-a}} \arctan\left(\frac{t}{\sqrt{-a}}\right) + C$$
+                      <div class="proof-end">$\blacksquare$</div>
+                    </div>
+                  </div>
+                </li>
+                <li><strong>求 $\int x\sqrt{x^4 - 9} \, dx$：</strong><br>
+                  對應 $\int \sqrt{u^2 - a^2} \, du = \frac{1}{2}(u\sqrt{u^2 - a^2} - a^2 \ln|u + \sqrt{u^2 - a^2}|) + C$。<br>
+                  令 $u = x^2, \, a = 3, \, du = 2x \, dx$：
+                  $$\int x\sqrt{x^4 - 9} \, dx = \frac{1}{2} \int \sqrt{(x^2)^2 - 3^2} (2x \, dx) = \frac{1}{4}\left(x^2\sqrt{x^4 - 9} - 9\ln|x^2 + \sqrt{x^4 - 9}|\right) + C$$
+                </li>
+                <li><strong>求 $\int \frac{x}{1 + e^{-x^2}} \, dx$：</strong><br>
+                  對應 $\int \frac{du}{1 + e^u} = u - \ln(1 + e^u) + C$。令 $u = -x^2 \implies du = -2x \, dx$：
+                  $$\int \frac{x}{1 + e^{-x^2}} \, dx = -\frac{1}{2} [-x^2 - \ln(1 + e^{-x^2})] + C = \frac{1}{2}[x^2 + \ln(1 + e^{-x^2})] + C$$
+                </li>
+                <li><strong>降次公式查表應用：求 $\int x^3 \sin x \, dx$</strong><br>
+                  查表公式 $\int u^n \sin u \, du = -u^n \cos u + n \int u^{n-1} \cos u \, du$ 及 $\int u^n \cos u \, du = u^n \sin u - n \int u^{n-1} \sin u \, du$：
+                  $$\begin{aligned}
+                  \int x^3 \sin x \, dx &= -x^3 \cos x + 3 \int x^2 \cos x \, dx = -x^3 \cos x + 3\left(x^2 \sin x - 2 \int x \sin x \, dx\right) \\
+                  &= -x^3 \cos x + 3x^2 \sin x - 6(-x \cos x + \sin x) + C \\
+                  &= -x^3 \cos x + 3x^2 \sin x + 6x \cos x - 6\sin x + C
+                  \end{aligned}$$
+                </li>
+                <li><strong>化簡後查表：求 $\int \frac{\sin 2x}{2 + \cos x} \, dx$</strong><br>
+                  先以倍角公式展開 $\sin 2x = 2\sin x \cos x$：
+                  $$\int \frac{2\sin x \cos x}{2 + \cos x} \, dx = -2 \int \frac{\cos x}{2 + \cos x} (-\sin x \, dx)$$
+                  令 $u = \cos x, \, a = 2, \, b = 1$，對應 $\int \frac{u}{a + bu} \, du = \frac{1}{b^2}(bu - a\ln|a + bu|) + C$：
+                  $$-2(\cos x - 2\ln|2 + \cos x|) + C = -2\cos x + 4\ln|2 + \cos x| + C$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 魏爾斯特拉斯萬能代換法 -->
+          <div class="callout callout-def">
+            <div class="callout-title">📐 魏爾斯特拉斯萬能半角代換法 (Weierstrass Half-Angle Substitution)</div>
+            <div class="callout-body">
+              <p>處理包含 $\sin x$ 與 $\cos x$ 的有理函數時，設定半角正切代換：</p>
+              $$u = \tan\left(\frac{x}{2}\right) \implies x = 2\arctan u \implies dx = \frac{2}{1 + u^2} \, du$$
+              <p>利用倍角公式可將所有三角項轉化為 $u$ 的純有理式：</p>
+              $$\cos x = \frac{1 - u^2}{1 + u^2}, \quad \sin x = \frac{2u}{1 + u^2}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.5.2：萬能代換法求解有理三角積分</div>
+            <div class="callout-body">
+              <p>求不定積分 $\int \frac{1}{2 + \cos x} \, dx$：</p>
+              <div class="proof-body">
+                令 $u = \tan(x/2)$，代入 $\cos x = \frac{1 - u^2}{1 + u^2}$ 及 $dx = \frac{2}{1 + u^2} \, du$：
+                $$\begin{aligned}
+                \int \frac{1}{2 + \cos x} \, dx &= \int \frac{\frac{2}{1 + u^2}}{2 + \frac{1 - u^2}{1 + u^2}} \, du = \int \frac{2}{2(1 + u^2) + (1 - u^2)} \, du \\
+                &= \int \frac{2}{3 + u^2} \, du = \frac{2}{\sqrt{3}} \arctan\left(\frac{u}{\sqrt{3}}\right) + C \\
+                &= \frac{2}{\sqrt{3}} \arctan\left(\frac{\tan(x/2)}{\sqrt{3}}\right) + C
+                \end{aligned}$$
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6.6 不定型與羅必達法則 -->
+        <section id="sec6-6" class="lecture-section">
+          <h2>6.6 不定型與羅必達法則 (Indeterminate Forms and L'Hôpital's Rule)</h2>
+          <p>
+            當極限運算出現 $\frac{0}{0}$ 或 $\frac{\infty}{\infty}$ 時，無法直接利用代入法得出極限值，此類形式稱為<strong>不定型（Indeterminate Forms）</strong>。羅必達法則提供了藉由分子分母各自導函數比值求解極限的強大工具。
+          </p>
+
+          <!-- 柯西廣義均值定理與羅必達法則 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 6.6.1：柯西廣義均值定理 (Cauchy's Extended Mean Value Theorem)</div>
+            <div class="callout-body">
+              若函數 $f$ 與 $g$ 在開區間 $(a, b)$ 上可微，在閉區間 $[a, b]$ 上連續，且在區間內 $g'(x) \ne 0$，則在 $(a, b)$ 內至少存在一點 $c$ 使得：
+              $$\frac{f'(c)}{g'(c)} = \frac{f(b) - f(a)}{g(b) - g(a)}$$
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 6.6.2：羅必達法則 (L'Hôpital's Rule)</div>
+            <div class="callout-body">
+              設函數 $f$ 與 $g$ 在包含 $c$ 的開區間（$c$ 點可除外）上可微，且 $g'(x) \ne 0$。若 $\lim_{x \to c} \frac{f(x)}{g(x)}$ 產生不定型：
+              $$\frac{0}{0}, \quad \frac{\pm\infty}{\pm\infty}$$
+              則：
+              $$\lim_{x \to c} \frac{f(x)}{g(x)} = \lim_{x \to c} \frac{f'(x)}{g'(x)}$$
+              前提是右側的極限存在（或為無窮大 $\pm\infty$）。此法則亦完全適用於單邊極限（$x \to c^+, x \to c^-$）以及無窮遠處之極限（$x \to \infty, x \to -\infty$）。
+            </div>
+          </div>
+
+          <!-- 典型分式不定型範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.6.1：基礎 $\frac{0}{0}$ 與 $\frac{\infty}{\infty}$ 運算</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\lim_{x \to 0} \frac{e^{2x} - 1}{x} \quad \left(\frac{0}{0}\right)$：</strong><br>
+                  $$\lim_{x \to 0} \frac{e^{2x} - 1}{x} \overset{\text{L'H}}{=} \lim_{x \to 0} \frac{2e^{2x}}{1} = 2$$
+                </li>
+                <li><strong>求 $\lim_{x \to \infty} \frac{\ln x}{x} \quad \left(\frac{\infty}{\infty}\right)$：</strong><br>
+                  $$\lim_{x \to \infty} \frac{\ln x}{x} \overset{\text{L'H}}{=} \lim_{x \to \infty} \frac{1/x}{1} = 0$$
+                </li>
+                <li><strong>連續使用羅必達：求 $\lim_{x \to -\infty} \frac{x^2}{e^{-x}} \quad \left(\frac{\infty}{\infty}\right)$：</strong><br>
+                  $$\lim_{x \to -\infty} \frac{x^2}{e^{-x}} \overset{\text{L'H}}{=} \lim_{x \to -\infty} \frac{2x}{-e^{-x}} \overset{\text{L'H}}{=} \lim_{x \to -\infty} \frac{2}{e^{-x}} = 0$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 其他不定型轉化：乘積、指數、差值 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.6.2：其他五類不定型之轉換策略</div>
+            <div class="callout-body">
+              <p>除了分式型，其他不定型包含 $0 \cdot \infty$、$1^\infty$、$\infty^0$、$0^0$ 與 $\infty - \infty$，均需轉化為 $\frac{0}{0}$ 或 $\frac{\infty}{\infty}$：</p>
+              <ul>
+                <li><strong>乘積型 $0 \cdot \infty$：求 $\lim_{x \to \infty} e^{-x}\sqrt{x}$</strong><br>
+                  改寫為分式：$\lim_{x \to \infty} \frac{\sqrt{x}}{e^x} \overset{\text{L'H}}{=} \lim_{x \to \infty} \frac{1/(2\sqrt{x})}{e^x} = 0$。
+                </li>
+                <li><strong>指數型 $1^\infty$：求 $\lim_{x \to \infty} \left(1 + \frac{1}{x}\right)^x$（自然底數 $e$ 的起源）</strong><br>
+                  取對數化冪次為乘積：設 $y = \lim_{x \to \infty} \left(1 + \frac{1}{x}\right)^x$：
+                  $$\ln y = \lim_{x \to \infty} \ln\left(1 + \frac{1}{x}\right)^x = \lim_{x \to \infty} x \ln\left(1 + \frac{1}{x}\right) = \lim_{x \to \infty} \frac{\ln(1 + 1/x)}{1/x} \quad \left(\frac{0}{0}\right)$$
+                  微分計算：
+                  $$\lim_{x \to \infty} \frac{\frac{1}{1 + 1/x} \cdot (-1/x^2)}{-1/x^2} = \lim_{x \to \infty} \frac{1}{1 + 1/x} = 1 \implies y = e^1 = e$$
+                </li>
+                <li><strong>指數型 $0^0$：求 $\lim_{x \to 0^+} (\sin x)^x$</strong><br>
+                  設 $y = \lim_{x \to 0^+} (\sin x)^x \implies \ln y = \lim_{x \to 0^+} x \ln(\sin x) = \lim_{x \to 0^+} \frac{\ln(\sin x)}{1/x} \quad \left(\frac{-\infty}{\infty}\right)$：
+                  $$\lim_{x \to 0^+} \frac{\cot x}{-1/x^2} = \lim_{x \to 0^+} \frac{-x^2}{\tan x} \overset{\text{L'H}}{=} \lim_{x \to 0^+} \frac{-2x}{\sec^2 x} = \frac{0}{1} = 0 \implies y = e^0 = 1$$
+                </li>
+                <li><strong>差值型 $\infty - \infty$：求 $\lim_{x \to 1^+} \left(\frac{1}{\ln x} - \frac{1}{x - 1}\right)$</strong><br>
+                  通分合為單一分式：
+                  $$\lim_{x \to 1^+} \frac{x - 1 - \ln x}{(x - 1)\ln x} \overset{\text{L'H}}{=} \lim_{x \to 1^+} \frac{1 - 1/x}{\ln x + \frac{x-1}{x}} = \lim_{x \to 1^+} \frac{x - 1}{x\ln x + x - 1} \overset{\text{L'H}}{=} \lim_{x \to 1^+} \frac{1}{\ln x + 1 + 1} = \frac{1}{2}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-title">⚠️ 定型（Determinate Forms）警示：切勿盲目套用羅必達</div>
+            <div class="callout-body">
+              下列形式為<strong>定型</strong>，極限可直接判定，不可使用羅必達法則：
+              $$\infty + \infty = \infty, \quad -\infty - \infty = -\infty, \quad 0^\infty = 0, \quad 0^{-\infty} = \frac{1}{0^\infty} = \infty$$
+            </div>
+          </div>
+        </section>
+
+        <!-- 6.7 瑕積分 -->
+        <section id="sec6-7" class="lecture-section">
+          <h2>6.7 瑕積分 (Improper Integrals)</h2>
+          <p>
+            定積分 $\int_a^b f(x) \, dx$ 的傳統黎曼定義要求<strong>積分區間 $[a, b]$ 必須有限</strong>且<strong>被積函數 $f(x)$ 必須連續有界</strong>。若違反其中任一條件，該積分即為<strong>瑕積分（Improper Integral）</strong>，必須透過極限來定義。
+          </p>
+
+          <!-- 第一類瑕積分 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 6.7.1：第一類瑕積分——無窮積分區間 (Type I: Infinite Integration Limits)</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 2;">
+                <li>若 $f$ 在 $[a, \infty)$ 上連續，則 $\int_a^\infty f(x) \, dx = \lim_{b \to \infty} \int_a^b f(x) \, dx$</li>
+                <li>若 $f$ 在 $(-\infty, b]$ 上連續，則 $\int_{-\infty}^b f(x) \, dx = \lim_{a \to -\infty} \int_a^b f(x) \, dx$</li>
+                <li>若 $f$ 在 $(-\infty, \infty)$ 上連續，任取常數 $c$：$\int_{-\infty}^\infty f(x) \, dx = \int_{-\infty}^c f(x) \, dx + \int_c^\infty f(x) \, dx$</li>
+              </ol>
+              若對應極限存在且為有限值，稱瑕積分<strong>收斂（Converges）</strong>；若極限不存在或為 $\pm\infty$，稱其<strong>發散（Diverges）</strong>。
+            </div>
+          </div>
+
+          <!-- p-瑕積分定理與收斂證明 -->
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 6.7.2：$p$-瑕積分收斂定理 (Convergence of $p$-Integrals)</div>
+            <div class="callout-body">
+              對於形式為 $\int_1^\infty \frac{1}{x^p} \, dx$ 的瑕積分：
+              $$\int_1^\infty \frac{1}{x^p} \, dx = \begin{cases}
+              \frac{1}{p - 1}, & \text{若 } p > 1 \quad (\text{收斂}) \\
+              \text{發散}, & \text{若 } p \le 1 \quad (\text{發散})
+              \end{cases}$$
+            </div>
+          </div>
+
+          <div class="proof-block">
+            <div class="proof-title">證明 $p$-瑕積分定理：</div>
+            <div class="proof-body">
+              <p>1. 當 $p = 1$ 時：</p>
+              $$\int_1^\infty \frac{1}{x} \, dx = \lim_{b \to \infty} \int_1^b \frac{1}{x} \, dx = \lim_{b \to \infty} [\ln x]_1^b = \lim_{b \to \infty} (\ln b - 0) = \infty \quad (\text{發散})$$
+              <p>2. 當 $p \ne 1$ 時：</p>
+              $$\int_1^\infty x^{-p} \, dx = \lim_{b \to \infty} \left[ \frac{x^{-p+1}}{-p+1} \right]_1^b = \lim_{b \to \infty} \frac{1}{1 - p} \left( \frac{1}{b^{p-1}} - 1 \right)$$
+              - 若 $p > 1 \implies p - 1 > 0 \implies \lim_{b \to \infty} \frac{1}{b^{p-1}} = 0$，極限值為 $\frac{1}{1-p}(0 - 1) = \frac{1}{p - 1}$（收斂）。<br>
+              - 若 $p < 1 \implies 1 - p > 0 \implies \lim_{b \to \infty} b^{1-p} = \infty$，極限發散。
+              <div class="proof-end">$\blacksquare$</div>
+            </div>
+          </div>
+
+          <!-- 第一類瑕積分範例 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.7.1：第一類瑕積分計算範例</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>求 $\int_0^\infty e^{-x} \, dx$：</strong><br>
+                  $$\int_0^\infty e^{-x} \, dx = \lim_{b \to \infty} \int_0^b e^{-x} \, dx = \lim_{b \to \infty} [-e^{-x}]_0^b = \lim_{b \to \infty} (-e^{-b} + 1) = 1$$
+                </li>
+                <li><strong>求 $\int_0^\infty \frac{1}{x^2 + 1} \, dx$：</strong><br>
+                  $$\int_0^\infty \frac{1}{x^2 + 1} \, dx = \lim_{b \to \infty} [\arctan x]_0^b = \lim_{b \to \infty} \arctan b = \frac{\pi}{2}$$
+                </li>
+                <li><strong>求 $\int_1^\infty (1 - x)e^{-x} \, dx$（分部積分結合羅必達）：</strong><br>
+                  不定積分：$\int (1 - x)e^{-x} \, dx = x e^{-x} + C$。<br>
+                  取無窮極限：$\lim_{b \to \infty} \left[ x e^{-x} \right]_1^b = \lim_{b \to \infty} \frac{b}{e^b} - \frac{1}{e} = 0 - \frac{1}{e} = -\frac{1}{e}$。無界區域面積為 $|-1/e| = 1/e$。
+                </li>
+                <li><strong>全實數線雙向無窮：求 $\int_{-\infty}^\infty \frac{e^x}{1 + e^{2x}} \, dx$</strong><br>
+                  拆成 $(-\infty, 0]$ 與 $[0, \infty)$。原導函數為 $\arctan(e^x)$：
+                  $$\lim_{a \to -\infty} [\arctan e^x]_a^0 + \lim_{b \to \infty} [\arctan e^x]_0^b = \left(\frac{\pi}{4} - 0\right) + \left(\frac{\pi}{2} - \frac{\pi}{4}\right) = \frac{\pi}{2}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 第二類瑕積分 -->
+          <div class="callout callout-def">
+            <div class="callout-title">定義 6.7.2：第二類瑕積分——無窮不連續點 (Type II: Infinite Discontinuities)</div>
+            <div class="callout-body">
+              <ol style="margin-left: 1.2rem; line-height: 2;">
+                <li>若 $f$ 在 $[a, b)$ 上連續，且在右端點 $b$ 處有垂直漸近線不連續：$\int_a^b f(x) \, dx = \lim_{c \to b^-} \int_a^c f(x) \, dx$</li>
+                <li>若 $f$ 在 $(a, b]$ 上連續，且在左端點 $a$ 處有垂直漸近線不連續：$\int_a^b f(x) \, dx = \lim_{c \to a^+} \int_c^b f(x) \, dx$</li>
+                <li>若在區間內部點 $c \in (a, b)$ 處有垂直漸近線不連續：$\int_a^b f(x) \, dx = \int_a^c f(x) \, dx + \int_c^b f(x) \, dx$</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- 第二類瑕積分範例與致命錯誤提示 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.7.2：第二類瑕積分計算與內部奇異點陷阱</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>左端點奇異：求 $\int_0^1 x^{-1/3} \, dx$</strong><br>
+                  $x = 0$ 處垂直漸近線：$\lim_{b \to 0^+} \int_b^1 x^{-1/3} \, dx = \lim_{b \to 0^+} \left[ \frac{3}{2}x^{2/3} \right]_b^1 = \lim_{b \to 0^+} \frac{3}{2}(1 - b^{2/3}) = \frac{3}{2}$（收斂）。
+                </li>
+                <li><strong>左端點奇異發散：求 $\int_0^2 \frac{dx}{x^3}$</strong><br>
+                  $$\lim_{b \to 0^+} \left[ -\frac{1}{2x^2} \right]_b^2 = \lim_{b \to 0^+} \left(-\frac{1}{8} + \frac{1}{2b^2}\right) = \infty \quad (\text{發散})$$
+                </li>
+                <li><strong>端點奇異：求 $\int_2^5 \frac{1}{\sqrt{x - 2}} \, dx$</strong><br>
+                  $$\lim_{t \to 2^+} \int_t^5 (x - 2)^{-1/2} \, dx = \lim_{t \to 2^+} [2\sqrt{x - 2}]_t^5 = \lim_{t \to 2^+} 2(\sqrt{3} - \sqrt{t - 2}) = 2\sqrt{3}$$
+                </li>
+                <li><strong>對數奇異：求 $\int_0^1 \ln x \, dx$</strong><br>
+                  分部積分原導函數為 $x\ln x - x$。在 $t \to 0^+$ 時 $\lim_{t \to 0^+} t\ln t = \lim_{t \to 0^+} \frac{\ln t}{1/t} = \lim \frac{1/t}{-1/t^2} = 0$：
+                  $$\lim_{t \to 0^+} [x\ln x - x]_t^1 = (0 - 1) - (0 - 0) = -1$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-title">🚨 嚴重警告：跨越內部無窮不連續點的常見錯誤 (Incorrect Evaluation)</div>
+            <div class="callout-body">
+              <p>評估積分 $\int_{-1}^2 \frac{dx}{x^3}$：</p>
+              <p>
+                <strong>❌ 錯誤作法：</strong>盲目套用微積分基本定理直接代入上下限：
+                $$\int_{-1}^2 \frac{dx}{x^3} = \left[ -\frac{1}{2x^2} \right]_{-1}^2 = -\frac{1}{8} - \left(-\frac{1}{2}\right) = \frac{3}{8} \quad \text{(完全錯誤！)}$$
+              </p>
+              <p>
+                <strong>✅ 正確作法：</strong>被積函數在區間內部 $x = 0$ 處有垂直漸近線，必須拆成兩段檢驗：
+                $$\int_{-1}^2 \frac{dx}{x^3} = \int_{-1}^0 \frac{dx}{x^3} + \int_0^2 \frac{dx}{x^3}$$
+                因右段 $\int_0^2 \frac{dx}{x^3} = \infty$ 發散，<strong>原瑕積分判定為發散！</strong>
+              </p>
+            </div>
+          </div>
+
+          <!-- 幾何悖論與綜合瑕積分 -->
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6.7.3：圓周長弧長、雙重瑕積分與托里拆利小號 (Gabriel's Horn)</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>單位圓圓周長（弧長公式轉化為瑕積分）：</strong><br>
+                  計算單位圓第一象限弧長 $s = \int_0^1 \sqrt{1 + (y')^2} \, dx = \int_0^1 \frac{dx}{\sqrt{1 - x^2}}$。<br>
+                  在 $x = 1$ 端點不連續，取極限：$\lim_{b \to 1^-} [\arcsin x]_0^b = \arcsin 1 - 0 = \frac{\pi}{2}$。<br>
+                  因此整個圓周長為 $4 \times \frac{\pi}{2} = 2\pi$。
+                </li>
+                <li><strong>雙重瑕積分 (Doubly Improper Integral, Type I + Type II)：</strong><br>
+                  計算 $\int_0^\infty \frac{dx}{\sqrt{x}(x + 1)}$（$x = 0$ 點為第二類奇異，$\infty$ 為第一類奇異）。<br>
+                  任選分割點 $x = 1$：原導函數為 $2\arctan\sqrt{x}$：
+                  $$\int_0^\infty \frac{dx}{\sqrt{x}(x + 1)} = \lim_{b \to 0^+} [2\arctan\sqrt{x}]_b^1 + \lim_{c \to \infty} [2\arctan\sqrt{x}]_1^c = 2\left(\frac{\pi}{4}\right) - 0 + 2\left(\frac{\pi}{2}\right) - 2\left(\frac{\pi}{4}\right) = \pi$$
+                </li>
+                <li><strong>托里拆利小號幾何悖論 (Gabriel's Horn Paradox)：</strong><br>
+                  將曲線 $y = \frac{1}{x} \quad (x \ge 1)$ 繞 $x$ 軸旋轉所形成的無窮長喇叭體：
+                  <div class="proof-body">
+                    <p>1. 旋轉體體積（圓盤法，$p = 2 > 1$）：</p>
+                    $$V = \pi \int_1^\infty \left(\frac{1}{x}\right)^2 dx = \pi \left[ \frac{1}{2 - 1} \right] = \pi \quad (\text{有限體積！})$$
+                    <p>2. 旋轉曲面表面積（因 $\sqrt{1 + 1/x^4} > 1$）：</p>
+                    $$S = 2\pi \int_1^\infty \frac{1}{x} \sqrt{1 + \left(-\frac{1}{x^2}\right)^2} \, dx > 2\pi \int_1^\infty \frac{1}{x} \, dx = 2\pi(\infty) = \infty \quad (\text{無窮大表面積！})$$
+                    <p style="color: var(--accent-color); font-weight: 600;">
+                      💡 幾何哲學悖論：這個小號可以用有限的油漆量（$\pi$ 單位體積）完全填滿，但卻永遠無法用油漆將它的表面完全塗滿！
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 前後章節導航按鈕 -->
+        <nav class="chapter-pagination">
+          <a href="ch05-applications-of-integration.html" id="prev-chapter-link" class="page-link prev">
+            <span class="link-label">← 上一章</span>
+            <span class="link-title">第 05 章：積分之應用</span>
+          </a>
+          <a href="ch07-infinite-series.html" id="next-chapter-link" class="page-link next">
+            <span class="link-label">下一章 →</span>
+            <span class="link-title">第 07 章：無窮級數</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <!-- 邏輯腳本 (相對路徑) -->
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

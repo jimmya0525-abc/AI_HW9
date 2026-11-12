@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微積分講義 - 第 02 章：微分及其法則 (Differentiation)</title>
+
+  <!-- 全站共用樣式 (相對路徑) -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- KaTeX 數學公式支援 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-chapter-id="ch02">
+  <!-- 頂部功能導覽列 -->
+  <header class="site-header">
+    <div class="header-left">
+      <button id="menu-toggle" class="icon-btn" aria-label="切換選單">☰</button>
+      <a href="../index.html" class="header-logo">
+        <span>📐</span> 微積分課程講義
+      </a>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="切換主題模式">🌓</button>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- 側邊欄（由 nav.js 動態渲染目錄） -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>章節目錄導覽</h3>
+      </div>
+      <nav id="course-nav" class="course-nav">
+        <!-- nav.js 自動注入目錄 -->
+      </nav>
+    </aside>
+
+    <!-- 手機端側邊欄遮罩 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 講義主內容區域 -->
+    <main class="main-content">
+      <article class="lecture-content">
+        <!-- 章節標頭 -->
+        <header class="chapter-header">
+          <div class="chapter-meta">Chapter 02</div>
+          <h1 class="chapter-title">微分及其法則<br><small style="font-size: 0.6em; font-weight: 500; color: var(--text-muted);">Differentiation</small></h1>
+          <p class="chapter-lead">
+            本章深入研究微分學的核心運算工具：從幾何切線斜率與差商極限出發，建立導數的嚴格定義、可微性與連續性的本質關聯；推導冪次、乘積、商法則與連鎖律；掌握隱函數微分法、反函數與超越函數求導；並透過時間相關變率（Related Rates）解決物理與幾何中的瞬時變化率問題。
+          </p>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- 2.1 Derivative and Tangent Line -->
+        <!-- ========================================== -->
+        <section id="sec2-1" class="lecture-section">
+          <h2>2.1 切線與導數定義 (Derivative and Tangent Line)</h2>
+          <p>
+            考慮坐標平面上通過曲線 $y = f(x)$ 上兩點 $(c, f(c))$ 與 $(c+\Delta x, f(c+\Delta x))$ 的割線（Secant line）：
+          </p>
+          <div class="callout callout-def">
+            <div class="callout-title">差商 (Difference Quotient) 與切線斜率</div>
+            <div class="callout-body">
+              <p><strong>差商 (Difference Quotient)：</strong>
+                $$m_{\text{sec}} = \frac{\Delta y}{\Delta x} = \frac{f(c+\Delta x) - f(c)}{\Delta x}$$
+                其物理與幾何意涵為「$y$ 的變化量除以 $x$ 的變化量」。
+              </p>
+              <p><strong>切線斜率 (Slope of tangent line at $x=c$)：</strong>
+                當割線兩點間距 $\Delta x \to 0$ 時，割線逼近於點 $(c, f(c))$ 處的切線。切線斜率即為差商的極限：
+                $$m = \lim_{\Delta x \to 0} m_{\text{sec}} = \lim_{\Delta x \to 0} \frac{\Delta y}{\Delta x} = \lim_{\Delta x \to 0} \frac{f(c+\Delta x) - f(c)}{\Delta x}$$
+                此斜率亦稱為函數圖形在 $x = c$ 處的斜率 (slope of the graph of $f(x)$ at $x=c$)。
+              </p>
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：函數的導函數 (Definition of the Derivative)</div>
+            <div class="callout-body">
+              函數 $f$ 在 $x$ 處的導函數定義為：
+              $$f'(x) = \lim_{\Delta x \to 0} \frac{f(x+\Delta x) - f(x)}{\Delta x}$$
+              只要此極限存在。導函數的本質就是<strong>差商在 $\Delta x \to 0$ 時的極限 (The derivative is the limit of Difference Quotient as $\Delta x \to 0$)</strong>！
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 3：以極限定義求導函數 (多項式)</div>
+            <div class="callout-body">
+              求 $f(x) = x^3 + 2x$ 的導函數 $f'(x)$：
+              $$\begin{aligned}
+              f'(x) &= \lim_{\Delta x \to 0} \frac{f(x+\Delta x) - f(x)}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \frac{\left[(x+\Delta x)^3 + 2(x+\Delta x)\right] - (x^3 + 2x)}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \frac{x^3 + 3x^2\Delta x + 3x(\Delta x)^2 + (\Delta x)^3 + 2x + 2\Delta x - x^3 - 2x}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \frac{3x^2\Delta x + 3x(\Delta x)^2 + (\Delta x)^3 + 2\Delta x}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \left[3x^2 + 3x\Delta x + (\Delta x)^2 + 2\right] = 3x^2 + 2
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 4：求特定點的切線斜率 (根式與共軛對技巧)</div>
+            <div class="callout-body">
+              求 $f(x) = \sqrt{x}$ 的導函數，並求在點 $(1, 1)$ 與 $(4, 2)$ 處的切線斜率：
+              $$\begin{aligned}
+              f'(x) &= \lim_{\Delta x \to 0} \frac{\sqrt{x+\Delta x} - \sqrt{x}}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \frac{(\sqrt{x+\Delta x} - \sqrt{x})(\sqrt{x+\Delta x} + \sqrt{x})}{\Delta x(\sqrt{x+\Delta x} + \sqrt{x})} && \text{(分子有理化：乘以共軛對)} \\
+              &= \lim_{\Delta x \to 0} \frac{(x+\Delta x) - x}{\Delta x(\sqrt{x+\Delta x} + \sqrt{x})} = \lim_{\Delta x \to 0} \frac{1}{\sqrt{x+\Delta x} + \sqrt{x}} = \frac{1}{2\sqrt{x}} \quad (x > 0)
+              \end{aligned}$$
+              <ul>
+                <li>在 $(1, 1)$ 處：斜率 $m = f'(1) = \frac{1}{2\sqrt{1}} = \frac{1}{2}$</li>
+                <li>在 $(4, 2)$ 處：斜率 $m = f'(4) = \frac{1}{2\sqrt{4}} = \frac{1}{4}$</li>
+                <li>在原點 $(0, 0)$ 處：$x \to 0^+$ 時斜率趨向無窮大，切線為鉛直線。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 5：分式求導 (通分技巧)</div>
+            <div class="callout-body">
+              求 $y = f(t) = \frac{2}{t}$ 對時間 $t$ 的導數：
+              $$\begin{aligned}
+              \frac{dy}{dt} &= \lim_{\Delta t \to 0} \frac{f(t+\Delta t) - f(t)}{\Delta t} = \lim_{\Delta t \to 0} \frac{\frac{2}{t+\Delta t} - \frac{2}{t}}{\Delta t} \\
+              &= \lim_{\Delta t \to 0} \frac{\frac{2t - 2(t+\Delta t)}{t(t+\Delta t)}}{\Delta t} && \text{(通分：Reduction to common denominator)} \\
+              &= \lim_{\Delta t \to 0} \frac{-2\Delta t}{\Delta t \cdot t(t+\Delta t)} = \lim_{\Delta t \to 0} \frac{-2}{t(t+\Delta t)} = -\frac{2}{t^2}
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <h3>導數在點 $c$ 的替代形式 (Alternative Form of Derivative)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">點 $c$ 處導數的替代極限定義</div>
+            <div class="callout-body">
+              令 $\Delta x = x - c$，當 $\Delta x \to 0$ 相當於 $x \to c$；$\Delta y = f(x) - f(c)$。則：
+              $$f'(c) = \lim_{x \to c} \frac{f(x) - f(c)}{x - c}$$
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 2.1：可微必連續 (Differentiability Implies Continuity)</div>
+            <div class="callout-body">
+              若函數 $f$ 在 $x = c$ 處可微（differentiable），則 $f$ 在 $x = c$ 處必然連續（continuous）。
+              <div class="proof-block">
+                <div class="proof-title">證明：</div>
+                <div class="proof-body">
+                  欲證 $\lim_{x \to c} f(x) = f(c)$，等價於證明 $\lim_{x \to c} [f(x) - f(c)] = 0$：
+                  $$\begin{aligned}
+                  \lim_{x \to c} [f(x) - f(c)] &= \lim_{x \to c} \left[(x-c) \cdot \frac{f(x) - f(c)}{x - c}\right] \\
+                  &= \left[\lim_{x \to c} (x-c)\right] \cdot \left[\lim_{x \to c} \frac{f(x)-f(c)}{x-c}\right] \\
+                  &= (0) \cdot [f'(c)] = 0
+                  \end{aligned}$$
+                  故 $\lim_{x \to c} f(x) = f(c)$，函數在 $c$ 處連續。
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-title">⚠️ 重點警示：連續不保證可微 (Continuity DOES NOT Imply Differentiability)</div>
+            <div class="callout-body">
+              可微要求極限斜率存在且為單一有限確定值。以下為連續但不可微的兩大典型反例：
+              <ol>
+                <li>
+                  <strong>尖折點 (Sharp Turn / Not smooth)：</strong>
+                  考慮 $f(x) = |x - 2|$ 在 $x = 2$ 處：
+                  <ul>
+                    <li>左導數：$\lim_{x \to 2^-} \frac{|x-2| - 0}{x - 2} = \lim_{x \to 2^-} \frac{-(x-2)}{x-2} = -1$</li>
+                    <li>右導數：$\lim_{x \to 2^+} \frac{|x-2| - 0}{x - 2} = \lim_{x \to 2^+} \frac{x-2}{x-2} = +1$</li>
+                  </ul>
+                  因為左極限 $\ne$ 右極限，極限不存在，故 $f$ 在 $x = 2$ 處<strong>不可微</strong>！
+                </li>
+                <li>
+                  <strong>垂直切線 (Vertical Tangent Line)：</strong>
+                  考慮 $f(x) = x^{1/3}$ 在 $x = 0$ 處：
+                  $$\lim_{x \to 0} \frac{f(x) - f(0)}{x - 0} = \lim_{x \to 0} \frac{x^{1/3}}{x} = \lim_{x \to 0} \frac{1}{x^{2/3}} = \infty$$
+                  極限趨向無窮大（unbounded），極限不存在。圖形在 $x = 0$ 處切線為垂直線，故在此點<strong>不可微</strong>。
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2.2 - 2.3 Differentiation Rules -->
+        <!-- ========================================== -->
+        <section id="sec2-2" class="lecture-section">
+          <h2>2.2-2.3 微分基本法則 (Differentiation Rules)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">基本導數法則總覽</div>
+            <div class="callout-body">
+              <ol>
+                <li><strong>常數法則 (Constant Rule)：</strong> $\frac{d}{dx}[c] = 0$</li>
+                <li><strong>冪次法則 (Power Rule)：</strong> $\frac{d}{dx}[x^n] = n x^{n-1}$</li>
+                <li><strong>常數倍法則 (Constant Multiple Rule)：</strong> $\frac{d}{dx}[c f(x)] = c f'(x)$</li>
+                <li><strong>和與差法則 (Sum and Difference Rule)：</strong> $\frac{d}{dx}[f(x) \pm g(x)] = f'(x) \pm g'(x)$</li>
+                <li><strong>正弦與餘弦：</strong> $\frac{d}{dx}[\sin x] = \cos x$；$\frac{d}{dx}[\cos x] = -\sin x$</li>
+                <li><strong>指數函數：</strong> $\frac{d}{dx}[e^x] = e^x$</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="proof-block">
+            <div class="proof-title">證明：冪次法則 $\frac{d}{dx}[x^n] = n x^{n-1}$（利用二項式定理展開）</div>
+            <div class="proof-body">
+              設 $n$ 為大於 1 的正整數，二項式展開為 $(x+\Delta x)^n = x^n + n x^{n-1}\Delta x + C_2^n x^{n-2}(\Delta x)^2 + \dots + (\Delta x)^n$：
+              $$\begin{aligned}
+              \frac{d}{dx}[x^n] &= \lim_{\Delta x \to 0} \frac{(x+\Delta x)^n - x^n}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \frac{\left[x^n + n x^{n-1}(\Delta x) + \frac{n(n-1)}{2}x^{n-2}(\Delta x)^2 + \dots + (\Delta x)^n\right] - x^n}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \left[n x^{n-1} + \frac{n(n-1)}{2}x^{n-2}(\Delta x) + \dots + (\Delta x)^{n-1}\right] = n x^{n-1}
+              \end{aligned}$$
+              <div class="proof-end">$\blacksquare$</div>
+            </div>
+          </div>
+
+          <div class="proof-block">
+            <div class="proof-title">證明：正弦函數導數 $\frac{d}{dx}[\sin x] = \cos x$（和角公式展開）</div>
+            <div class="proof-body">
+              由和角公式 $\sin(x+\Delta x) = \sin x \cos\Delta x + \cos x \sin\Delta x$：
+              $$\begin{aligned}
+              \frac{d}{dx}[\sin x] &= \lim_{\Delta x \to 0} \frac{\sin(x+\Delta x) - \sin x}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \frac{(\sin x \cos\Delta x + \cos x \sin\Delta x) - \sin x}{\Delta x} \\
+              &= \lim_{\Delta x \to 0} \left[(\cos x)\frac{\sin\Delta x}{\Delta x} - (\sin x)\frac{1-\cos\Delta x}{\Delta x}\right] \\
+              &= (\cos x)\lim_{\Delta x \to 0}\frac{\sin\Delta x}{\Delta x} - (\sin x)\lim_{\Delta x \to 0}\frac{1-\cos\Delta x}{\Delta x} \\
+              &= (\cos x)(1) - (\sin x)(0) = \cos x
+              \end{aligned}$$
+              <div class="proof-end">$\blacksquare$</div>
+            </div>
+          </div>
+
+          <h3>乘積法則 (Product Rule)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">定理：乘積法則 (Product Rule)</div>
+            <div class="callout-body">
+              $$\frac{d}{dx}[f(x)g(x)] = f(x)g'(x) + g(x)f'(x)$$
+              <div class="proof-block">
+                <div class="proof-title">證明（分子同加減項法）：</div>
+                <div class="proof-body">
+                  在分子同時減去並加上相同項 $f(x+\Delta x)g(x)$：
+                  $$\begin{aligned}
+                  \frac{d}{dx}[f(x)g(x)] &= \lim_{\Delta x \to 0} \frac{f(x+\Delta x)g(x+\Delta x) - f(x)g(x)}{\Delta x} \\
+                  &= \lim_{\Delta x \to 0} \frac{f(x+\Delta x)g(x+\Delta x) - f(x+\Delta x)g(x) + f(x+\Delta x)g(x) - f(x)g(x)}{\Delta x} \\
+                  &= \lim_{\Delta x \to 0} \left[f(x+\Delta x)\frac{g(x+\Delta x)-g(x)}{\Delta x} + g(x)\frac{f(x+\Delta x)-f(x)}{\Delta x}\right] \\
+                  &= f(x)g'(x) + g(x)f'(x)
+                  \end{aligned}$$
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">乘積法則範例</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> 求 $y = 2x\cos x - 2\sin x$ 的導數：</p>
+              $$\begin{aligned}
+              y' &= \left[(2x)\frac{d}{dx}[\cos x] + (\cos x)\frac{d}{dx}[2x]\right] - 2\frac{d}{dx}[\sin x] \\
+              &= (2x)(-\sin x) + (\cos x)(2) - 2\cos x = -2x\sin x
+              \end{aligned}$$
+
+              <p><strong>例 2：</strong> 求 $y = 3x^2\sin x$ 的導數：</p>
+              $$y' = 3x^2\frac{d}{dx}[\sin x] + \sin x\frac{d}{dx}[3x^2] = 3x^2\cos x + 6x\sin x = 3x(x\cos x + 2\sin x)$$
+
+              <p><strong>三項乘積法則註記：</strong> $\frac{d}{dx}(fgh) = f'gh + fg'h + fgh'$</p>
+            </div>
+          </div>
+
+          <h3>商法則 (Quotient Rule)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">定理：商法則 (Quotient Rule)</div>
+            <div class="callout-body">
+              $$\frac{d}{dx}\left[\frac{f(x)}{g(x)}\right] = \frac{g(x)f'(x) - f(x)g'(x)}{[g(x)]^2}, \quad g(x) \ne 0$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：商法則求導</div>
+            <div class="callout-body">
+              求 $y = \frac{5x-2}{x^2+1}$ 的導數：
+              $$\begin{aligned}
+              y' &= \frac{(x^2+1)\frac{d}{dx}[5x-2] - (5x-2)\frac{d}{dx}[x^2+1]}{(x^2+1)^2} \\
+              &= \frac{(x^2+1)(5) - (5x-2)(2x)}{(x^2+1)^2} \\
+              &= \frac{(5x^2+5) - (10x^2-4x)}{(x^2+1)^2} = \frac{-5x^2+4x+5}{(x^2+1)^2}
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <h3>其他四種三角函數的導數</h3>
+          <div class="data-table-container">
+            <table class="lecture-table">
+              <thead>
+                <tr>
+                  <th>函數</th>
+                  <th>導數公式</th>
+                  <th>函數</th>
+                  <th>導數公式</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$\tan x$</td>
+                  <td>$\frac{d}{dx}[\tan x] = \sec^2 x$</td>
+                  <td>$\cot x$</td>
+                  <td>$\frac{d}{dx}[\cot x] = -\csc^2 x$</td>
+                </tr>
+                <tr>
+                  <td>$\sec x$</td>
+                  <td>$\frac{d}{dx}[\sec x] = \sec x \tan x$</td>
+                  <td>$\csc x$</td>
+                  <td>$\frac{d}{dx}[\csc x] = -\csc x \cot x$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：$y = x\sec x$</div>
+            <div class="callout-body">
+              $$y' = x(\sec x \tan x) + (\sec x)(1) = \sec x(1 + x\tan x)$$
+            </div>
+          </div>
+
+          <h3>高階導數 (High-Order Derivatives) 記號表</h3>
+          <div class="data-table-container">
+            <table class="lecture-table">
+              <thead>
+                <tr>
+                  <th>階數</th>
+                  <th>常用記號 1</th>
+                  <th>常用記號 2</th>
+                  <th>Leibniz 記號</th>
+                  <th>微分算子記號</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>一階 (First)</td>
+                  <td>$y'$</td>
+                  <td>$f'(x)$</td>
+                  <td>$\frac{dy}{dx}$</td>
+                  <td>$D_x[y]$</td>
+                </tr>
+                <tr>
+                  <td>二階 (Second)</td>
+                  <td>$y''$</td>
+                  <td>$f''(x)$</td>
+                  <td>$\frac{d^2y}{dx^2}$</td>
+                  <td>$D_x^2[y]$</td>
+                </tr>
+                <tr>
+                  <td>三階 (Third)</td>
+                  <td>$y'''$</td>
+                  <td>$f'''(x)$</td>
+                  <td>$\frac{d^3y}{dx^3}$</td>
+                  <td>$D_x^3[y]$</td>
+                </tr>
+                <tr>
+                  <td>四階 (Fourth)</td>
+                  <td>$y^{(4)}$</td>
+                  <td>$f^{(4)}(x)$</td>
+                  <td>$\frac{d^4y}{dx^4}$</td>
+                  <td>$D_x^4[y]$</td>
+                </tr>
+                <tr>
+                  <td>$n$ 階 ($n$-th)</td>
+                  <td>$y^{(n)}$</td>
+                  <td>$f^{(n)}(x)$</td>
+                  <td>$\frac{d^n y}{dx^n}$</td>
+                  <td>$D_x^n[y]$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2.4 Chain Rule -->
+        <!-- ========================================== -->
+        <section id="sec2-4" class="lecture-section">
+          <h2>2.4 複合函數連鎖律 (Chain Rule for Composite Functions)</h2>
+          <div class="callout callout-thm">
+            <div class="callout-title">定理：連鎖律 (The Chain Rule)</div>
+            <div class="callout-body">
+              若 $y = f(u)$ 為 $u$ 的可微函數，且 $u = g(x)$ 為 $x$ 的可微函數，則複合函數 $y = f(g(x))$ 也是 $x$ 的可微函數，其導數為：
+              $$\frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx} \quad \text{或表示為} \quad \frac{d}{dx}[f(g(x))] = f'(g(x))g'(x)$$
+              <div class="proof-block">
+                <div class="proof-title">證明（利用點 $c$ 導數替代形式）：</div>
+                <div class="proof-body">
+                  令 $h(x) = f(g(x))$：
+                  $$h'(c) = \lim_{x \to c} \frac{f(g(x)) - f(g(c))}{x - c}$$
+                  分子分母同乘以 $[g(x) - g(c)]$：
+                  $$= \lim_{x \to c} \left[\frac{f(g(x)) - f(g(c))}{g(x) - g(c)} \cdot \frac{g(x) - g(c)}{x - c}\right] = f'(g(c)) \cdot g'(c)$$
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：連鎖律威力對比二項式展開</div>
+            <div class="callout-body">
+              求 $\frac{d}{dx}[(x^2+1)^{50}]$：
+              <ul>
+                <li><strong>方法 1（連鎖律）：</strong>令 $u = x^2+1, y = u^{50}$：
+                  $$\frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx} = (50u^{49})(2x) = 100x(x^2+1)^{49}$$
+                </li>
+                <li><strong>方法 2（二項式展開）：</strong>展開多項式 $\sum_{n=0}^{50} C_n^{50} x^{2n}$ 再項項求導，極度繁瑣！</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 2.11：廣義冪次法則 (The General Power Rule)</div>
+            <div class="callout-body">
+              若 $y = [u(x)]^n$，其中 $u$ 為可微函數，$n$ 為有理數：
+              $$\frac{dy}{dx} = n[u(x)]^{n-1} \cdot \frac{du}{dx}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：廣義冪次法則求導</div>
+            <div class="callout-body">
+              求 $f(x) = (x^2-1)^{2/3}$ 的導函數：
+              $$f'(x) = \frac{2}{3}(x^2-1)^{-1/3} \cdot \frac{d}{dx}[x^2-1] = \frac{2}{3}(x^2-1)^{-1/3}(2x) = \frac{4x}{3\sqrt[3]{x^2-1}}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 7 & 8：因式提出最小冪次化簡技巧</div>
+            <div class="callout-body">
+              <p><strong>例 7：</strong> 求 $f(x) = x^2\sqrt{1-x^2}$ 的導數：</p>
+              $$\begin{aligned}
+              f(x) &= x^2(1-x^2)^{1/2} \\
+              f'(x) &= x^2\left[\frac{1}{2}(1-x^2)^{-1/2}(-2x)\right] + (1-x^2)^{1/2}(2x) \\
+              &= -x^3(1-x^2)^{-1/2} + 2x(1-x^2)^{1/2} \\
+              &= x(1-x^2)^{-1/2}\left[-x^2 + 2(1-x^2)\right] = \frac{x(2-3x^2)}{\sqrt{1-x^2}}
+              \end{aligned}$$
+
+              <p><strong>例 8：</strong> 求 $f(x) = \frac{x}{\sqrt[3]{x^2+4}}$ 的導數：</p>
+              $$\begin{aligned}
+              f'(x) &= \frac{(x^2+4)^{1/3}(1) - x\left[\frac{1}{3}(x^2+4)^{-2/3}(2x)\right]}{(x^2+4)^{2/3}} \\
+              &= \frac{1}{3}(x^2+4)^{-2/3} \cdot \frac{3(x^2+4) - 2x^2}{(x^2+4)^{2/3}} = \frac{x^2+12}{3(x^2+4)^{4/3}}
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <h3>多次連鎖律 (Repeated Chain Rules)</h3>
+          <div class="callout callout-example">
+            <div class="callout-title">範例：多次連鎖複合</div>
+            <div class="callout-body">
+              <p><strong>a. 三角冪次複合：</strong> $f(t) = \sin^3(4t) = [\sin(4t)]^3$</p>
+              $$f'(t) = 3[\sin(4t)]^2 \cdot \frac{d}{dt}[\sin(4t)] = 3\sin^2(4t) \cdot [\cos(4t) \cdot 4] = 12\sin^2(4t)\cos(4t)$$
+
+              <p><strong>b. 指數複合：</strong> $y = e^{\cos(x^2)}$</p>
+              $$\frac{dy}{dx} = e^{\cos(x^2)} \cdot \frac{d}{dx}[\cos(x^2)] = e^{\cos(x^2)} \cdot \left[-\sin(x^2) \cdot 2x\right] = -2x\sin(x^2)e^{\cos(x^2)}$$
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2.5 Implicit Differentiation -->
+        <!-- ========================================== -->
+        <section id="sec2-5" class="lecture-section">
+          <h2>2.5 隱函數微分法 (Implicit Differentiation)</h2>
+          <div class="callout callout-def">
+            <div class="callout-title">顯函數與隱函數的差別</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>顯函數 (Explicit function)：</strong> $x$ 與 $y$ 可完全分離，左側純為 $y$，右側純為 $x$ 的式子（如 $y = ax^2+bx+c$）。</li>
+                <li><strong>隱函數 (Implicit function)：</strong> $x$ 與 $y$ 混雜在同一個方程式中（如 $ax^2 + bxy + cy^2 + dx + ey + f = 0$）。</li>
+              </ul>
+              <p><em>註：部分函數可互換，例如 $xy = 1$（隱式）$\iff y = \frac{1}{x}$（顯式）。</em></p>
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">隱微分的核心關鍵步驟 (Guidelines)</div>
+            <div class="callout-body">
+              記住：<strong>$y$ 仍是 $x$ 的函數，只是被隱含在式中</strong>。因此只要微分含有 $y$ 的項，就必須套用連鎖律：
+              $$\frac{d}{dx}[y^3] = 3y^2\frac{dy}{dx}, \quad \frac{d}{dx}[xy^2] = x\left(2y\frac{dy}{dx}\right) + y^2(1) = 2xy\frac{dy}{dx} + y^2$$
+              <strong>四步驟求導程序：</strong>
+              <ol>
+                <li>方程式兩邊對 $x$ 求導。</li>
+                <li>將所有含 $\frac{dy}{dx}$ 的項移至等號左側，其他項移至右側。</li>
+                <li>在左側提出公因式 $\frac{dy}{dx}$。</li>
+                <li>除過去，解出 $\frac{dy}{dx}$。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 2：隱函數求導運算</div>
+            <div class="callout-body">
+              求 $y^3 + y^2 - 5y - x^2 = -4$ 的 $\frac{dy}{dx}$：
+              $$\begin{aligned}
+              \frac{d}{dx}[y^3] + \frac{d}{dx}[y^2] - \frac{d}{dx}[5y] - \frac{d}{dx}[x^2] &= \frac{d}{dx}[-4] \\
+              3y^2\frac{dy}{dx} + 2y\frac{dy}{dx} - 5\frac{dy}{dx} - 2x &= 0 \\
+              \frac{dy}{dx}(3y^2 + 2y - 5) &= 2x \implies \frac{dy}{dx} = \frac{2x}{3y^2+2y-5}
+              \end{aligned}$$
+              <p><strong>注意：</strong> 隱函數求出的導函數通常也是隱式形式（同時含有 $x$ 與 $y$）！</p>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：切線斜率與切線方程式</div>
+            <div class="callout-body">
+              <p><strong>例 1：橢圓 $x^2 + 4y^2 = 4$ 在點 $(\sqrt{2}, -1/\sqrt{2})$ 的切線斜率：</strong></p>
+              $$2x + 8y\frac{dy}{dx} = 0 \implies \frac{dy}{dx} = -\frac{2x}{8y} = -\frac{x}{4y}$$
+              代入點坐標：$m = -\frac{\sqrt{2}}{4(-1/\sqrt{2})} = \frac{2}{4} = \frac{1}{2}$。
+
+              <p><strong>例 2：曲線 $x^2(x^2+y^2) = y^2 \implies x^4 + x^2y^2 - y^2 = 0$ 在點 $(\frac{\sqrt{2}}{2}, \frac{\sqrt{2}}{2})$ 的切線：</strong></p>
+              $$4x^3 + x^2\left(2y\frac{dy}{dx}\right) + 2xy^2 - 2y\frac{dy}{dx} = 0 \implies \frac{dy}{dx} = \frac{x(2x^2+y^2)}{y(1-x^2)}$$
+              代入求得斜率 $m = 3$。切線方程式為：
+              $$y - \frac{\sqrt{2}}{2} = 3\left(x - \frac{\sqrt{2}}{2}\right) \implies y = 3x - \sqrt{2}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：高階隱微分 (High-Order Implicit Differentiation)</div>
+            <div class="callout-body">
+              已知圓方程式 $x^2 + y^2 = 25$，求二階導數 $\frac{d^2y}{dx^2}$：
+              <ol>
+                <li>一階導：$2x + 2y\frac{dy}{dx} = 0 \implies \frac{dy}{dx} = -\frac{x}{y}$</li>
+                <li>二階導（對 $-\frac{x}{y}$ 套用商法則）：
+                  $$\frac{d^2y}{dx^2} = -\frac{y(1) - x\frac{dy}{dx}}{y^2} = -\frac{y - x\left(-\frac{x}{y}\right)}{y^2} = -\frac{y + \frac{x^2}{y}}{y^2} = -\frac{y^2+x^2}{y^3}$$
+                </li>
+                <li>將原方程式 $x^2+y^2 = 25$ 代回：
+                  $$\frac{d^2y}{dx^2} = -\frac{25}{y^3}$$
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2.6 Inverse Functions & Transcendental -->
+        <!-- ========================================== -->
+        <section id="sec2-6" class="lecture-section">
+          <h2>2.6 反函數與超越函數微分 (Derivatives of Inverse Functions & Transcendental Functions)</h2>
+
+          <h3>自然對數函數的導數</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 5.3：自然對數函數的導數</div>
+            <div class="callout-body">
+              $$\frac{d}{dx}[\ln x] = \frac{1}{x} \quad (x > 0), \qquad \frac{d}{dx}[\ln u] = \frac{1}{u}\frac{du}{dx} = \frac{u'}{u} \quad (u > 0)$$
+              <div class="proof-block">
+                <div class="proof-title">證明（利用反函數與隱微分）：</div>
+                <div class="proof-body">
+                  令 $y = \ln x \implies e^y = x$。兩邊對 $x$ 求導：
+                  $$e^y \frac{dy}{dx} = 1 \implies \frac{dy}{dx} = \frac{1}{e^y} = \frac{1}{x}$$
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+              <p><strong>推廣：</strong>對所有 $u \ne 0$，恆有 $\frac{d}{dx}[\ln|u|] = \frac{u'}{u}$。</p>
+            </div>
+          </div>
+
+          <h3>對數微分法 (Logarithmic Differentiation)</h3>
+          <div class="callout callout-note">
+            <div class="callout-title">對數微分法解題思路</div>
+            <div class="callout-body">
+              當遇到複雜的有理式（乘除次方混雜）或「底數與指數皆為 $x$ 的函數」$y = f(x)^{g(x)}$ 時，先在等號兩側取自然對數 $\ln$，利用對數律化簡展開後再進行隱微分！
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：對數微分法實戰演算</div>
+            <div class="callout-body">
+              <p><strong>例 1：有理式化簡求導</strong> $y = \frac{x(x^2+1)^2}{\sqrt{2x^3-1}}$</p>
+              $$\begin{aligned}
+              \ln y &= \ln x + 2\ln(x^2+1) - \frac{1}{2}\ln(2x^3-1) \\
+              \frac{y'}{y} &= \frac{1}{x} + 2\left(\frac{2x}{x^2+1}\right) - \frac{1}{2}\left(\frac{6x^2}{2x^3-1}\right) = \frac{1}{x} + \frac{4x}{x^2+1} - \frac{3x^2}{2x^3-1} \\
+              y' &= y\left[\frac{1}{x} + \frac{4x}{x^2+1} - \frac{3x^2}{2x^3-1}\right]
+              \end{aligned}$$
+
+              <p><strong>例 2：底數與指數皆為變數</strong> $y = x^{\sin x}$</p>
+              $$\begin{aligned}
+              \ln y &= \sin x \cdot \ln x \\
+              \frac{1}{y}\frac{dy}{dx} &= (\cos x)(\ln x) + (\sin x)\left(\frac{1}{x}\right) \\
+              \frac{dy}{dx} &= x^{\sin x}\left[\cos x \ln x + \frac{\sin x}{x}\right]
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <h3>反函數的導數關係 (Derivative of Inverse Function)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">反函數斜率互為倒數定理</div>
+            <div class="callout-body">
+              由 $f(f^{-1}(x)) = x$，令 $g(x) = f^{-1}(x)$，則 $f(g(x)) = x$。兩端對 $x$ 微分：
+              $$f'(g(x)) \cdot g'(x) = 1 \implies g'(x) = (f^{-1})'(x) = \frac{1}{f'(g(x))}$$
+              幾何意義：在點 $(a, b) \in f$ 與點 $(b, a) \in f^{-1}$ 處，切線斜率乘積等於 1：
+              $$m_f \cdot m_{f^{-1}} = 1$$
+            </div>
+          </div>
+
+          <h3>非 $e$ 為底的指數與對數導數 (Derivatives for Bases Other than $e$)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 5.13：一般底數導數公式</div>
+            <div class="callout-body">
+              設 $a > 0, a \ne 1$：
+              <ol>
+                <li>$\frac{d}{dx}[a^x] = (\ln a)a^x$</li>
+                <li>$\frac{d}{dx}[a^u] = (\ln a)a^u \frac{du}{dx}$</li>
+                <li>$\frac{d}{dx}[\log_a x] = \frac{1}{(\ln a)x}$</li>
+                <li>$\frac{d}{dx}[\log_a u] = \frac{1}{(\ln a)u} \frac{du}{dx}$</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">自然底數 $e$ 的連續複利物理意涵</div>
+            <div class="callout-body">
+              複利本利和公式 $A = P\left(1 + \frac{r}{n}\right)^{nt}$，當計息期數 $n \to \infty$（連續複利 continuously compound）時：
+              $$A = \lim_{n \to \infty} P\left(1 + \frac{r}{n}\right)^{nt} = P e^{rt}$$
+              <em>實例：</em> 本金 2500 美元、年利率 $5\%$、存 5 年連續複利本利和為 $A = 2500 e^{(0.05)(5)} = 2500 e^{0.25}$。
+            </div>
+          </div>
+
+          <h3>反三角函數的導數 (Derivatives of Inverse Trigonometric Functions)</h3>
+          <div class="data-table-container">
+            <table class="lecture-table">
+              <thead>
+                <tr>
+                  <th>反三角函數</th>
+                  <th>連鎖律導數公式</th>
+                  <th>反三角函數</th>
+                  <th>連鎖律導數公式</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$\arcsin u$</td>
+                  <td>$\frac{d}{dx}[\arcsin u] = \frac{u'}{\sqrt{1-u^2}}$</td>
+                  <td>$\arccos u$</td>
+                  <td>$\frac{d}{dx}[\arccos u] = \frac{-u'}{\sqrt{1-u^2}}$</td>
+                </tr>
+                <tr>
+                  <td>$\arctan u$</td>
+                  <td>$\frac{d}{dx}[\arctan u] = \frac{u'}{1+u^2}$</td>
+                  <td>$\text{arccot } u$</td>
+                  <td>$\frac{d}{dx}[\text{arccot } u] = \frac{-u'}{1+u^2}$</td>
+                </tr>
+                <tr>
+                  <td>$\text{arcsec } u$</td>
+                  <td>$\frac{d}{dx}[\text{arcsec } u] = \frac{u'}{|u|\sqrt{u^2-1}}$</td>
+                  <td>$\text{arccsc } u$</td>
+                  <td>$\frac{d}{dx}[\text{arccsc } u] = \frac{-u'}{|u|\sqrt{u^2-1}}$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="proof-block">
+            <div class="proof-title">證明：$\frac{d}{dx}[\arcsin x] = \frac{1}{\sqrt{1-x^2}}$ ($-1 < x < 1$)</div>
+            <div class="proof-body">
+              令 $y = \arcsin x \implies \sin y = x$（其中 $y \in (-\pi/2, \pi/2)$）。<br>
+              兩邊對 $x$ 微分得 $\cos y \frac{dy}{dx} = 1 \implies \frac{dy}{dx} = \frac{1}{\cos y}$。<br>
+              因在 $(-\pi/2, \pi/2)$ 區間內 $\cos y > 0$，由 $\cos y = \sqrt{1 - \sin^2 y} = \sqrt{1 - x^2}$，證得：
+              $$\frac{d}{dx}[\arcsin x] = \frac{1}{\sqrt{1-x^2}}$$
+              <div class="proof-end">$\blacksquare$</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2.7 Related Rates -->
+        <!-- ========================================== -->
+        <section id="sec2-7" class="lecture-section">
+          <h2>2.7 相關變率 (Related Rates)</h2>
+          <p>
+            在真實世界中，許多物理量由幾何或代數公式連結（如 $V, r, h$）。當這些物理量隨時間 $t$ 變化時，它們的<strong>時間變化率（對 $t$ 的導數）</strong>也具有連帶關係。透過隱微分對時間 $t$ 求導，即可由已知變率求出未知變率。
+          </p>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 3：氣球充氣問題 (An Inflating Balloon)</div>
+            <div class="callout-body">
+              空氣以 $4.5 \text{ ft}^3/\text{min}$ 的速率充入球形氣球。當氣球半徑為 $2 \text{ ft}$ 時，求半徑的增加速率：
+              <ul>
+                <li><strong>幾何關聯式：</strong> $V = \frac{4}{3}\pi r^3$</li>
+                <li><strong>對時間 $t$ 求導：</strong> $\frac{dV}{dt} = 4\pi r^2 \frac{dr}{dt}$</li>
+                <li><strong>已知條件：</strong> $\frac{dV}{dt} = 4.5 = \frac{9}{2}$，當 $r = 2$ 時：
+                  $$\frac{dr}{dt} = \frac{1}{4\pi r^2}\frac{dV}{dt} = \frac{1}{4\pi (2)^2}\left(\frac{9}{2}\right) = \frac{9}{32\pi} \approx 0.09 \text{ ft/min}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 5：火箭升空攝影機仰角變化率</div>
+            <div class="callout-body">
+              攝影機架於距發射台 $2000 \text{ ft}$ 處。火箭垂直升空的高度為 $s = 50t^2$（速度 $\frac{ds}{dt} = 100t$）。求火箭升空 $t = 10$ 秒時（此時 $s = 5000 \text{ ft}$），攝影機仰角 $\theta$ 的變化率：
+              <ul>
+                <li><strong>幾何方程式：</strong> $\tan\theta = \frac{s}{2000}$</li>
+                <li><strong>對時間求導：</strong>
+                  $$\sec^2\theta \frac{d\theta}{dt} = \frac{1}{2000}\frac{ds}{dt} \implies \frac{d\theta}{dt} = \cos^2\theta \cdot \frac{100t}{2000}$$
+                </li>
+                <li>由直角三角形：$\cos\theta = \frac{2000}{\sqrt{s^2 + 2000^2}}$。代入 $t = 10, s = 5000$：
+                  $$\frac{d\theta}{dt} = \frac{2000(100)(10)}{5000^2 + 2000^2} = \frac{2{,}000{,}000}{29{,}000{,}000} = \frac{2}{29} \text{ rad/s}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 6：活塞曲軸運動速度 (餘弦定理連鎖求導)</div>
+            <div class="callout-body">
+              曲軸長度 3，連桿長度 7，活塞沿水平方向移動距離為 $x$。曲軸轉速為每分鐘 200 轉（$\frac{d\theta}{dt} = 200(2\pi) = 400\pi \text{ rad/min}$）。
+              <ul>
+                <li><strong>餘弦定理方程式：</strong> $7^2 = 3^2 + x^2 - 2(3)(x)\cos\theta \implies 49 = 9 + x^2 - 6x\cos\theta$</li>
+                <li><strong>對時間 $t$ 隱微分：</strong>
+                  $$0 = 2x\frac{dx}{dt} - 6\left[-x\sin\theta\frac{d\theta}{dt} + \cos\theta\frac{dx}{dt}\right]$$
+                  $$(6\cos\theta - 2x)\frac{dx}{dt} = 6x\sin\theta\frac{d\theta}{dt} \implies \frac{dx}{dt} = \frac{6x\sin\theta}{6\cos\theta - 2x}\frac{d\theta}{dt}$$
+                </li>
+                <li>當 $\theta = \frac{\pi}{3}$ 時，解出 $x = 8$。代入計算：
+                  $$\frac{dx}{dt} = \frac{6(8)(\sqrt{3}/2)}{6(1/2) - 16}(400\pi) = -\frac{9600\pi\sqrt{3}}{13} \text{ 單位/min}$$
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 前後章節跳轉按鈕 -->
+        <nav class="chapter-pagination">
+          <a href="ch01-limits.html" id="prev-chapter-link" class="page-link prev">
+            <span class="link-label">← 上一章</span>
+            <span class="link-title">第 01 章：極限及其性質</span>
+          </a>
+          <a href="ch03-applications-of-differentiation.html" id="next-chapter-link" class="page-link next">
+            <span class="link-label">下一章 →</span>
+            <span class="link-title">第 03 章：微分之應用</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <!-- 邏輯腳本 (相對路徑) -->
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

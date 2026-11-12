@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微積分講義 - 第 03 章：微分之應用 (Applications of Differentiation)</title>
+
+  <!-- 全站共用樣式 (相對路徑) -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- KaTeX 數學公式支援 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-chapter-id="ch03">
+  <!-- 頂部功能導覽列 -->
+  <header class="site-header">
+    <div class="header-left">
+      <button id="menu-toggle" class="icon-btn" aria-label="切換選單">☰</button>
+      <a href="../index.html" class="header-logo">
+        <span>📐</span> 微積分課程講義
+      </a>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="切換主題模式">🌓</button>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- 側邊欄（由 nav.js 動態渲染目錄） -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>章節目錄導覽</h3>
+      </div>
+      <nav id="course-nav" class="course-nav">
+        <!-- nav.js 自動注入目錄 -->
+      </nav>
+    </aside>
+
+    <!-- 手機端側邊欄遮罩 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 講義主內容區域 -->
+    <main class="main-content">
+      <article class="lecture-content">
+        <!-- 章節標頭 -->
+        <header class="chapter-header">
+          <div class="chapter-meta">Chapter 03</div>
+          <h1 class="chapter-title">微分之應用<br><small style="font-size: 0.6em; font-weight: 500; color: var(--text-muted);">Applications of Differentiation</small></h1>
+          <p class="chapter-lead">
+            微分能幫助我們精確掌握：(1) 函數的行為（遞增減、凹凸性、極值、漸近線）；(2) 工程與經濟問題的最優最佳化解；(3) 函數的線性逼近與誤差傳遞分析。本章將完整探討極值定理、均值定理、函數繪圖四大步驟、最佳化問題與微分量應用。
+          </p>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- 3.1 Extrema -->
+        <!-- ========================================== -->
+        <section id="sec3-1" class="lecture-section">
+          <h2>3.1 極值與臨界點 (Extrema & Critical Numbers)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">相對極值定義 (Definition of Relative Extrema)</div>
+            <div class="callout-body">
+              <ol>
+                <li>若存在一個包含 $c$ 的開區間，使得對該區間內所有的 $x$ 均有 $f(c)$ 為最大值，則稱 $f(c)$ 為 $f$ 的<strong>相對極大值 (relative maximum)</strong>，點 $(c, f(c))$ 稱為相對極大點。</li>
+                <li>若存在一個包含 $c$ 的開區間，使得 $f(c)$ 為最小值，則稱 $f(c)$ 為 $f$ 的<strong>相對極小值 (relative minimum)</strong>，點 $(c, f(c))$ 稱為相對極小點。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：臨界數/臨界點 (Critical Number)</div>
+            <div class="callout-body">
+              設 $f$ 在 $c$ 處有定義。若滿足以下條件之一，則稱 $c$ 為函數 $f$ 的<strong>臨界數 (critical number)</strong>：
+              <ul>
+                <li>$f'(c) = 0$（水平切線）</li>
+                <li>$f'(c)$ 不存在（不可微，如尖折點或垂直切線）</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 3.2：相對極值必發生於臨界點 (Relative Extrema Occur Only at Critical Numbers)</div>
+            <div class="callout-body">
+              若函數 $f$ 在 $x = c$ 處具有相對極大或相對極小值，則 $c$ 必然是 $f$ 的臨界數。
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-title">⚠️ 重點警示：臨界點不一定是相對極值！</div>
+            <div class="callout-body">
+              <strong>"The critical point is not necessarily the relative extrema! (Only potential candidate 候選人!)"</strong>
+              <ul>
+                <li><strong>平滑曲線反例：</strong> $f(x) = x^3$，$f'(x) = 3x^2 \implies f'(0) = 0$（$x=0$ 為臨界點）。
+                  但在 $x=0$ 左側函數遞增，在右側函數亦遞增，因此 $x=0$ 既非極大也非極小！
+                </li>
+                <li><strong>尖折曲線反例：</strong> 某點 $x_0$ 處 $f'(x_0)$ 不存在（為臨界點），但圖形在該點兩側皆持續遞減，因此該點並非極值！</li>
+              </ul>
+              <p>結論：臨界點周圍的<strong>遞增與遞減行為</strong>，才是判斷該點是否為極值的關鍵依據。</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3.2 Rolle's & Mean-Value Theorem -->
+        <!-- ========================================== -->
+        <section id="sec3-2" class="lecture-section">
+          <h2>3.2 羅爾定理與均值定理 (Rolle's Theorem & Mean-Value Theorem)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 3.3：羅爾定理 (Rolle's Theorem)</div>
+            <div class="callout-body">
+              設函數 $f$ 滿足：
+              <ol>
+                <li>在閉區間 $[a, b]$ 上<strong>連續</strong>；</li>
+                <li>在開區間 $(a, b)$ 內<strong>可微</strong>；</li>
+                <li>端點函數值相等：$f(a) = f(b)$。</li>
+              </ol>
+              則在開區間 $(a, b)$ 內至少存在一個數字 $c$，使得：
+              $$f'(c) = 0$$
+              <p><strong>注意：</strong> 若函數在 $(a, b)$ 內不可微，羅爾定理可能失效！此外，「至少一個 $c$」意味著可能存在多個滿足 $f'(c) = 0$ 的點。</p>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 3.4：均值定理 (The Mean Value Theorem, MVT)</div>
+            <div class="callout-body">
+              若函數 $f$ 在閉區間 $[a, b]$ 上連續，且在開區間 $(a, b)$ 內可微，則在 $(a, b)$ 內至少存在一個數字 $c$，使得：
+              $$f'(c) = \frac{f(b) - f(a)}{b - a}$$
+              <p><strong>幾何意義：</strong> 端點連線的割線斜率 $\frac{f(b)-f(a)}{b-a}$，必然等於區間內某點 $c$ 處的切線斜率 $f'(c)$。這代表<strong>切線與端點割線互相平行</strong>！</p>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：均值定理計算</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> $f(x) = 5 - \frac{4}{x}$ 於區間 $[1, 4]$：</p>
+              $$\text{割線斜率} = \frac{f(4) - f(1)}{4 - 1} = \frac{4 - 1}{3} = 1$$
+              $$f'(x) = \frac{4}{x^2} = 1 \implies x^2 = 4 \implies c = 2 \in (1, 4)$$
+
+              <p><strong>例 2：</strong> $f(x) = \sin x$ 於區間 $\left[0, \frac{\pi}{2}\right]$：</p>
+              $$\frac{\sin(\pi/2) - \sin 0}{\pi/2 - 0} = \frac{1}{\pi/2} = \frac{2}{\pi} \implies f'(c) = \cos c = \frac{2}{\pi} \implies c \approx 0.8807$$
+
+              <p><strong>不可微反例：</strong> $f(x) = |x|$ 在 $[-1, 1]$ 區間：</p>
+              割線斜率 $\frac{1 - 1}{1 - (-1)} = 0$。但因 $f$ 在 $x=0$ 處不可微，$f'(x) = \pm 1$ 永遠不等於 0，故均值定理不成立。
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">🚗 均值定理的現實應用：區間測速 (Average Speed Enforcement)</div>
+            <div class="callout-body">
+              <strong>「依據 Mean-Value Theorem，當平均速率超標 $\implies$ 瞬時速率一定超標！」</strong>
+              <p><em>案例：</em> 高速公路上兩輛巡邏雷達車相距 5 英里。一輛卡車經過第一輛車時測得時速 55 mph；4 分鐘後（$t = \frac{4}{60} = \frac{1}{15}$ 小時）經過第二輛車測得時速 50 mph。</p>
+              $$\text{平均車速} = \frac{\Delta s}{\Delta t} = \frac{5 \text{ miles}}{\frac{1}{15} \text{ hr}} = 75 \text{ mph}$$
+              由於行車位移函數連續且可微，由均值定理，在 4 分鐘內的某一瞬間，卡車的瞬時速率必定恰好達到 $75 \text{ mph}$，確定違規超速！
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3.3 Increasing/Decreasing & 1st Test -->
+        <!-- ========================================== -->
+        <section id="sec3-3" class="lecture-section">
+          <h2>3.3 函數遞增減與一階導數檢驗 (First Derivative Test)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 3.5：函數遞增與遞減檢驗法</div>
+            <div class="callout-body">
+              設 $f$ 在 $[a, b]$ 連續，在 $(a, b)$ 可微：
+              <ol>
+                <li>若對所有 $x \in (a, b)$ 恆有 $f'(x) > 0$，則 $f$ 在 $[a, b]$ 上<strong>嚴格遞增 (increasing)</strong>。</li>
+                <li>若對所有 $x \in (a, b)$ 恆有 $f'(x) < 0$，則 $f$ 在 $[a, b]$ 上<strong>嚴格遞減 (decreasing)</strong>。</li>
+                <li>若對所有 $x \in (a, b)$ 恆有 $f'(x) = 0$，則 $f$ 在 $[a, b]$ 上為<strong>常數函數 (constant)</strong>。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 3.6：一階導數檢驗法 (The First Derivative Test)</div>
+            <div class="callout-body">
+              設 $c$ 為連續函數 $f$ 的臨界數：
+              <ol>
+                <li>若 $f'(x)$ 在 $c$ 處由<strong>負變正</strong>（左減右增），則 $f(c)$ 為<strong>相對極小值 (relative minimum)</strong>。</li>
+                <li>若 $f'(x)$ 在 $c$ 處由<strong>正變負</strong>（左增右減），則 $f(c)$ 為<strong>相對極大值 (relative maximum)</strong>。</li>
+                <li>若 $f'(x)$ 在 $c$ 兩側符號相同，則 $f(c)$ 不是極值。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：利用一階導數檢驗極值 $f(x) = (x^2-4)^{2/3}$</div>
+            <div class="callout-body">
+              $$f'(x) = \frac{2}{3}(x^2-4)^{-1/3}(2x) = \frac{4x}{3(x^2-4)^{1/3}}$$
+              臨界數：$f'(x) = 0 \implies x = 0$；$f'(x)$ 未定義 $\implies x = \pm 2$。
+
+              <div class="data-table-container">
+                <table class="lecture-table" style="text-align: center;">
+                  <thead>
+                    <tr>
+                      <th>區間</th>
+                      <th>測試值 $x$</th>
+                      <th>$f'(x)$ 符號</th>
+                      <th>函數行為</th>
+                      <th>極值判斷</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>$(-\infty, -2)$</td><td>$-3$</td><td>$f'(-3) < 0$</td><td>遞減</td><td rowspan="2">相對極小值 $( -2, 0 )$</td>
+                    </tr>
+                    <tr>
+                      <td>$(-2, 0)$</td><td>$-1$</td><td>$f'(-1) > 0$</td><td>遞增</td>
+                    </tr>
+                    <tr>
+                      <td>$(0, 2)$</td><td>$1$</td><td>$f'(1) < 0$</td><td>遞減</td><td>相對極大值 $( 0, \sqrt[3]{16} )$</td>
+                    </tr>
+                    <tr>
+                      <td>$(2, \infty)$</td><td>$3$</td><td>$f'(3) > 0$</td><td>遞增</td><td>相對極小值 $( 2, 0 )$</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：數線正負號簡算法 $f(x) = x^{5/3} - 3x^{2/3}$</div>
+            <div class="callout-body">
+              $$f'(x) = \frac{5}{3}x^{2/3} - 3\left(\frac{2}{3}\right)x^{-1/3} = \frac{5x - 6}{3x^{1/3}}$$
+              臨界數為 $x = \frac{6}{5}$（$f'=0$）與 $x = 0$（$f'$ 未定義）：
+              <ul>
+                <li>當 $x < 0$ 時：分子 $(-)$，分母 $(-)$ $\implies f'(x) > 0$（遞增）</li>
+                <li>當 $0 < x < \frac{6}{5}$ 時：分子 $(-)$，分母 $(+)$ $\implies f'(x) < 0$（遞減）</li>
+                <li>當 $x > \frac{6}{5}$ 時：分子 $(+)$，分母 $(+)$ $\implies f'(x) > 0$（遞增）</li>
+              </ul>
+              結論：$x = 0$ 處由正變負為<strong>相對極大值</strong>；$x = \frac{6}{5}$ 處由負變正為<strong>相對極小值</strong>。
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3.4 Concavity & 2nd Test -->
+        <!-- ========================================== -->
+        <section id="sec3-4" class="lecture-section">
+          <h2>3.4 凹凸性、反曲點與二階導數檢驗 (Concavity & Second Derivative Test)</h2>
+          <div class="callout callout-def">
+            <div class="callout-title">凹凸性定義 (Concavity)</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>凹口向上 (Concave Upward)：</strong> 圖形切線斜率 $f'(x)$ 遞增 $\iff f''(x) > 0$。</li>
+                <li><strong>凹口向下 (Concave Downward)：</strong> 圖形切線斜率 $f'(x)$ 遞減 $\iff f''(x) < 0$。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：反曲點 (Point of Inflection)</div>
+            <div class="callout-body">
+              曲線圖形在某點連續，且凹凸性由「向上變向下」或「向下變向上」的轉折點，稱為<strong>反曲點 (Point of Inflection)</strong>。
+              <p><strong>定理 3.8：</strong> 若 $(c, f(c))$ 為反曲點，則必有 $f''(c) = 0$ 或 $f''(c)$ 不存在。</p>
+              <p><em>警示反例：</em> $f(x) = x^4$ 在 $x = 0$ 處 $f''(0) = 0$，但其兩側二階導皆為正（皆凹口向上），因此 $(0, 0)$ <strong>不是</strong>反曲點！</p>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 3.9：二階導數極值檢驗法 (The Second Derivative Test)</div>
+            <div class="callout-body">
+              設 $c$ 為滿足 $f'(c) = 0$ 的臨界點：
+              <ol>
+                <li>若 $f''(c) > 0$（凹口向上），則 $f$ 在 $c$ 處具有<strong>相對極小值 (relative minimum)</strong>。</li>
+                <li>若 $f''(c) < 0$（凹口向下），則 $f$ 在 $c$ 處具有<strong>相對極大值 (relative maximum)</strong>。</li>
+                <li>若 $f''(c) = 0$，則<strong>檢驗失效 (test fails)</strong>！必須回歸一階導數檢驗法判定。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：二階檢驗失效實例 $f(x) = -3x^5 + 5x^3$</div>
+            <div class="callout-body">
+              $$f'(x) = -15x^4 + 15x^2 = 15x^2(1 - x^2) = 0 \implies x = -1, 0, 1$$
+              $$f''(x) = -60x^3 + 30x = 30x(1 - 2x^2)$$
+              <ul>
+                <li>在 $x = -1$：$f''(-1) = 30 > 0 \implies$ 相對極小值 $(-1, -2)$</li>
+                <li>在 $x = 1$：$f''(1) = -30 < 0 \implies$ 相對極大值 $(1, 2)$</li>
+                <li>在 $x = 0$：$f''(0) = 0 \implies$ <strong>檢驗失效</strong>！經由一階檢驗法發現兩側 $f'(x) \ge 0$ 不變號，故 $(0, 0)$ 不是極值（為反曲點）。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3.5 Asymptotes & Graphing -->
+        <!-- ========================================== -->
+        <section id="sec3-5" class="lecture-section">
+          <h2>3.5 漸近線與函數繪圖四大步驟 (Asymptotes and Graphing a Function)</h2>
+          <div class="callout callout-def">
+            <div class="callout-title">三種漸近線定義</div>
+            <div class="callout-body">
+              <ol>
+                <li><strong>水平漸近線 (Horizontal Asymptote)：</strong> $y = c$，若 $\lim_{x \to \infty} f(x) = c$ 或 $\lim_{x \to -\infty} f(x) = c$。</li>
+                <li><strong>垂直漸近線 (Vertical Asymptote)：</strong> $x = a$，若 $\lim_{x \to a^+} f(x) = \pm\infty$ 或 $\lim_{x \to a^-} f(x) = \pm\infty$。</li>
+                <li><strong>斜漸近線 (Oblique Asymptote)：</strong> 直線 $y = mx + b$ ($m \ne 0$)，若滿足：
+                  $$\lim_{x \to \infty} [f(x) - (mx+b)] = 0 \quad \text{或} \quad \lim_{x \to -\infty} [f(x) - (mx+b)] = 0$$
+                  <em>(註：水平漸近線實為 $m = 0$ 時的斜漸近線特例)</em>
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">有理函數的斜漸近線求法：多項式長除法</div>
+            <div class="callout-body">
+              對於有理函數 $\frac{N(x)}{D(x)}$，當分子次數比分母次數<strong>恰好多 1</strong> 時（即 $\deg(N) = \deg(D) + 1$），透過長除法化為：
+              $$f(x) = (\text{商式 } mx+b) + \frac{\text{餘式 } R(x)}{\text{除式 } D(x)}$$
+              因為當 $x \to \pm\infty$ 時 $\frac{R(x)}{D(x)} \to 0$，故直線 $y = mx+b$ 即為斜漸近線！
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：以長除法求斜漸近線 $f(x) = \frac{2x^2-4x}{x+1}$</div>
+            <div class="callout-body">
+              長除法計算 $(2x^2 - 4x) \div (x + 1) = (2x - 6) + \frac{6}{x+1}$：
+              $$\lim_{x \to \pm\infty} [f(x) - (2x - 6)] = \lim_{x \to \pm\infty} \frac{6}{x+1} = 0 \implies y = 2x - 6 \text{ 為斜漸近線}$$
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">函數精準繪圖的四大步驟 (How to graph a function step by step?)</div>
+            <div class="callout-body">
+              <ol>
+                <li><strong>求漸近線 (Find asymptotes)：</strong> 垂直、水平與斜漸近線。</li>
+                <li><strong>求一階導數 (Determine increasing/decreasing by $f'(x)$)：</strong> 找臨界點與遞增減區間。</li>
+                <li><strong>求二階導數 (Determine concavity by $f''(x)$)：</strong> 找反曲點與凹凸性。</li>
+                <li><strong>求相對極值與特徵點 (Find relative extrema & plot key points)：</strong> 包含截距點。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">完整繪圖實戰範例：$f(x) = x + \frac{1}{x}$</div>
+            <div class="callout-body">
+              <ol>
+                <li><strong>定義域與漸近線：</strong> $x \ne 0$。$\lim_{x \to 0^+} f(x) = +\infty, \lim_{x \to 0^-} f(x) = -\infty \implies x = 0$ 為垂直漸近線。<br>
+                  $f(x) - x = \frac{1}{x} \to 0 \implies y = x$ 為斜漸近線。
+                </li>
+                <li><strong>一階導：</strong> $f'(x) = 1 - \frac{1}{x^2} = \frac{x^2-1}{x^2} = 0 \implies x = \pm 1$。
+                  在 $(-\infty, -1)$ 與 $(1, \infty)$ 遞增；在 $(-1, 0)$ 與 $(0, 1)$ 遞減。
+                </li>
+                <li><strong>二階導：</strong> $f''(x) = \frac{2}{x^3}$。
+                  當 $x < 0$ 時 $f'' < 0$（凹口向下）；當 $x > 0$ 時 $f'' > 0$（凹口向上）。
+                </li>
+                <li><strong>極值結論：</strong> $(-1, -2)$ 為相對極大點；$(1, 2)$ 為相對極小點。</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3.6 Optimization -->
+        <!-- ========================================== -->
+        <section id="sec3-6" class="lecture-section">
+          <h2>3.6 極值最佳化應用 (Optimization)</h2>
+
+          <div class="callout callout-example">
+            <div class="callout-title">最佳化範例 1：無蓋方形底容器最大容積</div>
+            <div class="callout-body">
+              以面積 $S = 108$ 的材料打造一無蓋且底面為正方形（邊長 $x$、高 $h$）的盒子。求能裝載的最大容積：
+              <ul>
+                <li>表面積：$S = x^2 + 4xh = 108 \implies h = \frac{108 - x^2}{4x}$</li>
+                <li>體積目標函數：$V = x^2 h = x^2\left(\frac{108-x^2}{4x}\right) = 27x - \frac{x^3}{4}$</li>
+                <li>一階導求極值：
+                  $$\frac{dV}{dx} = 27 - \frac{3x^2}{4} = 0 \implies 3x^2 = 108 \implies x = 6$$
+                </li>
+                <li>此時高 $h = \frac{108 - 36}{24} = 3$，最大體積 $V = 6^2 \times 3 = 108$。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">最佳化範例 2：懸掛畫作之視角最大化 (Maximize the Angle)</div>
+            <div class="callout-body">
+              壁畫高 4 ft，底緣距人眼視平線高 1 ft，人距牆距離為 $x$。令觀看仰角為 $\beta = \theta - \alpha$：
+              $$\beta = \cot^{-1}\left(\frac{x}{5}\right) - \cot^{-1}\left(\frac{x}{1}\right)$$
+              對 $x$ 微分（利用反餘切求導公式 $\frac{d}{dx}[\text{arccot } u] = \frac{-u'}{1+u^2}$）：
+              $$\frac{d\beta}{dx} = \frac{-1/5}{1+(x/5)^2} - \frac{-1}{1+x^2} = -\frac{5}{25+x^2} + \frac{1}{1+x^2} = \frac{4(5-x^2)}{(25+x^2)(1+x^2)} = 0$$
+              解得最佳觀賞距離為 $x = \sqrt{5} \text{ ft}$。
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">最佳化範例 3：電線長度最短化 (Minimize Wire Length)</div>
+            <div class="callout-body">
+              兩電線桿高分別為 12 ft 與 28 ft，相距 30 ft。於地面一點固定兩條拉線連接桿頂。求最省線的固定點距離 $x$：
+              $$W = \sqrt{x^2 + 144} + \sqrt{(30-x)^2 + 28^2} = \sqrt{x^2+144} + \sqrt{x^2 - 60x + 1684}$$
+              $$\frac{dW}{dx} = \frac{x}{\sqrt{x^2+144}} + \frac{x-30}{\sqrt{x^2-60x+1684}} = 0$$
+              通分平方展開化簡得 $320(x-9)(2x+45) = 0 \implies x = 9 \text{ ft}$。
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">最佳化範例 4：端點極值陷阱——鐵絲圍出最大面積</div>
+            <div class="callout-body">
+              長 4 ft 的鐵絲剪成兩段，分別圍成正方形（邊長 $x$）與圓形（半徑 $r$）：
+              $$4 = 4x + 2\pi r \implies r = \frac{2(1-x)}{\pi} \quad (0 \le x \le 1)$$
+              總面積：$A(x) = x^2 + \pi r^2 = \frac{1}{\pi}\left[(\pi+4)x^2 - 8x + 4\right]$。
+              求導令為 0：$\frac{dA}{dx} = 0 \implies x = \frac{4}{\pi+4} \approx 0.56$。
+              <p><strong>注意：</strong> 此拋物線開口向上，$x \approx 0.56$ 處是<strong>面積最小值</strong>！</p>
+              檢驗端點：$A(1) = 1$；$A(0) = \frac{4}{\pi} \approx 1.273$。
+              <strong>結論：</strong> 最大面積發生在端點 $x = 0$（全部鐵絲圍成圓形）！
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3.7 Differentials -->
+        <!-- ========================================== -->
+        <section id="sec3-7" class="lecture-section">
+          <h2>3.7 微分量與線性逼近 (Differentials and Linear Approximation)</h2>
+          <p>
+            在 $c$ 點可微的函數，其在該點附近的曲線可由切線極佳地逼近：
+            $$y - f(c) = f'(c)(x-c) \implies y = f(c) + f'(c)(x-c)$$
+            當 $x$ 自 $c$ 增加至 $c+\Delta x$ 時，$y$ 的變化量 $\Delta y = f(c+\Delta x) - f(c)$ 可由微分量極其快速地逼近：
+            $$\Delta y \approx f'(c)\Delta x$$
+          </p>
+
+          <div class="callout callout-def">
+            <div class="callout-title">微分量定義 (Definition of Differentials)</div>
+            <div class="callout-body">
+              設 $y = f(x)$ 為可微函數：
+              <ul>
+                <li>自變數微分量：$dx = \Delta x$（任意非零實數）。</li>
+                <li>應變數微分量：$dy = f'(x)dx$。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：以微分量逼近平方根 $\sqrt{16.5}$</div>
+            <div class="callout-body">
+              令 $f(x) = \sqrt{x}$，則 $f'(x) = \frac{1}{2\sqrt{x}}$。取基準點 $x = 16$ 及 $dx = 0.5$：
+              $$f(16.5) \approx f(16) + f'(16)dx = \sqrt{16} + \frac{1}{2\sqrt{16}}(0.5) = 4 + \left(\frac{1}{8}\right)(0.5) = 4.0625$$
+              <em>(計算機真實值為 $4.0620$，逼近極為精準！)</em>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：誤差傳遞分析 (Error Propagation)</div>
+            <div class="callout-body">
+              測量滾珠軸承 (Ball bearing) 半徑 $r = 0.7 \text{ in}$，螺旋測微器測量誤差最大為 $|\Delta r| \le 0.01 \text{ in}$。評估球體積 $V = \frac{4}{3}\pi r^3$ 的傳遞誤差與相對誤差：
+              <ul>
+                <li><strong>傳遞誤差：</strong>
+                  $$\Delta V \approx dV = 4\pi r^2 dr = 4\pi(0.7)^2(\pm 0.01) \approx \pm 0.06158 \text{ in}^3$$
+                </li>
+                <li><strong>相對誤差 (Relative error)：</strong>
+                  $$\frac{dV}{V} = \frac{4\pi r^2 dr}{\frac{4}{3}\pi r^3} = \frac{3dr}{r} = \frac{3(\pm 0.01)}{0.7} \approx \pm 4.29\%$$
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 前後章節跳轉按鈕 -->
+        <nav class="chapter-pagination">
+          <a href="ch02-derivatives.html" id="prev-chapter-link" class="page-link prev">
+            <span class="link-label">← 上一章</span>
+            <span class="link-title">第 02 章：微分及其法則</span>
+          </a>
+          <a href="ch04-integrals.html" id="next-chapter-link" class="page-link next">
+            <span class="link-label">下一章 →</span>
+            <span class="link-title">第 04 章：積分及其法則</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <!-- 邏輯腳本 (相對路徑) -->
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

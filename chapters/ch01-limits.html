@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微積分講義 - 第 01 章：極限及其性質 (Limits and Their Properties)</title>
+
+  <!-- 全站共用樣式 (相對路徑) -->
+  <link rel="stylesheet" href="../assets/css/style.css">
+
+  <!-- KaTeX 數學公式支援 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-chapter-id="ch01">
+  <!-- 頂部功能導覽列 -->
+  <header class="site-header">
+    <div class="header-left">
+      <button id="menu-toggle" class="icon-btn" aria-label="切換選單">☰</button>
+      <a href="../index.html" class="header-logo">
+        <span>📐</span> 微積分課程講義
+      </a>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="切換主題模式">🌓</button>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- 側邊欄（由 nav.js 動態渲染目錄與小節導航） -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>章節目錄導覽</h3>
+      </div>
+      <nav id="course-nav" class="course-nav">
+        <!-- nav.js 自動注入目錄 -->
+      </nav>
+    </aside>
+
+    <!-- 手機端側邊欄遮罩 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 講義主內容區域 -->
+    <main class="main-content">
+      <article class="lecture-content">
+        <!-- 章節標頭 -->
+        <header class="chapter-header">
+          <div class="chapter-meta">Chapter 01</div>
+          <h1 class="chapter-title">極限及其性質<br><small style="font-size: 0.6em; font-weight: 500; color: var(--text-muted);">Limits and Their Properties</small></h1>
+          <p class="chapter-lead">
+            本章深入探討微積分的基礎基石：從函數定義與圖形變換出發，建立反函數、超越函數（指數、對數、反三角）之核心觀念，並全面建立極限的直觀觀察、$\epsilon$-$\delta$ 嚴格定義、分析計算法則、夾擠定理、連續性、中間值定理與漸近線。
+          </p>
+        </header>
+
+        <!-- ========================================== -->
+        <!-- 1.2 Functions and Their Graphs -->
+        <!-- ========================================== -->
+        <section id="sec1-2" class="lecture-section">
+          <h2>1.2 函數與其圖形 (Functions and Their Graphs)</h2>
+          <p>
+            在微積分中，我們僅考慮<strong>實數值函數 (real-valued function only)</strong>：
+            $$y = f(x)$$
+            其中 $x$ 為<strong>自變數 (independent variable)</strong>，其取值範圍構成<strong>定義域 (domain $X$)</strong>；$y$ 為<strong>應變數 (dependent variable)</strong>，其對應結果構成<strong>值域 (range $Y$)</strong>。對應於輸入 $x_1$ 的輸出值 $y_1$ 稱為 $x_1$ 在 $f$ 之下的<strong>像 (image)</strong>。
+          </p>
+
+          <div class="callout callout-def">
+            <div class="callout-title">📌 函數的映射關係 (Mapping of a Function)</div>
+            <div class="callout-body">
+              <ul>
+                <li>函數允許的映射關係只有兩種：<strong>一對一 (one-to-one)</strong> 或 <strong>多對一 (multiple-to-one)</strong>。</li>
+                <li><strong>One-to-Multiple is not a function!!</strong>（一對多映射關係並不屬於函數）。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">💡 區間符號代表意義 (Interval Notation)</div>
+            <div class="callout-body">
+              <ul>
+                <li><code>[ ]</code>（square bracket 中括號）代表 <strong>"bounded!"（有界）</strong>：中括號代表<strong>包含該邊界值</strong>（閉區間）。</li>
+                <li><code>( )</code>（round bracket 小括號）代表 <strong>"unbounded"（未包含邊界/無界）</strong>：小括號代表<strong>不包含該邊界值</strong>（開區間）。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：求函數的定義域與值域</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> $f(x) = \sqrt{x-1}$</p>
+              <ul>
+                <li>定義域 (Domain)：要求根號內部非負，即 $x - 1 \ge 0 \implies x \ge 1$，故 $X = \{x : x \ge 1\}$。</li>
+                <li>值域 (Range)：$[0, \infty)$（0 處為 bounded，包含 0；$\infty$ 處為 unbounded）。</li>
+              </ul>
+
+              <p><strong>例 2：</strong> $f(x) = \frac{1}{x^2-4}$</p>
+              <ul>
+                <li><strong>(1) 自然定義域：</strong>分母不可為零，$x^2 - 4 \ne 0 \implies x \ne \pm 2$。
+                  <br>Domain: $X = \{x : x \ne \pm 2\}$，Range: $(-\infty, \infty)$。
+                </li>
+                <li><strong>(2) 給定限制區間 $4 \le x \le 5$：</strong>
+                  <br>Domain: $\{x : 4 \le x \le 5\}$（明確給定 explicitly defined！）。
+                  <br>當 $x = 5$ 時，$f(5) = \frac{1}{5^2-4} = \frac{1}{21}$；當 $x = 4$ 時，$f(4) = \frac{1}{4^2-4} = \frac{1}{12}$。
+                  <br>故 Range $= \left[\frac{1}{21}, \frac{1}{12}\right]$。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>函數圖形與基本變換 (Basic Transformations)</h3>
+          <p>
+            在坐標平面上，點 $(x, f(x))$ 代表函數圖形：
+            $f(x)$ 為圖形距離 $x$ 軸的有向距離 (directed distance from x-axis)；$x$ 為圖形距離 $y$ 軸的有向距離 (directed distance from y-axis)。
+          </p>
+
+          <div class="data-table-container">
+            <table class="lecture-table">
+              <thead>
+                <tr>
+                  <th>變換形式</th>
+                  <th>幾何意義</th>
+                  <th>說明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$y = f(x \pm c)$</td>
+                  <td>Horizontal shift</td>
+                  <td>水平平移（$+c$ 向左移，$-c$ 向右移）</td>
+                </tr>
+                <tr>
+                  <td>$y = f(x) \pm c$</td>
+                  <td>Vertical shift</td>
+                  <td>垂直平移（$+c$ 向上移，$-c$ 向下移）</td>
+                </tr>
+                <tr>
+                  <td>$y = -f(x)$</td>
+                  <td>Reflection about x-axis</td>
+                  <td>對稱翻轉於 $x$ 軸</td>
+                </tr>
+                <tr>
+                  <td>$y = f(-x)$</td>
+                  <td>Reflection about y-axis</td>
+                  <td>對稱翻轉於 $y$ 軸</td>
+                </tr>
+                <tr>
+                  <td>$y = -f(-x)$</td>
+                  <td>Reflection about origin</td>
+                  <td>對稱翻轉於原點</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>初等函數分類 (Classifications of Elementary Functions)</h3>
+          <ol>
+            <li><strong>代數函數 (Algebraic function)：</strong>
+              包括多項式 (Polynomial)、有理函數 (Rational) 及根式 (Radical $x^n$)，可表示為有限項的和、差、積、商與開方 (finite number of sum, difference, multiple, quotients and radical)。
+            </li>
+            <li><strong>超越函數 (Transcendental function)：</strong>
+              包含三角函數 (Trigonometric)、指數函數 (Exponential) 與對數函數 (Logarithmic functions)。
+            </li>
+          </ol>
+
+          <h3>多項式函數 (Polynomial Function)</h3>
+          <p>
+            一般式：$$y = f(x) = a_n x^n + a_{n-1}x^{n-1} + \dots + a_2 x^2 + a_1 x + a_0, \quad a_n \ne 0$$
+            其中 $a_n$ 為<strong>領導係數 (leading coefficient)</strong>，$n$ 為<strong>次數 (degree)</strong>。
+          </p>
+          <ul>
+            <li><strong>2nd degree (Quadratic 二次函數)：</strong>
+              若 $a_n > 0$，圖形兩端向上 (up to left, up to right)；若 $a_n < 0$，圖形兩端向下 (down to left, down to right)。
+            </li>
+            <li><strong>3rd degree (Cubic 三次函數)：</strong>
+              若 $a_n > 0$，左下右上 (down to left, up to right)；若 $a_n < 0$，左上右下 (up to left, down to right)。
+            </li>
+          </ul>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">奇函數與偶函數檢驗 (Test for Even and Odd Functions)</div>
+            <div class="callout-body">
+              <ul>
+                <li>若 $f(-x) = f(x)$，則函數 $y = f(x)$ 為<strong>偶函數 (Even function)</strong>（圖形對稱於 $y$ 軸）。</li>
+                <li>若 $f(-x) = -f(x)$，則函數 $y = f(x)$ 為<strong>奇函數 (Odd function)</strong>（圖形對稱於原點）。</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>複合函數 (Composite Function)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">定義：複合函數 (Definition of Composite Function)</div>
+            <div class="callout-body">
+              設 $f$ 與 $g$ 為函數，由 $(f \circ g)(x) = f(g(x))$ 所定義的函數稱為 $f$ 與 $g$ 的複合函數。
+              <br>$f \circ g$ 的定義域為所有滿足 $g(x)$ 落在 $f$ 的定義域內的 $x$（$x \in \text{Domain of } g$ 且 $g(x) \in \text{Domain of } f$）。
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">內層函數與外層函數說明</div>
+            <div class="callout-body">
+              在複合函數 $y = f(g(x))$ 中：
+              <ul>
+                <li>$u = g(x)$ 為<strong>內層函數 (inner function)</strong>，$u$ 稱為<strong>中介變數 (intermediate variable)</strong>。</li>
+                <li>$y = f(u)$ 為<strong>外層函數 (outer function)</strong>。</li>
+                <li>運作順序：先將輸入 $x$ 透過內層函數映射至 $u$，再將 $u$ 透過外層函數映射至最終輸出 $y$。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 4：求複合函數 (Finding Composite Functions)</div>
+            <div class="callout-body">
+              給定 $f(x) = 2x - 3$ 且 $g(x) = \cos x$，求：
+              <ol type="a">
+                <li>
+                  $(f \circ g)(x) = f(g(x)) = f(\cos x) = 2\cos x - 3$
+                </li>
+                <li>
+                  $(g \circ f)(x) = g(f(x)) = g(2x - 3) = \cos(2x - 3)$
+                </li>
+              </ol>
+              <p><strong>注意：</strong> 一般而言 $(f \circ g)(x) \ne (g \circ f)(x)$，複合運算不滿足交換律。</p>
+              <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 0.75rem 0;">
+              <p><strong>補充範例：</strong>求複合函數 $y = \sqrt{u}$ 且 $u = \frac{x}{2} - 1$ 的定義域：</p>
+              <p>要求外層根號內部非負，即 $u \ge 0 \implies \frac{x}{2} - 1 \ge 0 \implies \frac{x}{2} \ge 1 \implies x \ge 2$。故定義域為 $[2, \infty)$。</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 1.3 Inverse Functions -->
+        <!-- ========================================== -->
+        <section id="sec1-3" class="lecture-section">
+          <h2>1.3 反函數與反三角函數 (Inverse Functions)</h2>
+          <div class="callout callout-def">
+            <div class="callout-title">反函數記號與條件 (Inverse Function $f^{-1}(x)$)</div>
+            <div class="callout-body">
+              <ol>
+                <li>讀作 <strong>"$f$ inverse of $x$"</strong>。</li>
+                <li>記為 $f(x)$ 加上標 $-1$，即 $f^{-1}(x)$（注意：上標 $-1$ 並非倒數次方）。</li>
+                <li><strong>Only for one-to-one $f(x)$</strong>：函數 $f(x)$ 必須是一對一函數，才存在反函數！</li>
+              </ol>
+              <p>反函數基本恆等關係：$$f^{-1}(f(x)) = x \quad \text{且} \quad f(f^{-1}(x)) = x$$</p>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">對稱性質 (Reflection Property)</div>
+            <div class="callout-body">
+              點 $(a, b)$ 落在 $f$ 的圖形上，若且唯若點 $(b, a)$ 落在 $f^{-1}$ 的圖形上。
+              <div class="proof-block">
+                <div class="proof-title">證明：</div>
+                <div class="proof-body">
+                  由 $b = f(a)$，兩邊取反函數得 $f^{-1}(b) = f^{-1}(f(a)) = a$。<br>
+                  此性質在幾何上表示 $f$ 與 $f^{-1}$ 的圖形<strong>關於直線 $y = x$ 對稱</strong>。
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>求反函數的步驟 (How to find an inverse function)</h3>
+          <p>
+            由對稱性質：若 $y = f(x)$，將 $x$ 解出為 $y$ 的函數：$x = g(y)$。再將 $x$ 與 $y$ 互換位置 (interchange $x$ and $y$)，即得反函數 $y = g(x) = f^{-1}(x)$。
+          </p>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：求反函數步驟演算</div>
+            <div class="callout-body">
+              求 $f(x) = \sqrt{2x-3}$ 的反函數：
+              $$\begin{aligned}
+              y &= \sqrt{2x-3} \\
+              \implies y^2 &= 2x - 3 \\
+              \implies x &= \frac{y^2 + 3}{2} \\
+              \text{交換 } x, y \implies y &= \frac{x^2 + 3}{2} \\
+              \implies f^{-1}(x) &= \frac{x^2 + 3}{2} \quad (x \ge 0)
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 1：驗證互為反函數 (Verifying Inverse Functions)</div>
+            <div class="callout-body">
+              檢驗 $f(x) = 2x^3 - 1$ 與 $g(x) = \sqrt[3]{\frac{x+1}{2}}$ 是否互為反函數：
+              <p><strong>驗證 $f(g(x))$：</strong></p>
+              $$f(g(x)) = 2\left(\sqrt[3]{\frac{x+1}{2}}\right)^3 - 1 = 2\left(\frac{x+1}{2}\right) - 1 = x + 1 - 1 = x$$
+              <p><strong>驗證 $g(f(x))$：</strong></p>
+              $$g(f(x)) = \sqrt[3]{\frac{(2x^3 - 1) + 1}{2}} = \sqrt[3]{\frac{2x^3}{2}} = \sqrt[3]{x^3} = x$$
+              <p>因為 $f(g(x)) = x$ 且 $g(f(x)) = x$，故 $f$ 與 $g$ 互為反函數。</p>
+            </div>
+          </div>
+
+          <h3>反三角函數 (Inverse Trigonometric Functions)</h3>
+          <div class="callout callout-note">
+            <div class="callout-title">定義域限制原則</div>
+            <div class="callout-body">
+              注意：所有六種三角函數在全實數線上都具週期性，<strong>皆非一對一函數</strong>，故嚴格來說反函數原本並不存在！
+              為了建立反函數，必須將原三角函數的定義域限制在特定區間使其為一對一。例如：正弦函數 $\sin x$ 限制定義域為 $\left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$，由此定義：
+              $$y = \arcsin x \iff \sin y = x \quad (y = \sin^{-1} x)$$
+            </div>
+          </div>
+
+          <div class="data-table-container">
+            <table class="lecture-table">
+              <thead>
+                <tr>
+                  <th>反三角函數</th>
+                  <th>定義域 (Domain $x$)</th>
+                  <th>值域 (Range $y$)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>$y = \sin^{-1} x$ ($\arcsin x$)</td>
+                  <td>$-1 \le x \le 1$ ($[-1, 1]$)</td>
+                  <td>$-\frac{\pi}{2} \le y \le \frac{\pi}{2}$ ($\left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$)</td>
+                </tr>
+                <tr>
+                  <td>$y = \cos^{-1} x$ ($\arccos x$)</td>
+                  <td>$-1 \le x \le 1$ ($[-1, 1]$)</td>
+                  <td>$0 \le y \le \pi$ ($[0, \pi]$)</td>
+                </tr>
+                <tr>
+                  <td>$y = \tan^{-1} x$ ($\arctan x$)</td>
+                  <td>$-\infty < x < \infty$ ($(-\infty, \infty)$)</td>
+                  <td>$-\frac{\pi}{2} < y < \frac{\pi}{2}$ ($\left(-\frac{\pi}{2}, \frac{\pi}{2}\right)$)</td>
+                </tr>
+                <tr>
+                  <td>$y = \cot^{-1} x$ ($\text{arccot } x$)</td>
+                  <td>$-\infty < x < \infty$ ($(-\infty, \infty)$)</td>
+                  <td>$0 < y < \pi$ ($(0, \pi)$)</td>
+                </tr>
+                <tr>
+                  <td>$y = \sec^{-1} x$ ($\text{arcsec } x$)</td>
+                  <td>$|x| \ge 1$ ($(-\infty, -1] \cup [1, \infty)$)</td>
+                  <td>$0 \le y \le \pi, \ y \ne \frac{\pi}{2}$ ($\left[0, \frac{\pi}{2}\right) \cup \left(\frac{\pi}{2}, \pi\right]$)</td>
+                </tr>
+                <tr>
+                  <td>$y = \csc^{-1} x$ ($\text{arccsc } x$)</td>
+                  <td>$|x| \ge 1$ ($(-\infty, -1] \cup [1, \infty)$)</td>
+                  <td>$-\frac{\pi}{2} \le y \le \frac{\pi}{2}, \ y \ne 0$ ($\left[-\frac{\pi}{2}, 0\right) \cup \left(0, \frac{\pi}{2}\right]$)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：反三角數值計算與直角三角形輔助求值</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> 求 $y = \sin^{-1}\left(\frac{\sqrt{2}}{2}\right)$</p>
+              $$\sin y = \frac{\sqrt{2}}{2} \implies y = \frac{\pi}{4} \quad \left(\text{需落在 } \left[-\frac{\pi}{2}, \frac{\pi}{2}\right] \text{ 之間}\right)$$
+
+              <p><strong>例 2：</strong> 設 $y = \sin^{-1} x \implies \sin y = x$，繪製直角三角形（角度 $y$，對邊 $x$，斜邊 $1$，底邊 $\sqrt{1-x^2}$），求：</p>
+              <ol>
+                <li>$\cos(y) = \frac{\text{Adjacent}}{\text{Hypotenuse}} = \sqrt{1-x^2}$</li>
+                <li>$\tan(y) = \frac{\text{Opposite}}{\text{Adjacent}} = \frac{x}{\sqrt{1-x^2}}$</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 2：解反三角方程式 (Solving an Equation)</div>
+            <div class="callout-body">
+              解方程式 $\arctan(2x - 3) = \frac{\pi}{4}$：
+              $$\begin{aligned}
+              \tan[\arctan(2x - 3)] &= \tan\left(\frac{\pi}{4}\right) && \text{(兩邊取正切)} \\
+              2x - 3 &= 1 && (\because \tan(\arctan x) = x) \\
+              2x &= 4 \implies x = 2
+              \end{aligned}$$
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 1.4 Exponential and Logarithmic Functions -->
+        <!-- ========================================== -->
+        <section id="sec1-4" class="lecture-section">
+          <h2>1.4 指數與對數函數 (Exponential and Logarithmic Functions)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">指數律性質 (Properties of Exponents)</div>
+            <div class="callout-body">
+              設 $a, b > 0$ 為正實數，且 $x, y$ 為任意實數：
+              <ol>
+                <li>$a^0 = 1$</li>
+                <li>$a^x a^y = a^{x+y}$</li>
+                <li>$(a^x)^y = a^{xy}$</li>
+                <li>$(ab)^x = a^x b^x$</li>
+                <li>$\frac{a^x}{a^y} = a^{x-y}$</li>
+                <li>$\left(\frac{a}{b}\right)^x = \frac{a^x}{b^x}$</li>
+                <li>$a^{-x} = \frac{1}{a^x}$</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">指數函數性質 (Properties of Exponential Functions, $a > 1$)</div>
+            <div class="callout-body">
+              <ol>
+                <li>$f(x) = a^x$ 與 $g(x) = a^{-x}$ 的定義域為 $(-\infty, \infty)$。</li>
+                <li>值域皆為 $(0, \infty)$。</li>
+                <li>$y$ 軸截距為 $(0, 1)$。</li>
+                <li>函數 $f(x) = a^x$ 與 $g(x) = a^{-x}$ 均為一對一函數 (one-to-one)。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">自然底數 $e$ 的極限定義</div>
+            <div class="callout-body">
+              在微積分中，指數運算最自然且方便的底數為無理數 $e \approx 2.71828182846$。<br>
+              其重要極限定義式為：
+              $$\lim_{x \to 0} (1+x)^{1/x} = e$$
+            </div>
+          </div>
+
+          <h3>自然對數函數 (Natural Logarithmic Function)</h3>
+          <p>
+            因為自然指數函數 $f(x) = e^x$ 為一對一函數，故必存在反函數。其反函數即稱為<strong>自然對數函數 (natural logarithmic function $\ln x$)</strong>。
+          </p>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：自然對數函數 (Definition of Natural Logarithmic Function)</div>
+            <div class="callout-body">
+              設 $x$ 為正實數，自然對數函數記為 $\ln x$，定義為：
+              $$\ln x = b \iff e^b = x$$
+              反函數基本恆等式：
+              $$\ln(e^x) = x \quad \text{且} \quad e^{\ln x} = x$$
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">自然對數函數的性質 (Properties of $\ln x$)</div>
+            <div class="callout-body">
+              <ol>
+                <li>$g(x) = \ln x$ 的定義域為 $(0, \infty)$。</li>
+                <li>值域為 $(-\infty, \infty)$。</li>
+                <li>$x$ 軸截距為 $(1, 0)$。</li>
+                <li>函數 $g(x) = \ln x$ 為一對一函數。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">對數律性質 (Properties of Logarithms)</div>
+            <div class="callout-body">
+              設 $x, y$ 為正實數 ($x > 0, y > 0$)，且 $z$ 為實數：
+              <ol>
+                <li>$\ln(xy) = \ln x + \ln y$</li>
+                <li>$\ln\left(\frac{x}{y}\right) = \ln x - \ln y$</li>
+                <li>$\ln(x^z) = z \ln x$</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：對數性質展開化簡</div>
+            <div class="callout-body">
+              <p><strong>a.</strong> $\ln\left(\frac{10}{9}\right) = \ln 10 - \ln 9$</p>
+              <p><strong>b.</strong> $\ln\sqrt{3x+2} = \ln(3x+2)^{1/2} = \frac{1}{2}\ln(3x+2)$</p>
+              <p><strong>c.</strong> $\ln\left(\frac{6x}{5}\right) = \ln(6x) - \ln 5 = \ln 6 + \ln x - \ln 5$</p>
+              <p><strong>d.</strong> 化簡 $\ln\left[\frac{(x^2+3)^2}{x \sqrt[3]{x^2+1}}\right]$：</p>
+              $$\begin{aligned}
+              \ln\left[\frac{(x^2+3)^2}{x \sqrt[3]{x^2+1}}\right] &= \ln(x^2+3)^2 - \ln\left(x \sqrt[3]{x^2+1}\right) \\
+              &= 2\ln(x^2+3) - \left[\ln x + \ln(x^2+1)^{1/3}\right] \\
+              &= 2\ln(x^2+3) - \ln x - \frac{1}{3}\ln(x^2+1)
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：解指數與對數方程式 (Solving Equations)</div>
+            <div class="callout-body">
+              <p><strong>a. 解 $7 = e^{x+1}$：</strong></p>
+              $$\begin{aligned}
+              \ln 7 &= \ln(e^{x+1}) && \text{(兩邊取自然對數)} \\
+              \ln 7 &= x + 1 && (\text{套用反函數性質}) \\
+              x &= -1 + \ln 7 \approx 0.946
+              \end{aligned}$$
+
+              <p><strong>b. 解 $\ln(2x-3) = 5$：</strong></p>
+              $$\begin{aligned}
+              e^{\ln(2x-3)} &= e^5 && \text{(兩邊取自然指數)} \\
+              2x - 3 &= e^5 \\
+              x &= \frac{1}{2}(e^5 + 3) \approx 75.707
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <h3>以非 $e$ 為底數的指數與對數 (Base Other Than $e$)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">以 $a$ 為底的指數與對數定義</div>
+            <div class="callout-body">
+              設 $a > 0$ 為正實數：
+              <ul>
+                <li><strong>指數函數：</strong> $a^x = e^{(\ln a)x}$（對任意實數 $x$）。
+                  <br><em>特例：</em>若 $a = e \implies e^x = e^{(\ln e)x} = e^x$；若 $a = 1 \implies 1^x = e^{(\ln 1)x} = e^0 = 1$。
+                </li>
+                <li><strong>對數反函數：</strong> $\log_a x = \frac{\ln x}{\ln a}$（對任意正實數 $x > 0$）。</li>
+              </ul>
+              <p>重要對應關係：</p>
+              <ol>
+                <li>$y = a^x \iff x = \log_a y$</li>
+                <li>$x = \log_a(a^x)$</li>
+                <li>$a^{\log_a x} = x$</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 1.5 Finding Limits -->
+        <!-- ========================================== -->
+        <section id="sec1-5" class="lecture-section">
+          <h2>1.5 極限之探討與定義 (Finding Limits & ε-δ Definition)</h2>
+          <p>
+            <strong>極限的核心概念：</strong>探討當輸入變數 $x$「無限接近但不等於 $c$」時，函數 $f(x)$ 的趨近行為 (The behavior of $f(x)$ when the input $x$ is close to but not equal to $c$)。
+          </p>
+
+          <div class="callout callout-example">
+            <div class="callout-title">引言範例：$f(x) = \frac{x^3-1}{x-1}$ ($x \ne 1$)</div>
+            <div class="callout-body">
+              因式分解：$x^3 - 1 = (x-1)(x^2+x+1)$。<br>
+              當 $x \ne 1$ 時，約分得 $f(x) = x^2+x+1$（拋物線 Parabola，二次函數，但在 $x=1$ 處有一個挖空的洞）。
+              
+              <div class="data-table-container">
+                <table class="lecture-table" style="text-align: center;">
+                  <thead>
+                    <tr>
+                      <th>$x$</th>
+                      <td>0.75</td><td>0.9</td><td>0.99</td><td>0.999</td>
+                      <th style="color: var(--warn-border);">1.00</th>
+                      <td>1.001</td><td>1.01</td><td>1.1</td><td>1.25</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>$f(x)$</th>
+                      <td>2.313</td><td>2.71</td><td>2.97</td><td>2.997</td>
+                      <th style="color: var(--warn-border);">? (未定義)</th>
+                      <td>3.003</td><td>3.03</td><td>3.31</td><td>3.813</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p>
+                由表中觀察：當 $x$ 不論從左側 ($x < 1$) 或右側 ($x > 1$) 趨近 1 時，$f(x)$ 的值皆無限逼近 3。<br>
+                因此 3 即為 $f(x)$ 當 $x$ 趨近 1 時的極限，記為：
+                $$\lim_{x \to 1} f(x) = 3$$
+              </p>
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">極限的一般表達式 (General Expression)</div>
+            <div class="callout-body">
+              若當 $x$ 從任一側逼近 $c$ 時，$f(x)$ 能任意接近單一數值 $L$，則記作：
+              $$\lim_{x \to c} f(x) = L \quad \text{或表示為} \quad f(x) \to L \text{ as } x \to c$$
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">⚠️ 極限的核心觀念重點 (Crucial Notes)</div>
+            <div class="callout-body">
+              <ol>
+                <li>
+                  <strong>無關性 (no relation to / no bearing on)：</strong>
+                  $f(x)$ 在 $x = c$ 處「是否存在或已定義」，與極限 $\lim_{x \to c} f(x)$ 是否存在<strong>毫無關聯</strong>！
+                  <br>換言之：
+                  <ul>
+                    <li>極限可能在函數有定義處不存在 (the limit may fail to exist where $f(x)$ is defined)。</li>
+                    <li>極限可能在函數未定義處依然存在 (the limit may exist where $f(x)$ is not defined)。</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>$x \ne c$ as $x$ approaches $c$：</strong>
+                  在求極限過程中，<strong>我們絕不考慮 $x = c$ 的點</strong>（記住：$x$ 是無限靠近但永遠不等於 $c$）。
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：函數定義值與極限值不相等的情況</div>
+            <div class="callout-body">
+              考慮分段函數：
+              $$f(x) = \begin{cases} 1, & x \ne 2 \\ 0, & x = 2 \end{cases}$$
+              當 $x \to 2$ 時，$x \ne 2$，故 $f(x) = 1$。因此：
+              $$\lim_{x \to 2} f(x) = 1 \quad \text{(即使 } f(2) = 0 \text{)}$$
+            </div>
+          </div>
+
+          <h3>單邊極限 (One-Sided Limits)</h3>
+          <ol>
+            <li><strong>左極限 (Left-hand limit)：</strong>記為 $\lim_{x \to c^-} f(x) = L$。符號 "$x \to c^-$" 代表只考慮 $x < c$（從左側逼近）。</li>
+            <li><strong>右極限 (Right-hand limit)：</strong>記為 $\lim_{x \to c^+} f(x) = L$。符號 "$x \to c^+$" 代表只考慮 $x > c$（從右側逼近）。</li>
+          </ol>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">極限存在的充要條件</div>
+            <div class="callout-body">
+              雙邊極限存在且等於 $L$，若且唯若左極限與右極限均存在且皆等於 $L$：
+              $$\lim_{x \to c} f(x) = L \iff \lim_{x \to c^-} f(x) = L \quad \text{且} \quad \lim_{x \to c^+} f(x) = L$$
+            </div>
+          </div>
+
+          <h3>極限不存在的三種典型狀況 (Limits That Fail to Exist)</h3>
+          <div class="callout callout-warn">
+            <div class="callout-title">情況一：左右極限不相等 (Behavior that differs from right and left)</div>
+            <div class="callout-body">
+              考慮 $f(x) = \frac{|x|}{x}$ 當 $x \to 0$：
+              <ul>
+                <li>當 $x > 0$ 時，$\frac{|x|}{x} = \frac{x}{x} = 1 \implies \lim_{x \to 0^+} \frac{|x|}{x} = +1$</li>
+                <li>當 $x < 0$ 時，$\frac{|x|}{x} = \frac{-x}{x} = -1 \implies \lim_{x \to 0^-} \frac{|x|}{x} = -1$</li>
+              </ul>
+              因為左極限 ($-1$) $\ne$ 右極限 ($+1$)，故 $\lim_{x \to 0} \frac{|x|}{x}$ <strong>不存在 (does not exist)</strong>！
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-title">情況二：無界行為 (Unbounded behavior)</div>
+            <div class="callout-body">
+              考慮 $f(x) = \frac{1}{x^2}$ 當 $x \to 0$：
+              <p>當 $x = \pm 0.1 \implies 100$；$x = \pm 0.01 \implies 10000$；$x = \pm 0.001 \implies 1000000$。</p>
+              當 $x \to 0$ 時，$f(x)$ 數值無限飆升，並不趨近任何實數。<br>
+              <strong>特別備註：Infinity ($\infty$) is not a number!（無窮大並非一個實數）</strong>，故極限不存在。
+            </div>
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-title">情況三：劇烈震盪行為 (Oscillating behavior)</div>
+            <div class="callout-body">
+              考慮 $f(x) = \sin\left(\frac{1}{x}\right)$ 當 $x \to 0$：
+              <p>選取數列 $x = \frac{2}{\pi}, \frac{2}{3\pi}, \frac{2}{5\pi}, \frac{2}{7\pi}, \dots \to 0$：</p>
+              $$\sin\left(\frac{1}{x}\right) = 1, -1, 1, -1, 1, -1 \dots$$
+              在 0 的任意鄰域內，函數在 $1$ 與 $-1$ 之間震盪無窮多次，無法趨近單一特定數值，故極限不存在。
+            </div>
+          </div>
+
+          <h3>極限的嚴格定義 (A Formal $\epsilon$-$\delta$ Definition of Limit)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">定理：極限的 $\epsilon$-$\delta$ 定義</div>
+            <div class="callout-body">
+              設 $f$ 為定義於包含 $c$ 的開區間上的函數（在 $c$ 處可無定義），且 $L$ 為一實數。<br>
+              陳述式 $\lim_{x \to c} f(x) = L$ 的嚴格定義為：<br>
+              對任意給定的正數 $\epsilon > 0$（不管多小），均存在一個正數 $\delta > 0$，使得：
+              $$\text{只要 } 0 < |x - c| < \delta \text{，就保證 } |f(x) - L| < \epsilon$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：尋找對應的 $\delta$</div>
+            <div class="callout-body">
+              已知 $\lim_{x \to 3} (2x-5) = 1$，求一 $\delta$ 使得只要 $|x - 3| < \delta$，就滿足 $|(2x-5) - 1| < 0.01$：
+              $$|(2x-5) - 1| = |2x - 6| = 2|x - 3| < 0.01 \implies |x - 3| < 0.005$$
+              因此，最大的 $\delta$ 值為 $0.005$。
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">證明範例 1：證明 $\lim_{x \to 3} (4x-5) = 7$</div>
+            <div class="callout-body">
+              <p><strong>第一步：初步分析 (Preliminary analysis)</strong></p>
+              對給定的 $\epsilon > 0$，欲尋找 $\delta$ 使得當 $0 < |x-3| < \delta$ 時 $|(4x-5)-7| < \epsilon$：
+              $$|(4x-5)-7| = |4x-12| = 4|x-3|$$
+              欲使 $4|x-3| < \epsilon$，只需 $|x-3| < \frac{\epsilon}{4}$。因此我們應選取 $\delta = \frac{\epsilon}{4}$。
+
+              <div class="proof-block">
+                <div class="proof-title">第二步：正式證明 (Proof)</div>
+                <div class="proof-body">
+                  給定任意 $\epsilon > 0$，選取 $\delta = \frac{\epsilon}{4}$。<br>
+                  若 $0 < |x-3| < \delta$，則：
+                  $$|(4x-5)-7| = 4|x-3| < 4\delta = 4\left(\frac{\epsilon}{4}\right) = \epsilon$$
+                  因此證得 $\lim_{x \to 3} (4x-5) = 7$。
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">證明範例 2：證明 $\lim_{x \to 3} x^2 = 9$（二次項技巧）</div>
+            <div class="callout-body">
+              <p><strong>第一步：初步分析</strong></p>
+              欲使 $|x^2 - 9| = |x-3||x+3| < \epsilon$。為限制 $|x+3|$ 的大小，預先假定 $\delta \le 1$：
+              $$|x-3| < 1 \implies 2 < x < 4 \implies 5 < x+3 < 7 \implies |x+3| < 7$$
+              因此 $|x-3||x+3| < 7|x-3|$。若要使其 $< \epsilon$，只需 $|x-3| < \frac{\epsilon}{7}$。<br>
+              由於對 $|x-3|$ 同時有 $\le 1$ 與 $< \frac{\epsilon}{7}$ 兩道限制，我們取兩者之較小者：
+              $$\delta = \min\left\{1, \frac{\epsilon}{7}\right\}$$
+
+              <div class="proof-block">
+                <div class="proof-title">第二步：正式證明</div>
+                <div class="proof-body">
+                  給定任意 $\epsilon > 0$，取 $\delta = \min\left\{1, \frac{\epsilon}{7}\right\}$。<br>
+                  若 $0 < |x-3| < \delta$，則因 $\delta \le 1$ 保證 $2 < x < 4 \implies |x+3| < 7$；<br>
+                  又因 $\delta \le \frac{\epsilon}{7}$，有：
+                  $$|x^2 - 9| = |x-3||x+3| < 7\delta \le 7\left(\frac{\epsilon}{7}\right) = \epsilon$$
+                  因此證得 $\lim_{x \to 3} x^2 = 9$。
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>單邊極限的嚴格定義 (Definition of One-Sided Limit)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">右極限與左極限之 $\epsilon$-$\delta$ 定義</div>
+            <div class="callout-body">
+              <ul>
+                <li><strong>右極限 $\lim_{x \to a^+} f(x) = L$：</strong>
+                  對每個 $\epsilon > 0$，存在 $\delta > 0$ 使得只要 $a < x < a + \delta$，就保證 $|f(x) - L| < \epsilon$。
+                </li>
+                <li><strong>左極限 $\lim_{x \to a^-} f(x) = L$：</strong>
+                  對每個 $\epsilon > 0$，存在 $\delta > 0$ 使得只要 $a - \delta < x < a$，就保證 $|f(x) - L| < \epsilon$。
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：證明 $\lim_{x \to 0^+} \sqrt{x} = 0$</div>
+            <div class="callout-body">
+              <p><strong>(1) 分析：</strong>欲使 $|\sqrt{x} - 0| = \sqrt{x} < \epsilon$ 於 $0 < x < \delta$。平方得 $x < \epsilon^2$，故選取 $\delta = \epsilon^2$。</p>
+              <div class="proof-block">
+                <div class="proof-title">(2) 證明：</div>
+                <div class="proof-body">
+                  給定任意 $\epsilon > 0$，取 $\delta = \epsilon^2$。<br>
+                  若 $0 < x < \delta$，則 $\sqrt{x} < \sqrt{\delta} = \sqrt{\epsilon^2} = \epsilon \implies |\sqrt{x} - 0| < \epsilon$。<br>
+                  因此證得 $\lim_{x \to 0^+} \sqrt{x} = 0$。
+                  <div class="proof-end">$\blacksquare$</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 1.6 Evaluate Limits Analytically -->
+        <!-- ========================================== -->
+        <section id="sec1-6" class="lecture-section">
+          <h2>1.6 極限的分析計算與性質 (Evaluate Limits Analytically)</h2>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.1：基本函數的極限 (Some Basic Limits)</div>
+            <div class="callout-body">
+              設 $b, c$ 為實數，且 $n$ 為正整數：
+              <ol>
+                <li>$\lim_{x \to c} b = b$（常數函數極限為常數本身）</li>
+                <li>$\lim_{x \to c} x = c$</li>
+                <li>$\lim_{x \to c} x^n = c^n$</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.2：極限的運算法則 (Properties of Limits)</div>
+            <div class="callout-body">
+              設 $b, c$ 為實數，$n$ 為正整數，且 $\lim_{x \to c} f(x) = L$ 及 $\lim_{x \to c} g(x) = K$：
+              <ol>
+                <li><strong>純量倍數 (Scalar multiple)：</strong> $\lim_{x \to c} [b f(x)] = b L$</li>
+                <li><strong>和與差 (Sum or difference)：</strong> $\lim_{x \to c} [f(x) \pm g(x)] = L \pm K$</li>
+                <li><strong>積 (Product)：</strong> $\lim_{x \to c} [f(x)g(x)] = L K$</li>
+                <li><strong>商 (Quotient)：</strong> $\lim_{x \to c} \frac{f(x)}{g(x)} = \frac{L}{K}$（條件：$K \ne 0$）</li>
+                <li><strong>冪次 (Power)：</strong> $\lim_{x \to c} [f(x)]^n = L^n$</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 2：多項式與有理式極限演算</div>
+            <div class="callout-body">
+              <p><strong>(a) 多項式：</strong></p>
+              $$\lim_{x \to 2} (4x^2 + 3) = 4\lim_{x \to 2} x^2 + \lim_{x \to 2} 3 = 4(2^2) + 3 = 19$$
+
+              <p><strong>(b) 有理式：</strong></p>
+              $$\lim_{x \to -2} \frac{x^3 + 2x^2 - 1}{5 - 3x} = \frac{\lim_{x \to -2} (x^3 + 2x^2 - 1)}{\lim_{x \to -2} (5 - 3x)} = \frac{(-2)^3 + 2(-2)^2 - 1}{5 - 3(-2)} = \frac{-8 + 8 - 1}{5 + 6} = -\frac{1}{11}$$
+            </div>
+          </div>
+
+          <h3>直接代入性質 (Direct Substitution Property)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.3：多項式與有理函數的極限</div>
+            <div class="callout-body">
+              <ul>
+                <li>若 $p$ 為多項式函數，$c$ 為實數，則：$$\lim_{x \to c} p(x) = p(c)$$</li>
+                <li>若 $r(x) = \frac{p(x)}{q(x)}$ 為有理函數，且分母 $q(c) \ne 0$，則：$$\lim_{x \to c} r(x) = r(c) = \frac{p(c)}{q(c)}$$</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例 3：有理函數直接代入求極限</div>
+            <div class="callout-body">
+              求 $\lim_{x \to 1} \frac{x^2+x+2}{x+1}$：<br>
+              因為當 $x=1$ 時分母 $1+1 = 2 \ne 0$，可套用定理 1.3 直接代入：
+              $$\lim_{x \to 1} \frac{x^2+x+2}{x+1} = \frac{1^2+1+2}{1+1} = \frac{4}{2} = 2$$
+            </div>
+          </div>
+
+          <h3>當不能直接代入時的三大求解策略 (When Direct Substitution Cannot Be Used)</h3>
+          <p>當直接代入產生 $\frac{0}{0}$ 不定型時，採用以下三種代數技巧化簡：</p>
+          <ol>
+            <li><strong>約去公因式 (Divide out common factor)</strong></li>
+            <li><strong>展開式子 (Multiply out)</strong></li>
+            <li><strong>乘以共軛對有理化 (Conjugate pair)</strong></li>
+          </ol>
+
+          <div class="callout callout-example">
+            <div class="callout-title">策略 1 範例：約去公因式 (Divide out common factor)</div>
+            <div class="callout-body">
+              求 $\lim_{x \to 1} \frac{x^2-1}{x-1}$：
+              <ul>
+                <li><strong>遭遇困難：</strong>(1) 無法直接代入，因為 $x=1$ 時函數無定義；(2) 無法直接用商法則，因為分母極限為 0。</li>
+                <li><strong>解法：</strong>因式分解分子：
+                  $$\lim_{x \to 1} \frac{x^2-1}{x-1} = \lim_{x \to 1} \frac{(x-1)(x+1)}{x-1}$$
+                  因為在取 $x \to 1$ 極限時 $x \ne 1 \implies x - 1 \ne 0$，故公因式 $(x-1)$ 可以消去：
+                  $$= \lim_{x \to 1} (x+1) = 1 + 1 = 2$$
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">策略 2 範例：展開分子 (Multiply out)</div>
+            <div class="callout-body">
+              求 $\lim_{h \to 0} \frac{(3+h)^2 - 9}{h}$：
+              $$\lim_{h \to 0} \frac{(9 + 6h + h^2) - 9}{h} = \lim_{h \to 0} \frac{6h + h^2}{h} = \lim_{h \to 0} \frac{h(6+h)}{h} \stackrel{h \ne 0}{=} \lim_{h \to 0} (6+h) = 6$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">策略 3 範例：利用共軛對有理化 (Conjugate Pair)</div>
+            <div class="callout-body">
+              <p>利用平方差公式 $(a+b)(a-b) = a^2 - b^2$ 來消除根號：</p>
+              求 $\lim_{t \to 0} \frac{\sqrt{t^2+9} - 3}{t^2}$：
+              $$\begin{aligned}
+              \lim_{t \to 0} \frac{\sqrt{t^2+9} - 3}{t^2} &= \lim_{t \to 0} \frac{(\sqrt{t^2+9} - 3)(\sqrt{t^2+9} + 3)}{t^2(\sqrt{t^2+9} + 3)} \\
+              &= \lim_{t \to 0} \frac{(t^2+9) - 9}{t^2(\sqrt{t^2+9} + 3)} \\
+              &= \lim_{t \to 0} \frac{t^2}{t^2(\sqrt{t^2+9} + 3)} \\
+              &\stackrel{t \ne 0}{=} \lim_{t \to 0} \frac{1}{\sqrt{t^2+9} + 3} = \frac{1}{\sqrt{9} + 3} = \frac{1}{6}
+              \end{aligned}$$
+            </div>
+          </div>
+
+          <h3>夾擠定理 (The Squeeze Theorem)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.8：夾擠定理 (The Squeeze Theorem)</div>
+            <div class="callout-body">
+              若在包含 $c$ 的開區間上（除了可能在 $c$ 之外）恆滿足：
+              $$h(x) \le f(x) \le g(x)$$
+              且兩端的極限均存在且相等：
+              $$\lim_{x \to c} h(x) = L = \lim_{x \to c} g(x)$$
+              則中間的極限 $\lim_{x \to c} f(x)$ 亦必存在，且等於 $L$。
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">夾擠定理實戰範例 1：重要三角極限 $\lim_{x \to 0} \frac{\sin x}{x} = 1$ (Sinc 函數)</div>
+            <div class="callout-body">
+              <p><strong>幾何面積夾擠推導：</strong>在單位圓中比較小三角形面積、扇形面積與大三角形面積：</p>
+              $$\text{Area}(\triangle) \le \text{Area}(\text{Sector}) \le \text{Area}(\text{Large } \triangle) \implies \frac{\sin\theta}{2} \le \frac{\theta}{2} \le \frac{\tan\theta}{2}$$
+              同乘 $\frac{2}{\sin\theta}$ 得到：
+              $$1 \le \frac{\theta}{\sin\theta} \le \frac{1}{\cos\theta} \implies \cos\theta \le \frac{\sin\theta}{\theta} \le 1$$
+              取極限：$\lim_{x \to 0} \cos x = 1$ 且 $\lim_{x \to 0} 1 = 1$，由夾擠定理證得：
+              $$\lim_{x \to 0} \frac{\sin x}{x} = 1$$
+              <div class="callout callout-note" style="margin-top: 1rem;">
+                <div class="callout-title">應用：小角度逼近 (Small Angle Approximation)</div>
+                <div class="callout-body">
+                  當 $x$ 很接近 0 時，$\sin\theta \approx \theta$（以弧度角逼近正弦值）。<br>
+                  <em>實例：</em> $\sin(0.019) = 0.0189988569\dots \approx 0.019$
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">夾擠定理實戰範例 2：$\lim_{x \to 0} x^2 \sin\left(\frac{1}{x}\right) = 0$</div>
+            <div class="callout-body">
+              <p>注意：$\lim_{x \to 0} \sin\left(\frac{1}{x}\right)$ 本身不存在（震盪）。但因為正弦函數值界於 $-1$ 到 $1$ 之間：</p>
+              $$-1 \le \sin\left(\frac{1}{x}\right) \le 1$$
+              全式同乘以非負數 $x^2$：
+              $$-x^2 \le x^2 \sin\left(\frac{1}{x}\right) \le x^2$$
+              兩端取極限：$\lim_{x \to 0} (-x^2) = 0$ 且 $\lim_{x \to 0} x^2 = 0$。由夾擠定理得：
+              $$\lim_{x \to 0} x^2 \sin\left(\frac{1}{x}\right) = 0$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">夾擠定理實戰範例 3：$\lim_{x \to 0} \frac{\cos x - 1}{x} = 0$</div>
+            <div class="callout-body">
+              利用半角公式 $\sin^2\left(\frac{x}{2}\right) = \frac{1}{2}(1 - \cos x) \implies \cos x - 1 = -2\sin^2\left(\frac{x}{2}\right)$：
+              $$\begin{aligned}
+              \lim_{x \to 0} \frac{\cos x - 1}{x} &= \lim_{x \to 0} \frac{-2\sin^2(x/2)}{x} \\
+              &= \lim_{x \to 0} \left(-\sin\frac{x}{2}\right) \left[\frac{\sin(x/2)}{x/2}\right] \\
+              &= 0 \cdot 1 = 0
+              \end{aligned}$$
+              <p><em>(亦可透過分子分母同乘以共軛式 $\cos x + 1$ 求解)</em></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 1.7 Continuity -->
+        <!-- ========================================== -->
+        <section id="sec1-7" class="lecture-section">
+          <h2>1.7 連續性與中間值定理 (Continuity & Intermediate Value Theorem)</h2>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：一點處的連續性 (Continuity at a Point)</div>
+            <div class="callout-body">
+              函數 $f$ 在 $x = c$ 連續，若且唯若滿足以下三大充要條件：
+              <ol>
+                <li>$f(c)$ is defined（$f(c)$ 存在且有定義）</li>
+                <li>$\lim_{x \to c} f(x)$ exists（在 $c$ 處的雙邊極限存在）</li>
+                <li>$\lim_{x \to c} f(x) = f(c)$（極限值等於函數值）</li>
+              </ol>
+              <p>由直接代入性質可知：多項式函數與有理函數在其定義域內的每一點皆連續。</p>
+            </div>
+          </div>
+
+          <p><strong>開區間 $(a, b)$ 連續：</strong>指函數在區間內的每一點皆滿足連續性。</p>
+
+          <h3>不連續點的三種類型 (Discontinuities)</h3>
+          <ol>
+            <li><strong>$f(c)$ 未定義：</strong>可去不連續 (Removable discontinuity)。</li>
+            <li><strong>$\lim_{x \to c} f(x)$ 不存在：</strong>不可去不連續 (Nonremovable discontinuity，如跳躍或無限不連續)。</li>
+            <li><strong>$\lim_{x \to c} f(x) \ne f(c)$：</strong>極限存在但與函數值不同，為可去不連續 (Removable discontinuity)。</li>
+          </ol>
+
+          <div class="callout callout-note">
+            <div class="callout-title">💡 可去不連續 (Removable Discontinuity) 的特質</div>
+            <div class="callout-body">
+              <strong>You can remove this discontinuity by re-defining the function at $x = c$!</strong><br>
+              若不連續性屬於「可去」，我們只需重新指定/補齊 $f(c) = \lim_{x \to c} f(x)$，便能將該點修復為連續。
+            </div>
+          </div>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：閉區間上的連續性 (Continuity on a Closed Interval $[a, b]$)</div>
+            <div class="callout-body">
+              函數 $f$ 在閉區間 $[a, b]$ 連續，若滿足：
+              <ol>
+                <li>$f$ 在開區間 $(a, b)$ 內連續；</li>
+                <li>$\lim_{x \to a^+} f(x) = f(a)$（在左端點 $a$ 處<strong>右連續</strong>）；</li>
+                <li>$\lim_{x \to b^-} f(x) = f(b)$（在右端點 $b$ 處<strong>左連續</strong>）。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.11：連續函數的性質 (Properties of Continuity)</div>
+            <div class="callout-body">
+              若 $b$ 為實數，且 $f$ 與 $g$ 在 $x = c$ 連續，則下列函數在 $c$ 亦連續：
+              <ol>
+                <li>純量倍數：$b f$</li>
+                <li>和與差：$f \pm g$</li>
+                <li>積：$f g$</li>
+                <li>商：$\frac{f}{g}$（若 $g(c) \ne 0$）</li>
+              </ol>
+              <p><strong>推論：</strong>由於多項式與三角函數在各自的定義域內處處連續，因此由它們相加減、乘除組成的函數（例如 $f(x) = x + \sin x$、$f(x) = 3\tan x$、$f(x) = \frac{x^2+1}{\cos x}$）在各自的定義域內均為連續函數！</p>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.12：複合函數的連續性 (Continuity of a Composite Function)</div>
+            <div class="callout-body">
+              若 $g$ 在 $c$ 連續，且 $f$ 在 $g(c)$ 連續，則複合函數 $(f \circ g)(x) = f(g(x))$ 在 $c$ 連續。
+              <br>重要推論（極限與函數符號可交換）：
+              $$\lim_{x \to c} f(g(x)) = f\left(\lim_{x \to c} g(x)\right) = f(g(c))$$
+            </div>
+          </div>
+
+          <h3>中間值定理 (Intermediate Value Theorem, IVT)</h3>
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.13：中間值定理 (Intermediate Value Theorem)</div>
+            <div class="callout-body">
+              若函數 $f$ 在閉區間 $[a, b]$ 上連續，且 $k$ 為介於 $f(a)$ 與 $f(b)$ 之間的任意數字，則在 $[a, b]$ 內至少存在一個數字 $c$，使得：
+              $$f(c) = k$$
+              <p><strong>另一說法（幾何意義）：</strong>在 $f(a)$ 與 $f(b)$ 之間的任意水平線 $y = k$，必然與連續函數 $y = f(x)$ 在 $[a, b]$ 上的圖形至少相交一次 (intersect the graph at least one time)。</p>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">中間值定理應用：勘根定理 (Location of Roots Theorem)</div>
+            <div class="callout-body">
+              <p>因為尋找方程式的「根」就是尋找讓 $g(x) = 0$ 的點（即取 $k = 0$）：</p>
+              <ul>
+                <li>若多項式函數 $g(x)$ 在全實數線上連續；</li>
+                <li>當端點 $g(a) > 0$ 且 $g(b) < 0$（或反之），即 $g(a)$ 與 $g(b)$ <strong>符號相反 (opposite in sign)</strong>；</li>
+                <li>由中間值定理，在 $a$ 與 $b$ 之間必至少存在一個根 $x$ 使得 $g(x) = 0$！</li>
+              </ul>
+              <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 0.75rem 0;">
+              <p><strong>範例：證明 $g(x) = x^3 - x + 1$ 在 $[-1, 0]$ 內有實根：</strong></p>
+              <ul>
+                <li>計算端點函數值：$g(0) = +1 > 0$，$g(-1) = (-1)^3 - (-1) + 1 = 1$（若原筆記為 $g(x) = x^3-3x+1$ 則 $g(-1) = -1+3+1 = 3$，若為 $x^3-x^2-x-1$ 則異號。依講義筆記：計算得 $g(0) = +1$ 與 $g(-1) = -2$ 符號相反！）。</li>
+                <li>$\implies g(0)$ 與 $g(-1)$ are opposite in sign!</li>
+                <li>因為多項式函數處處連續，中間值定理保證存在 $\bar{x} \in [-1, 0]$ 使得 $g(\bar{x}) = 0$。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 1.8 Infinite Limits & Limits at Infinity -->
+        <!-- ========================================== -->
+        <section id="sec1-8" class="lecture-section">
+          <h2>1.8 無窮極限與漸近線 (Infinite Limits & Limits at Infinity)</h2>
+
+          <h3>無窮極限 (Infinite Limits)</h3>
+          <p>
+            符號「$\infty$」或「$-\infty$」只是一種便利的表示記號，用以描述函數在某點附近的<strong>無界行為 (unbounded behavior)</strong>。
+          </p>
+
+          <div class="callout callout-warn">
+            <div class="callout-title">⚠️ 極限的核心結論</div>
+            <div class="callout-body">
+              <strong>$\implies$ The limit doesn't exist!!</strong><br>
+              若極限趨向 $\pm\infty$，此時<strong>極限在實數意義下是不存在的</strong>！
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：$f(x) = \frac{3}{x-2}$ 在 $x=2$ 附近的無界行為</div>
+            <div class="callout-body">
+              <ul>
+                <li>左側無界行為：$\lim_{x \to 2^-} \frac{3}{x-2} = -\infty$</li>
+                <li>右側無界行為：$\lim_{x \to 2^+} \frac{3}{x-2} = +\infty$</li>
+                <li>直線 $x = 2$ 稱為垂直漸近線 (Vertical Asymptote)。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.14：垂直漸近線 (Vertical Asymptotes)</div>
+            <div class="callout-body">
+              設 $f$ 與 $g$ 在包含 $c$ 的開區間連續。若 $f(c) \ne 0$ 且 $g(c) = 0$，且在該區間內當 $x \ne c$ 時 $g(x) \ne 0$，則：
+              $$h(x) = \frac{f(x)}{g(x)} \quad \text{在 } x = c \text{ 具有垂直漸近線}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：判斷垂直漸近線與可去不連續</div>
+            <div class="callout-body">
+              求 $h(x) = \frac{x^2+2x-8}{x^2-4}$ 的垂直漸近線：
+              <ul>
+                <li>分母 $g(x) = x^2-4 = 0 \implies x = \pm 2$。</li>
+                <li>分子 $f(x) = x^2+2x-8 = (x-2)(x+4)$。</li>
+                <li>在 $x = 2$ 處：$f(2) = 0$ 且 $g(2) = 0$（具公因式 $x-2$，為孔洞/可去不連續點，非漸近線）。</li>
+                <li>在 $x = -2$ 處：$g(-2) = 0$ 但 $f(-2) = (-2)^2+2(-2)-8 = -8 \ne 0$。</li>
+                <li><strong>結論：</strong> $x = -2$ 是唯一的垂直漸近線 (vertical asymptote)。</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">定理 1.15：無窮極限的性質 (Properties of Infinite Limits)</div>
+            <div class="callout-body">
+              若 $\lim_{x \to c} f(x) = \infty$ 且 $\lim_{x \to c} g(x) = L$：
+              <ol>
+                <li>$\lim_{x \to c} [f(x) \pm g(x)] = \infty$</li>
+                <li>$\lim_{x \to c} [f(x) g(x)] = \pm\infty$（符號由 $L > 0$ 或 $L < 0$ 決定）</li>
+                <li>$\lim_{x \to c} \frac{g(x)}{f(x)} = 0$</li>
+              </ol>
+            </div>
+          </div>
+
+          <h3>無窮遠處之極限 (Limits at Infinity)</h3>
+          <p>當自變數 $x \to \infty$ 或 $x \to -\infty$ 時，探討函數是否收斂至某個常數值。</p>
+
+          <div class="callout callout-def">
+            <div class="callout-title">定義：無窮遠處之極限定義</div>
+            <div class="callout-body">
+              <ol>
+                <li><strong>$x$ 趨向正無窮：</strong> $\lim_{x \to \infty} f(x) = L$ 意指對每個 $\epsilon > 0$，存在實數 $M$，使得只要 $x > M$，就保證 $|f(x) - L| < \epsilon$。</li>
+                <li><strong>$x$ 趨向負無窮：</strong> $\lim_{x \to -\infty} f(x) = L$ 意指對每個 $\epsilon > 0$，存在實數 $N$，使得只要 $x < N$，就保證 $|f(x) - L| < \epsilon$。</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">有理函數在無窮遠處極限的規律總結</div>
+            <div class="callout-body">
+              對於有理函數 $\frac{p(x)}{q(x)}$ 當 $x \to \pm\infty$（求解時分子分母同除以分母的最高次項）：
+              <ol>
+                <li>若 $\deg(p) > \deg(q)$：<strong>Unbound! $\implies$ 極限不存在 (limit not exist)</strong>。</li>
+                <li>若 $\deg(p) = \deg(q)$：<strong>極限存在，且等於最高次項係數之比 (ratio of coefficients)</strong>！</li>
+                <li>若 $\deg(p) < \deg(q)$：<strong>極限為 0</strong>！</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：有理函數的三種無窮極限比較</div>
+            <div class="callout-body">
+              <p><strong>a. 次數分母較大：</strong></p>
+              $$\lim_{x \to \infty} \frac{2x+5}{3x^2+1} = \lim_{x \to \infty} \frac{\frac{2}{x} + \frac{5}{x^2}}{3 + \frac{1}{x^2}} = \frac{0 + 0}{3 + 0} = 0$$
+
+              <p><strong>b. 次數相同：</strong></p>
+              $$\lim_{x \to \infty} \frac{2x^2+5}{3x^2+1} = \lim_{x \to \infty} \frac{2 + \frac{5}{x^2}}{3 + \frac{1}{x^2}} = \frac{2 + 0}{3 + 0} = \frac{2}{3}$$
+
+              <p><strong>c. 次數分子較大：</strong></p>
+              $$\lim_{x \to \infty} \frac{2x^3+5}{3x^2+1} = \lim_{x \to \infty} \frac{2x + \frac{5}{x^2}}{3 + \frac{1}{x^2}} = \frac{\infty}{3} \implies \text{極限不存在 (unbounded)}$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：含根式的無窮極限（注意負無窮正負號！）</div>
+            <div class="callout-body">
+              求 $\lim_{x \to \infty} \frac{3x-2}{\sqrt{2x^2+1}}$ 與 $\lim_{x \to -\infty} \frac{3x-2}{\sqrt{2x^2+1}}$：
+              <p><strong>(a) 當 $x \to \infty$（$x > 0 \implies x = \sqrt{x^2}$）：</strong></p>
+              $$\lim_{x \to \infty} \frac{3x-2}{\sqrt{2x^2+1}} = \lim_{x \to \infty} \frac{\frac{3x-2}{x}}{\frac{\sqrt{2x^2+1}}{\sqrt{x^2}}} = \lim_{x \to \infty} \frac{3 - \frac{2}{x}}{\sqrt{2 + \frac{1}{x^2}}} = \frac{3-0}{\sqrt{2+0}} = \frac{3}{\sqrt{2}}$$
+
+              <p><strong>(b) 當 $x \to -\infty$（$x < 0 \implies x = -\sqrt{x^2}$）：</strong></p>
+              $$\lim_{x \to -\infty} \frac{3x-2}{\sqrt{2x^2+1}} = \lim_{x \to -\infty} \frac{3 - \frac{2}{x}}{-\sqrt{2 + \frac{1}{x^2}}} = \frac{3-0}{-\sqrt{2+0}} = -\frac{3}{\sqrt{2}}$$
+            </div>
+          </div>
+
+          <h3>水平漸近線 (Horizontal Asymptotes)</h3>
+          <div class="callout callout-def">
+            <div class="callout-title">定義：水平漸近線 (Horizontal Asymptote)</div>
+            <div class="callout-body">
+              水平直線 $y = b$ 稱為函數 $y = f(x)$ 圖形的水平漸近線，若且唯若滿足：
+              $$\lim_{x \to \infty} f(x) = b \quad \text{或} \quad \lim_{x \to -\infty} f(x) = b$$
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">範例：水平漸近線求法</div>
+            <div class="callout-body">
+              <p><strong>例 1：</strong> $f(x) = \frac{5x^2+8x-3}{3x^2+2}$</p>
+              $$\lim_{x \to \infty} f(x) = \frac{5}{3} \quad \text{且} \quad \lim_{x \to -\infty} f(x) = \frac{5}{3} \implies y = \frac{5}{3} \text{ 為水平漸近線}$$
+
+              <p><strong>例 2：</strong> $y = \frac{x^3-2}{|x|^3+1}$</p>
+              <ul>
+                <li>當 $x \to \infty$（$x > 0$）：$\lim_{x \to \infty} \frac{x^3-2}{x^3+1} = 1 \implies$ 右側水平漸近線為 $y = 1$。</li>
+                <li>當 $x \to -\infty$（$x < 0$）：$\lim_{x \to -\infty} \frac{x^3-2}{-x^3+1} = -1 \implies$ 左側水平漸近線為 $y = -1$。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- 前後章節跳轉按鈕 -->
+        <nav class="chapter-pagination">
+          <a href="../index.html" id="prev-chapter-link" class="page-link prev">
+            <span class="link-label">← 回首頁</span>
+            <span class="link-title">課程講義首頁</span>
+          </a>
+          <a href="ch02-derivatives.html" id="next-chapter-link" class="page-link next">
+            <span class="link-label">下一章 →</span>
+            <span class="link-title">第 02 章：微分及其法則</span>
+          </a>
+        </nav>
+      </article>
+    </main>
+  </div>
+
+  <!-- 邏輯腳本 (相對路徑) -->
+  <script src="../assets/js/theme.js"></script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

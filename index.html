@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微積分課程講義 - 線上學習平台</title>
+
+  <!-- 全站共用樣式 (相對路徑) -->
+  <link rel="stylesheet" href="./assets/css/style.css">
+
+  <!-- KaTeX 數學公式支援 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body data-chapter-id="index">
+  <!-- 頂部功能導覽列 -->
+  <header class="site-header">
+    <div class="header-left">
+      <button id="menu-toggle" class="icon-btn" aria-label="切換目錄選單">☰</button>
+      <a href="./index.html" class="header-logo">
+        <span>📐</span> 微積分課程講義
+      </a>
+    </div>
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" aria-label="切換主題模式">🌓</button>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <!-- 側邊欄（由 nav.js 動態渲染目錄） -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <h3>章節目錄導覽</h3>
+      </div>
+      <nav id="course-nav" class="course-nav">
+        <!-- nav.js 會自動注入章節連結 -->
+      </nav>
+    </aside>
+
+    <!-- 行動端遮罩 -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- 首頁主內容 -->
+    <main class="main-content">
+      <div class="lecture-content">
+        <!-- Hero 歡迎區塊 -->
+        <section class="hero-section">
+          <span class="hero-badge">Calculus Lecture Notes</span>
+          <h1 class="hero-title">微積分課程講義</h1>
+          <p class="hero-desc">
+            專為學習者打造的單元化微積分講義系統。依循課程進度深入淺出，結合嚴謹的數學推導、標準 LaTeX 公式呈現與清晰的範例解析。
+          </p>
+        </section>
+
+        <!-- 課程章節卡片導覽 -->
+        <section class="lecture-section">
+          <h2>📚 課程章節總覽</h2>
+          <p>點選下方章節即可進入對應的獨立講義單元：</p>
+
+          <div class="chapter-cards-grid">
+            <!-- 第 1 章卡片 -->
+            <a href="./chapters/ch01-limits.html" class="chapter-card">
+              <div class="chapter-card-number">Chapter 01</div>
+              <h3 class="chapter-card-title">極限及其性質</h3>
+              <p class="chapter-card-desc">
+                探討函數與其圖形變換、反函數與反三角函數、指數與對數、極限概念與 $\epsilon$-$\delta$ 嚴格定義、極限定理與夾擠定理、連續性與中間值定理、無窮極限與漸近線。
+              </p>
+              <div class="chapter-card-topics">
+                <span class="topic-tag">函數與圖形</span>
+                <span class="topic-tag">反函數與反三角</span>
+                <span class="topic-tag">指數與對數</span>
+                <span class="topic-tag">ε-δ 嚴格定義</span>
+                <span class="topic-tag">夾擠定理</span>
+                <span class="topic-tag">連續性與中間值定理</span>
+                <span class="topic-tag">漸近線</span>
+              </div>
+            </a>
+
+            <!-- 第 2 章卡片 -->
+            <a href="./chapters/ch02-derivatives.html" class="chapter-card">
+              <div class="chapter-card-number">Chapter 02</div>
+              <h3 class="chapter-card-title">微分及其法則</h3>
+              <p class="chapter-card-desc">
+                建立切線斜率與導數的極限定義、可微性與連續性關係、乘積與商法則證明、複合函數連鎖律、隱函數微分法、反函數與超越函數求導、以及時間相關變率（Related Rates）模型。
+              </p>
+              <div class="chapter-card-topics">
+                <span class="topic-tag">切線與差商</span>
+                <span class="topic-tag">乘積法則與商法則</span>
+                <span class="topic-tag">連鎖律 (Chain Rule)</span>
+                <span class="topic-tag">隱函數微分</span>
+                <span class="topic-tag">超越函數求導</span>
+                <span class="topic-tag">相關變率</span>
+              </div>
+            </a>
+
+            <!-- 第 3 章卡片 -->
+            <a href="./chapters/ch03-applications-of-differentiation.html" class="chapter-card">
+              <div class="chapter-card-number">Chapter 03</div>
+              <h3 class="chapter-card-title">微分之應用</h3>
+              <p class="chapter-card-desc">
+                探索極值與臨界點、羅爾定理與均值定理（含區間測速實際應用）、一階導數遞增減檢驗、二階導數凹凸性與反曲點、斜漸近線與完整繪圖流程、實際極值最佳化問題，以及微分量與線性逼近。
+              </p>
+              <div class="chapter-card-topics">
+                <span class="topic-tag">極值與臨界點</span>
+                <span class="topic-tag">均值定理 (MVT)</span>
+                <span class="topic-tag">一階檢驗法</span>
+                <span class="topic-tag">凹凸性與反曲點</span>
+                <span class="topic-tag">漸近線與函數繪圖</span>
+                <span class="topic-tag">極值最佳化</span>
+                <span class="topic-tag">微分線性逼近</span>
+              </div>
+            </a>
+
+            <!-- 第 4 章卡片 -->
+            <a href="./chapters/ch04-integrals.html" class="chapter-card">
+              <div class="chapter-card-number">Chapter 04</div>
+              <h3 class="chapter-card-title">積分及其法則</h3>
+              <p class="chapter-card-desc">
+                從反導函數與不定積分出發，探討黎曼和與平面面積逼近、微積分基本定理（FTC 第一與第二部分）、代換積分法、自然對數積分法、反三角函數積分與配方法，以及雙曲函數與反雙曲函數之微積分。
+              </p>
+              <div class="chapter-card-topics">
+                <span class="topic-tag">反導函數</span>
+                <span class="topic-tag">黎曼和 (Riemann Sum)</span>
+                <span class="topic-tag">微積分基本定理 (FTC)</span>
+                <span class="topic-tag">代換積分法</span>
+                <span class="topic-tag">對數與反三角積分</span>
+                <span class="topic-tag">雙曲函數</span>
+              </div>
+            </a>
+
+            <!-- 第 5 章卡片 -->
+            <a href="./chapters/ch05-applications-of-integration.html" class="chapter-card">
+              <div class="chapter-card-number">Chapter 05</div>
+              <h3 class="chapter-card-title">積分之應用</h3>
+              <p class="chapter-card-desc">
+                積分的幾何與物理工程應用：包含兩曲線間面積、旋轉體體積（圓盤法、圓環法與圓柱殼層法）、弧長與旋轉曲面表面積、變力作功（彈簧、抽水、氣體膨脹）、平面薄板質心、流體水壓力，以及指數成長衰減與牛頓冷卻定律。
+              </p>
+              <div class="chapter-card-topics">
+                <span class="topic-tag">兩曲線面積</span>
+                <span class="topic-tag">圓盤法與圓環法</span>
+                <span class="topic-tag">圓柱殼層法</span>
+                <span class="topic-tag">弧長與曲面積</span>
+                <span class="topic-tag">作功與質心</span>
+                <span class="topic-tag">流體壓力</span>
+                <span class="topic-tag">牛頓冷卻定律</span>
+              </div>
+            </a>
+
+            <!-- 第 6 章卡片 -->
+            <a href="./chapters/ch06-integration-techniques.html" class="chapter-card">
+              <div class="chapter-card-number">Chapter 06</div>
+              <h3 class="chapter-card-title">進階積分技巧與瑕積分</h3>
+              <p class="chapter-card-desc">
+                掌握解析積分的高階手法：20 基本法則回顧與代數擬合、分部積分法（LIATE 原則與循環分部）、三角乘冪積分、三角代換法、部分分式分解法、萬能半角代換與積分表、柯西均值定理與羅必達法則處理各類不定型，以及第一類與第二類瑕積分和托里拆利小號悖論。
+              </p>
+              <div class="chapter-card-topics">
+                <span class="topic-tag">20 基本法則</span>
+                <span class="topic-tag">分部積分法</span>
+                <span class="topic-tag">三角乘冪積分</span>
+                <span class="topic-tag">三角代換法</span>
+                <span class="topic-tag">部分分式法</span>
+                <span class="topic-tag">萬能代換法</span>
+                <span class="topic-tag">羅必達法則</span>
+                <span class="topic-tag">瑕積分 (Improper)</span>
+              </div>
+            </a>
+
+            <!-- 第 7 章卡片 -->
+            <a href="./chapters/ch07-infinite-series.html" class="chapter-card">
+              <div class="chapter-card-number">Chapter 07</div>
+              <h3 class="chapter-card-title">無窮級數</h3>
+              <p class="chapter-card-desc">
+                探索離散與連續的極限奧秘：數列極限與單調有界收斂定理、等比級數、望遠鏡級數與第 n 項發散審斂、積分審斂法、p-級數與比較審斂、絕對收斂與條件收斂、交錯級數（萊布尼茨法則）與截斷誤差、黎曼重排定理、比值與根值審斂法、泰勒多項式與餘項估計、冪級數收斂區間、逐項微積分，以及泰勒級數與廣義二項級數之金融精算應用。
+              </p>
+              <div class="chapter-card-topics">
+                <span class="topic-tag">數列與單調有界</span>
+                <span class="topic-tag">等比與望遠鏡級數</span>
+                <span class="topic-tag">積分審斂與 p-級數</span>
+                <span class="topic-tag">直接與極限比較</span>
+                <span class="topic-tag">交錯級數與截斷誤差</span>
+                <span class="topic-tag">比值與根值審斂</span>
+                <span class="topic-tag">泰勒多項式與餘項</span>
+                <span class="topic-tag">冪級數與逐項微積分</span>
+                <span class="topic-tag">廣義二項級數</span>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <!-- 網站特色與學習指引 -->
+        <section class="lecture-section">
+          <h2>💡 講義特色與閱讀指引</h2>
+          <div class="callout callout-def">
+            <div class="callout-title">📘 定義 (Definition) 區塊</div>
+            <div class="callout-body">
+              青藍色邊框卡片，收錄微積分的核心數學定義（例如極限的 $\epsilon$-$\delta$ 定義、連續性的三要素等）。
+            </div>
+          </div>
+
+          <div class="callout callout-thm">
+            <div class="callout-title">📗 定理 (Theorem) 區塊</div>
+            <div class="callout-body">
+              翡翠綠色邊框卡片，記載重要性質與理論（如極限定理、夾擠定理、中間值定理等）。
+            </div>
+          </div>
+
+          <div class="callout callout-example">
+            <div class="callout-title">📙 範例演算 (Example) 區塊</div>
+            <div class="callout-body">
+              暖琥珀色邊框卡片，提供完整的手寫演算步驟與題型解析（如因式分解約分、有理化共軛式、極限求解等）。
+            </div>
+          </div>
+
+          <div class="callout callout-note">
+            <div class="callout-title">🟣 重點提示 (Note / Remark) 區塊</div>
+            <div class="callout-body">
+              柔紫色邊框卡片，提醒常見易錯觀念（例如 $\infty$ 並非數字、函數未定義處極限仍可能存在等）。
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- 共用腳本 (相對路徑) -->
+  <script src="./assets/js/theme.js"></script>
+  <script src="./assets/js/nav.js"></script>
+</body>
+</html>
